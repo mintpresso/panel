@@ -1,0 +1,22 @@
+@(title: String)(color: String)(content: Html)
+
+@main(title) {
+
+<div id="single-page" class="@color hide">
+@content
+</div>
+
+} {
+  <link href="@routes.Assets.at("stylesheets/main.css")" rel="stylesheet">
+  <meta name="animation" content="fadein">
+} {
+  <script src="@routes.Assets.at("javascripts/main.js")"></script>
+  <script>
+  @if(title.startsWith("Log in -")){
+    window.mintpresso.waitForLoading = true
+    setTimeout(function(){
+      window.mintpresso.waitForLoading = false
+    }, 1300)
+  }
+  </script>
+}
