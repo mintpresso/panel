@@ -6,10 +6,23 @@
 // Base styles
 // --------------------------------------------------
 
+
+
+
+
+
+
+
+
+
+
+
+
 // Core
 .btn {
   display: inline-block;
   .ie7-inline-block();
+  color: #444 !important;
   padding: 9px 18px;
   margin-bottom: 0; // For input.btn
   font-size: @baseFontSize;
@@ -29,13 +42,12 @@
 
   // Hover state
   &:hover {
-    color: @grayDark;
     text-decoration: none;
-    background-position: 0 -15px;
+    // background-position: 0 -15px;
 
     // transition is only when going to hover, otherwise the background
     // behind the gradient (there for IE<=9 fallback) gets mismatched
-    .transition(background-position .1s linear);
+    // .transition(background-position .1s linear);
   }
 
   // Focus state for keyboard and accessibility
@@ -150,9 +162,15 @@ input[type="button"] {
   border-color: rgba(0,0,0,.15) rgba(0,0,0,.15) rgba(0,0,0,.25);
 }
 .btn-primary {
-  color: @white;
+  color: @white !important;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3) !important;
+  // .buttonBackground(@btnPrimaryBackground, @btnPrimaryBackgroundHighlight);
+  background-image: none;
+  background-color: rgba(86,86,86,0.85);
+  .transition(all .1s linear);
   &:hover{
     background-color: rgba(86,86,86,1.0);
+    .transition(all .1s linear);
   }
 }
 // Warning appears are orange
@@ -173,6 +191,8 @@ input[type="button"] {
 }
 // Inverse appears as dark gray
 .btn-inverse {
+  color: @white !important;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3) !important;
   .buttonBackground(@btnInverseBackground, @btnInverseBackgroundHighlight);
 }
 
