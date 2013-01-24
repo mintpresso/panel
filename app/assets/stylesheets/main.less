@@ -1,3 +1,5 @@
+@import "bootstrap/variables.less";
+
 /* GLOBAL STYLES
 -------------------------------------------------- */
 /* Padding below the footer and lighter body text */
@@ -7,6 +9,61 @@ body {
   color: #5a5a5a;
 }
 
+#single-page {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  &.white {
+    background-color: #f0f0f0;
+  }
+  &.black {
+    background-color: #444;
+  }
+  footer {
+    position: fixed;
+    width: 80%;
+    height: 80px;
+    bottom: 0px;
+
+    padding: 0px 10%;
+    p {
+      line-height: 80px;
+    }
+  }
+}
+#animation-mask {
+  width: 100%;
+  height: 100%;
+
+  position: fixed;
+  z-index: @zindexAnimationMask;
+
+  &.white {
+    background-color: #f0f0f0;
+  }
+  &.black {
+    background-color: #444;//darken(#444, 1%);
+  }
+
+  #logo {
+    width: 100%;
+    height: 100%;
+
+    position: fixed;
+    z-index: @zindexAnimationMask + 1;
+
+    background-color: none;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center center;
+    &.white {
+      background-image: url("@{imagePath}/logotype-white-v.png");
+    }
+    &.black {
+      background-image: url("@{imagePath}/logotype-black-v.png");
+    }    
+  }
+}
 
 
 /* CUSTOMIZE THE NAVBAR
