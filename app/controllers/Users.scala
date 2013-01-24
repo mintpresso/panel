@@ -23,14 +23,18 @@ object Users extends Controller {
     println(email + pw)
     if(email == "eces@mstock.org"){
       if(pw == "jin"){
-          Ok("OK")
-          //Redirect(routes.HomeController.home).flashing("error" -> Messages.get("users.login.email"))
+          val accountId = 1
+          Redirect(routes.Panel.overview(accountId)).withSession("accountId" -> accountId.toString, "email" -> email)
         }else{
           Redirect(routes.Application.login).flashing("retry" -> "true", "email" -> email, "error" -> Messages("users.login.pw"))
         }
     }else{
       Redirect(routes.Application.login).flashing("retry" -> "true", "error" -> Messages("users.login.email"))
     }
+  }
+
+  def logout() = Action {
+    Redirect(routes.Application.login).withNewSession
   }
 
 }
