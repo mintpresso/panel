@@ -1,22 +1,18 @@
 @()(implicit flash: Flash)
 
 @single("Log in - MINTPRESSO")("black") {
-<form class="form-inline" action="@routes.Users.login" method="POST">
+<form class="form-inline">
   <div class="modal">
     <div class="modal-header" style="text-align: center">
-      <a href="@routes.Application.index"><img src="@routes.Assets.at("images/logotype-white-v.png")" /></a>
+      <img src="@routes.Assets.at("images/logotype-white-v.png")" />
     </div>
     <div class="modal-body">
       <fieldset>
         <div style="text-align: center">
-          <input type="text" name="email" placeholder="Email" value="@flash.get("email")" />
-          <input type="password" name="password" placeholder="Password" />
+          <input type="text" id="inputEmail" placeholder="Email" />
+          <input type="password" id="inputPassword" placeholder="Password" />
           <span class="help-block">
-            @flash.get("error").map { message =>
-              @message
-            }.getOrElse {
-              <a href="@routes.Application.signup">회원이 아니세요? 새로운 아이디로 회원가입하기</a>
-            }
+            <a href="@routes.Application.signup">새로운 아이디로 회원가입하기</a>
           </span>
         </div>
         <div style="text-align: right; ">

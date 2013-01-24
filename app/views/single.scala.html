@@ -1,4 +1,4 @@
-@(title: String)(color: String)(content: Html)
+@(title: String)(color: String)(content: Html)(implicit flash: Flash)
 
 @main(title) {
 
@@ -8,15 +8,18 @@
 
 } {
   <link href="@routes.Assets.at("stylesheets/main.css")" rel="stylesheet">
-  <meta name="animation" content="fadein">
+  <meta name="animation" content="fadein"> 
 } {
   <script src="@routes.Assets.at("javascripts/main.js")"></script>
   <script>
+
+@if(!flash.get("retry").getOrElse("").startsWith("true")){
   @if(title.startsWith("Log in -")){
     window.mintpresso.waitForLoading = true
     setTimeout(function(){
       window.mintpresso.waitForLoading = false
     }, 1300)
   }
+}
   </script>
 }
