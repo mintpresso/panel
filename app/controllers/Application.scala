@@ -13,7 +13,7 @@ object Application extends Controller {
     Ok(views.html.features())
   }
 
-  def docs = Action {
+  def docs = Action { implicit request =>
     Ok(views.html.docs())
   }
 
@@ -21,8 +21,12 @@ object Application extends Controller {
     Ok(views.html.plans())
   }
 
-  def login = Action {
+  def login = Action { implicit request =>
     Ok(views.html.login())
+  }
+
+  def signup = Action { implicit request =>
+    Ok(views.html.signup())
   }
 
   def company = Action {
