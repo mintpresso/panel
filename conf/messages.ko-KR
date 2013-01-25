@@ -1,2 +1,12 @@
+users.login.fill=이메일과 비밀번호를 입력해주세요.
 users.login.email=이메일을 찾을 수 없습니다.
 users.login.pw=비밀번호가 틀립니다.
+
+users.signup.fill=모든 항목을 채워주세요.
+users.signup.email=이메일을 입력해주세요.
+users.signup.pw=비밀번호를 입력해주세요.
+users.signup.basicOK=좋아요.
+users.signup.name=회사 또는 개인의 이름을 입력해주세요.
+users.signup.subscription=개인, 스타트업 또는 기업중에서 속한 곳을 선택해주세요.
+users.signup.detailOK=좋아요.
+users.signup.welcome=이메일 인증 메일이 발송되었습니다.
