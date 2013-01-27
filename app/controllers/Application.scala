@@ -37,4 +37,17 @@ object Application extends Controller with Secured {
     Ok(views.html.company())
   }
 
+  def javascriptRoutes = Action { implicit request =>
+    import routes.javascript._
+    Ok(
+      Routes.javascriptRouter("routes")(
+        Panel.overview,
+        Panel.data,
+        Panel.order,
+        Panel.pickup,
+        Panel.support
+      )
+    ).as("text/javascript")
+  }
+
 }

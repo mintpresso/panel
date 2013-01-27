@@ -13,7 +13,7 @@ import play.api.libs.json._
 import com.mintpresso.MintpressoCore
 import play.api.libs.concurrent.Execution.Implicits._
 
-object Users extends Controller {
+object Users extends Controller with Secured {
   val subscriptions: List[String] = List("individual", "startup", "company")
 
   def login() = Action { implicit request =>
@@ -41,7 +41,15 @@ object Users extends Controller {
                     (response.json \ "account").asOpt[JsObject].map { obj =>
                       val id = (obj \ "id").as[Int]
                       val name = (obj \ "name").as[String]
-                      Redirect(routes.Panel.overview(id)).withSession("accountId" -> id.toString, "email" -> email, "name" -> name)
+                      val email = (obj \ "email").as[String]
+                      Redirect(routes.Users.postAuth)
+                        .withSession(
+                          "accountId" -> id.toString,
+                          "name" -> name,
+                          "email" -> email
+                        ).flashing(
+                          "redirectUrl" -> routes.Panel.overview(id).url
+                        )
                     } getOrElse {
                       Redirect(routes.Application.login).flashing("retry" -> "true", "error" -> Messages("users.login.fill"), "msg" -> "")
                     }
@@ -60,6 +68,10 @@ object Users extends Controller {
         case _ => Redirect(routes.Application.login).flashing("retry" -> "true", "error" -> Messages("users.login.fill"), "msg" -> "")
       }
     }
+  }
+
+  def postAuth() = Action { implicit request =>
+    Ok(views.html.loginPost(getUser))
   }
 
   def logout() = Action {

@@ -47,3 +47,16 @@ jQuery ->
       $(window).load (e) ->
         mintpresso.doneLoading = true
         event.afterLoad()
+
+  $meta = $('meta[name=panel]')
+  if $meta.length > 0 and $meta isnt undefined
+    mintpresso.page = $meta[0].getAttribute('content')
+
+    if mintpresso.page is 'overview'
+      mintpresso.waitForLoading = false
+    else if mintpresso.page is 'data'
+    else if mintpresso.page is 'support'
+    else
+      alert("페이지를 불러올 수 없습니다. ")
+
+
