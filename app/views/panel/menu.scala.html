@@ -1,0 +1,18 @@
+@(selected: String)(implicit flash: Flash)
+
+@dataAndClass(d: String, c: String) = {
+  @if(d == selected){
+    data-menu="@d" class="@c active"
+  } else {
+    data-menu="@d" class="@c"
+  }
+}
+<div id="menu">
+  <ul>
+    <li @dataAndClass("overview", "") onclick="location.href=routes.controllers.Panel.overview(mintpresso.user.id).url">모아보기</li>
+    <li @dataAndClass("data", "") onclick="location.href=routes.controllers.Panel.data(mintpresso.user.id).url">데이터 클라우드</li>
+    <li @dataAndClass("order", "") onclick="location.href=routes.controllers.Panel.order(mintpresso.user.id).url">주문하기</li>
+    <li @dataAndClass("pickup", "") onclick="location.href=routes.controllers.Panel.pickup(mintpresso.user.id).url">받아가기</li>
+    <li @dataAndClass("support", "") onclick="location.href=routes.controllers.Panel.support(mintpresso.user.id).url">고객지원</li>
+  </ul>
+</div>

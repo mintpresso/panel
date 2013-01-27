@@ -1,0 +1,18 @@
+@()(implicit flash: Flash)
+
+@single("Overview - MINTPRESSO Panel")("white") {
+  <meta name="panel" content="overview">
+  <div id="panel">
+    @menu("overview")
+    <div id="submenu">
+      <ul>
+        <li>이용량</li>
+        <li>계정 정보 수정</li>
+        <li>거래 내역</li>
+        <li>API 설정</li>
+      </ul>
+    </div>
+  </div>
+  <!-- FOOTER -->
+  @footer()
+} 
