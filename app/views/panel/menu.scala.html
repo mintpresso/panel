@@ -9,10 +9,11 @@
 }
 <div id="menu">
   <ul>
-    <li @dataAndClass("overview", "") onclick="location.href=routes.controllers.Panel.overview(mintpresso.user.id).url">모아보기</li>
-    <li @dataAndClass("data", "") onclick="location.href=routes.controllers.Panel.data(mintpresso.user.id).url">데이터 클라우드</li>
-    <li @dataAndClass("order", "") onclick="location.href=routes.controllers.Panel.order(mintpresso.user.id).url">주문하기</li>
-    <li @dataAndClass("pickup", "") onclick="location.href=routes.controllers.Panel.pickup(mintpresso.user.id).url">받아가기</li>
-    <li @dataAndClass("support", "") onclick="location.href=routes.controllers.Panel.support(mintpresso.user.id).url">고객지원</li>
+    <li @dataAndClass("overview", "") onclick="location.href=routes.controllers.Panel.overview(sessionStorage.id).url">OVERVIEW</li>
+    <li @dataAndClass("data", "") onclick="location.href=routes.controllers.Panel.data(sessionStorage.id).url">데이터<br />클라우드</li>
+    <li @dataAndClass("order", "") onclick="location.href=routes.controllers.Panel.order(sessionStorage.id).url">주문하기</li>
+    <li @dataAndClass("pickup", "") onclick="location.href=routes.controllers.Panel.pickup(sessionStorage.id).url">받아가기</li>
+    <li @dataAndClass("support", "") onclick="location.href=routes.controllers.Panel.support(sessionStorage.id).url">고객지원</li>
+    <li class="mintpresso" title="민트프레소 사이트로 이동합니다." onclick="location.href=routes.controllers.Application.index.url"></li>
   </ul>
 </div>

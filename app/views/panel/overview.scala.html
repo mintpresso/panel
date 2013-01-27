@@ -6,13 +6,15 @@
     @menu("overview")
     <div id="submenu">
       <ul>
-        <li>이용량</li>
-        <li>계정 정보 수정</li>
-        <li>거래 내역</li>
-        <li>API 설정</li>
+        <li onclick="$(this).toggleClass('active');"><span>이용량</span></li>
+        <li onclick="$(this).toggleClass('active');"><span>계정 정보 수정</span></li>
+        <li onclick="$(this).toggleClass('active');"><span>거래 내역</span><p>지불 금액과 결제일, 승인 여부 정보를 담고 있습니다.</p></li>
+        <li onclick="$(this).toggleClass('active');"><span>API 설정</span></li>
       </ul>
     </div>
+    <div id="content">
+    </div>
+    @footer()
   </div>
   <!-- FOOTER -->
-  @footer()
 } 

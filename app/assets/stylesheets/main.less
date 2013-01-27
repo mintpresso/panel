@@ -1,4 +1,5 @@
 @import "bootstrap/variables.less";
+@import "bootstrap/mixins.less";
 
 /* GLOBAL STYLES
 -------------------------------------------------- */
@@ -7,6 +8,10 @@
 body {
   padding-bottom: 40px;
   color: #5a5a5a;
+  background-image: url(http://subtlepatterns.subtlepatterns.netdna-cdn.com/patterns/gray_jean.png);
+
+  min-height: 700px;
+  overflow: scroll;
 }
 
 a {
@@ -54,12 +59,13 @@ footer {
 }
 
 #single-page {
+  overflow: hidden;
   width: 100%;
   height: 100%;
   position: fixed;
   &.white {
-    background-color: #f0f0f0;
     footer {
+      background-color: #f0f0f0;
       color: #444;
     }
     a {
@@ -124,6 +130,98 @@ footer {
   }
 }
 
+#panel {
+  #menu {
+    width: 100px; height: 100%;
+    background-color: #444;
+    position: fixed;
+    top: 0px; left: 0px;
+    padding-top: 100px;
+    z-index: @zindexFixedNavbar;
+    ul {
+      padding: 0; margin: 0;
+      li {
+        list-style: none;
+        text-align: center;
+        padding-top: 80px;
+        width:100px; height: 20px;
+        color: @white;
+        font-size: 8pt;
+        line-height: 10pt;
+        &:hover {
+          cursor: pointer;
+        }
+        &.mintpresso {
+          background-image: url("@{imagePath}/logotype-black-v.png");
+          background-size: 60px;
+          background-repeat: no-repeat;
+          background-position: center;
+          position: fixed;
+          bottom: 0px;
+        }
+      }
+    }
+  }
+  #submenu {
+    width: 250px; height: 100%;
+    background-color: #f0f0f0;
+    border-right: solid #e4e4e4 1px;
+    position: fixed;
+    top: 0px;
+    left: 100px;
+    padding-top: 100px;
+    z-index: @zindexFixedNavbar;
+    ul {
+      padding: 0; margin: 0;
+      li {
+        padding-left: 40px;
+        list-style: none;
+        text-align: left;
+        height: 40px; line-height: 40px;
+        margin: 0px 0px;
+        color: #444;
+        font-size: 8pt;
+        background-color: #f0f0f0;
+        .transition(all 300ms);
+        &:hover {
+          cursor: pointer;
+          background-color: #e4e4e4;
+          .transition(all 300ms);
+        }
+        &.active {
+          span {
+            border-top: solid 3px #444;
+            padding: 10px 30px 10px 0px;
+            margin: 0;
+          }
+          p {
+            display: block;
+            color: #999;
+            text-shadow: 0 1px 0px rgba(255, 255, 255, 1) !important;
+            font-weight: normal;
+            width: 180px;
+            line-height: 12pt;
+          }
+          height: 120px;
+          margin: 10px 0px;
+          .transition(all 300ms);
+        }
+        p {
+          display: none;
+        }
+      }
+    }
+  }
+  #content {
+    margin-left: 350px;
+    width: 800px; min-height: 700px;
+    background-color: #fff;
+    border-right: solid #e4e4e4 1px;
+  }
+  footer {
+    display: none;
+  }
+}
 
 /* CUSTOMIZE THE NAVBAR
 -------------------------------------------------- */
