@@ -6,6 +6,8 @@ import play.api.data.Forms._
 import play.api.data._
 import play.api.Play.current
 import play.api.libs._
+import models.User
+
 /** Uncomment the following lines as needed **/
 /**
 import play.api.libs.iteratee._
@@ -21,6 +23,13 @@ trait Secured {
   private var accountId: Int = -1
 
   def getAccountId(): Int = accountId
+  def getUser(implicit request: RequestHeader): User = {
+    User(
+      request.session.get("accountId").getOrElse(-1).toString.toInt,
+      request.session.get("name").getOrElse("Unknown"),
+      request.session.get("email").getOrElse("anonymous@mintpresso.com")
+    )
+  }
   def authenticated(implicit request: RequestHeader): Boolean = {
   	request.session.get("accountId").map { id =>
   	  accountId = id.toInt
