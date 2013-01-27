@@ -14,6 +14,9 @@
           <span class="help-block">
             @flash.get("error").map { message =>
               @message
+            }
+            @flash.get("msg").map { message =>
+              @message
             }.getOrElse {
               <a href="@routes.Application.signup">회원이 아니세요? 새로운 아이디로 회원가입하기</a>
             }
