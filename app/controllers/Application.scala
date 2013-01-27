@@ -3,7 +3,7 @@ package controllers
 import play.api._
 import play.api.mvc._
 
-object Application extends Controller {
+object Application extends Controller with Secured {
   
   def index = Action {
     Ok(views.html.overview())
@@ -22,7 +22,11 @@ object Application extends Controller {
   }
 
   def login = Action { implicit request =>
-    Ok(views.html.login())
+    if(authenticated){
+      Redirect(routes.Panel.overview(getAccountId))
+    }else{
+      Ok(views.html.login())
+    }
   }
 
   def signup = Action { implicit request =>
