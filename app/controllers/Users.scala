@@ -10,6 +10,9 @@ import play.api.libs._
 import play.api.cache._
 import play.api.libs.json._
 
+import com.mintpresso.MintpressoCore
+import play.api.libs.concurrent.Execution.Implicits._
+
 object Users extends Controller {
   val subscriptions: List[String] = List("individual", "startup", "company")
 
@@ -22,21 +25,39 @@ object Users extends Controller {
     )
     val form = f.bindFromRequest
     if(form.hasErrors){
-      Redirect(routes.Application.login).flashing("retry" -> "true", "error" -> Messages("users.login.fill"))
+      Redirect(routes.Application.login).flashing("retry" -> "true", "error" -> Messages("users.login.fill"), "msg" -> "")
     }else{
       form.get match {
         case (email: String, pw: String) => {
-          if(email == "eces@mstock.org"){
-            if(pw == "jin"){
-                val accountId = 1
-                Redirect(routes.Panel.overview(accountId)).withSession("accountId" -> accountId.toString, "email" -> email)
-              }else{
-                Redirect(routes.Application.login).flashing("retry" -> "true", "email" -> email, "error" -> Messages("users.login.pw"))
-              }
+          if(email.trim().length == 0){
+            Redirect(routes.Application.login).flashing("retry" -> "true", "error" -> Messages("users.login.fill"), "msg" -> "")
+          }else if(pw.trim().length == 0){
+            Redirect(routes.Application.login).flashing("retry" -> "true", "error" -> Messages("users.login.fill"), "msg" -> "", "email" -> email)
           }else{
-            Redirect(routes.Application.login).flashing("retry" -> "true", "error" -> Messages("users.login.email"))
+            Async {
+              MintpressoCore.authenticate(email, pw).map { response =>
+                response.status match {
+                  case 200 => {
+                    (response.json \ "account").asOpt[JsObject].map { obj =>
+                      val id = (obj \ "id").as[Int]
+                      val name = (obj \ "name").as[String]
+                      Redirect(routes.Panel.overview(id)).withSession("accountId" -> id.toString, "email" -> email, "name" -> name)
+                    } getOrElse {
+                      Redirect(routes.Application.login).flashing("retry" -> "true", "error" -> Messages("users.login.fill"), "msg" -> "")
+                    }
+                  }
+                  case 204 => {
+                    Redirect(routes.Application.login).flashing("retry" -> "true", "error" -> Messages("users.login.email"), "msg" -> "")
+                  }
+                  case _ => {
+                    Redirect(routes.Application.login).flashing("retry" -> "true", "email" -> email, "error" -> Messages("users.login.pw"), "msg" -> "")
+                  }
+                }
+              }
+            }
           }
         }
+        case _ => Redirect(routes.Application.login).flashing("retry" -> "true", "error" -> Messages("users.login.fill"), "msg" -> "")
       }
     }
   }
@@ -105,7 +126,60 @@ object Users extends Controller {
                     "error-detail" -> Messages("users.signup.subscription")
                   )
                 }else{
-                  Redirect(routes.Application.login).flashing("retry" -> "true", "email" -> email, "message" -> Messages("users.signup.confirm"))
+                  Async {
+                    MintpressoCore.addAccount(email, pw, name).map { response =>
+                      (response.json \ "status").asOpt[JsObject].map { obj =>
+                        (obj \ "code").asOpt[Int].getOrElse(0) match {
+                          case 201 => Redirect(routes.Application.login).flashing("retry" -> "true", "email" -> email, "msg" -> Messages("users.signup.confirm"))
+                          case 409 => {
+                            Redirect(routes.Application.signup).flashing(
+                              "retry" -> "true", 
+                              "email" -> email, 
+                              "name" -> name, 
+                              "subscription" -> subscription,  
+                              "msg-detail" -> "", 
+                              "error-basic" -> Messages("users.signup.email.duplicated", (obj \ "message").asOpt[String].getOrElse("  ")), 
+                              "error-detail" -> ""
+                            )  
+                          }
+                          case 500 => {
+                            Redirect(routes.Application.signup).flashing(
+                              "retry" -> "true", 
+                              "email" -> email, 
+                              "name" -> name, 
+                              "subscription" -> subscription, 
+                              "msg-basic" -> "", 
+                              "error-basic" -> "", 
+                              "error-detail" -> Messages("server.500")
+                            )  
+                          }
+
+                          // case 400
+                          case _ => {
+                            Redirect(routes.Application.signup).flashing(
+                              "retry" -> "true", 
+                              "email" -> email, 
+                              "name" -> name, 
+                              "subscription" -> subscription, 
+                              "msg-basic" -> "", 
+                              "error-basic" -> "", 
+                              "error-detail" -> Messages("server.400")
+                            )  
+                          }
+                        }
+                      } getOrElse {
+                        Redirect(routes.Application.signup).flashing(
+                          "retry" -> "true", 
+                          "email" -> email, 
+                          "name" -> name, 
+                          "subscription" -> subscription, 
+                          "msg-basic" -> "", 
+                          "error-basic" -> "", 
+                          "error-detail" -> Messages("users.signup.retry")
+                        )
+                      }
+                    }
+                  }
                 }
               }
             }
