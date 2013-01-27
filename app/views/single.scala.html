@@ -20,6 +20,9 @@
       window.mintpresso.waitForLoading = false
     }, 1300)
   }
+  @if(title.endsWith("MINTPRESSO Panel")){
+    window.mintpresso.waitForLoading = true
+  }
 }
   </script>
 }

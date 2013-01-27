@@ -11,11 +11,17 @@ GET     /plans                      controllers.Application.plans
 
 GET     /login                      controllers.Application.login
 POST    /login                      controllers.Users.login
+GET	    /login-post                 controllers.Users.postAuth
 GET     /logout                     controllers.Users.logout
 GET     /signup                     controllers.Application.signup
 POST    /signup                     controllers.Users.signup
 
 GET 	/:accId/overview			controllers.Panel.overview(accId: Int)
+GET 	/:accId/data-cloud			controllers.Panel.data(accId: Int)
+GET 	/:accId/order-here			controllers.Panel.order(accId: Int)
+GET 	/:accId/pick-up				controllers.Panel.pickup(accId: Int)
+GET 	/:accId/support				controllers.Panel.support(accId: Int)
 
 # Map static resources from the /public folder to the /assets URL path
+GET 	/jsRoutes 					controllers.Application.javascriptRoutes
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

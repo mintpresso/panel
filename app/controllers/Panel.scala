@@ -12,6 +12,10 @@ import play.api.libs.json._
 
 object Panel extends Controller with Secured {
   def overview(accountId: Int) = SignedAccount(accountId) { implicit request =>
-  	Ok(views.html.panel())
+    Ok(views.html.panel.overview())
   }
+  def data(accountId: Int) = TODO
+  def order(accountId: Int) = TODO
+  def pickup(accountId: Int) = TODO
+  def support(accountId: Int) = TODO
 }
