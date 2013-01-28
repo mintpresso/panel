@@ -50,7 +50,8 @@ object Application extends Controller with Secured {
         Panel.data,
         Panel.order,
         Panel.pickup,
-        Panel.support
+        Panel.support,
+        Users.logout
       )
     ).as("text/javascript")
   }
