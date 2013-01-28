@@ -64,10 +64,11 @@ jQuery ->
   onMenu = ($submenu, $menu) ->
     $submenu.find('li').removeClass('active')
     $menu.addClass('active')
+    document.location.hash = '!/' + $menu.data 'menu'
 
   triggerContent = ($content, $submenu, $menu, callback) ->
     $block = $content.find("[data-content=#{ $menu.data('menu') }]")
-    if $block.is('.active')
+    if $menu.is('.active')
       return true
 
     offContent $content
@@ -79,6 +80,45 @@ jQuery ->
     else
       onBlock $block
     true
+
+  triggerIndex = ($content, callback) ->
+    $block = $content.find('[data-content=index]')
+    offContent $content
+    $submenu.find('li').removeClass('active')
+
+    state = $block.data('state')
+    if state is "0" or state < new Date().getTime() - mintpresso.loadingInterval
+      callback $block
+    else
+      onBlock $block
+    true
+
+  triggerHash = ($content, $submenu) ->
+    path = document.location.pathname
+    hash = document.location.hash
+
+    if hash is undefined or hash.length is 0
+      triggerIndex $content, ($block) ->
+        routes.controllers.Panel.overview_index(sessionStorage.id)
+          .ajax()
+          .success (e) ->
+            $block.html e
+            onBlock $block
+    else if path.charAt(path.length - 1) is "/"
+      el = $submenu.find "[data-menu=#{ hash.substr(3) }]"
+      if el.length > 0
+        el.trigger 'click'
+      else
+        console.log "Invalid data-menu=? at method triggerHash"
+        document.location.hash = '!/index'
+        triggerIndex $content, ($block) ->
+          routes.controllers.Panel.overview_index(sessionStorage.id)
+            .ajax()
+            .success (e) ->
+              $block.html e
+              onBlock $block
+    else
+      false
 
   $meta = $('meta[name=panel]')
   if $meta.length > 0 and $meta isnt undefined
@@ -119,6 +159,8 @@ jQuery ->
             .success (e) ->
               $block.html e
               onBlock $block
+
+      triggerHash $content, $submenu
 
       mintpresso.waitForLoading = false
     else if mintpresso.page is 'data'

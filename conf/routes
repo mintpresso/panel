@@ -16,7 +16,7 @@ GET     /logout                     controllers.Users.logout
 GET     /signup                     controllers.Application.signup
 POST    /signup                     controllers.Users.signup
 
-GET 	/:accId/overview			controllers.Panel.overview(accId: Int)
+GET 	/:accId/overview/			controllers.Panel.overview(accId: Int)
 GET 	/:accId/overview/index		controllers.Panel.overview_index(accId: Int)
 GET 	/:accId/overview/usage		controllers.Panel.overview_usage(accId: Int)
 GET 	/:accId/overview/account	controllers.Panel.overview_account(accId: Int)
