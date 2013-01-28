@@ -214,9 +214,20 @@ footer {
   }
   #content {
     margin-left: 350px;
-    width: 800px; min-height: 700px;
+    margin-top: -20px;
+    width: 800px; min-height: 800px;
     background-color: #fff;
     border-right: solid #e4e4e4 1px;
+    background-image: url("@{imagePath}/loading.gif");
+    background-size: 30px;
+    background-position: center center;
+    background-repeat: no-repeat;
+
+    div {
+      display: none;
+      background-color: @white;
+      min-height: 800px;
+    }
   }
   footer {
     display: none;

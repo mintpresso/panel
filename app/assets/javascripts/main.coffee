@@ -32,6 +32,7 @@ jQuery ->
 
   mintpresso.waitForLoading = false if mintpresso.waitForLoading is undefined
   mintpresso.doneLoading = false if mintpresso.doneLoading is undefined
+  mintpresso.loadingInterval = 60 * 3
 
   $meta = $('meta[name=animation]')
   if $meta.length > 0 and $meta isnt undefined
@@ -53,6 +54,43 @@ jQuery ->
     mintpresso.page = $meta[0].getAttribute('content')
 
     if mintpresso.page is 'overview'
+      $submenu = $("#submenu")
+      $content = $("#content")
+
+      $submenu.find('[data-menu=usage]').click (e) ->
+        console.log "dd"
+        $block = $content.find('[data-content=usage]')
+        if $block.is('.active')
+          return true
+
+        $content.find('.active').fadeOut {
+          duration: 300
+          easing: 'easeOutQuint'
+        }
+
+        $submenu.removeClass('active')
+        $(this).addClass('active')
+
+        state = $block.data('state')
+        if state is "0" or state < new Date().getTime() - mintpresso.loadingInterval
+          routes.controllers.Panel.overview_index(sessionStorage.id)
+            .ajax()
+            .success (e) ->
+              console.log "zzz"
+              $block.html e
+              $block.addClass('active').fadeIn {
+                duration: 300
+                easing: 'easeOutQuint'
+              }
+        else
+          $block.addClass('active').fadeIn {
+            duration: 300
+            easing: 'easeOutQuint'
+          }
+        true
+
+
+
       mintpresso.waitForLoading = false
     else if mintpresso.page is 'data'
     else if mintpresso.page is 'support'
