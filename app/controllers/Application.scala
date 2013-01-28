@@ -42,6 +42,11 @@ object Application extends Controller with Secured {
     Ok(
       Routes.javascriptRouter("routes")(
         Panel.overview,
+        Panel.overview_index,
+        Panel.overview_usage,
+        Panel.overview_account,
+        Panel.overview_transaction,
+        Panel.overview_api,
         Panel.data,
         Panel.order,
         Panel.pickup,

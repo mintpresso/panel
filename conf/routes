@@ -17,6 +17,12 @@ GET     /signup                     controllers.Application.signup
 POST    /signup                     controllers.Users.signup
 
 GET 	/:accId/overview			controllers.Panel.overview(accId: Int)
+GET 	/:accId/overview/index		controllers.Panel.overview_index(accId: Int)
+GET 	/:accId/overview/usage		controllers.Panel.overview_usage(accId: Int)
+GET 	/:accId/overview/account	controllers.Panel.overview_account(accId: Int)
+GET 	/:accId/overview/transaction	controllers.Panel.overview_transaction(accId: Int)
+GET 	/:accId/overview/api	 	controllers.Panel.overview_api(accId: Int)
+
 GET 	/:accId/data-cloud			controllers.Panel.data(accId: Int)
 GET 	/:accId/order-here			controllers.Panel.order(accId: Int)
 GET 	/:accId/pick-up				controllers.Panel.pickup(accId: Int)
