@@ -49,6 +49,37 @@ jQuery ->
         mintpresso.doneLoading = true
         event.afterLoad()
 
+  onBlock = ($block) ->
+    $block.addClass('active').fadeIn {
+        duration: 300
+        easing: 'easeOutQuint'
+      }
+
+  offContent = ($content) ->
+    $content.find('.active').fadeOut {
+      duration: 300
+      easing: 'easeOutQuint'
+    }
+
+  onMenu = ($submenu, $menu) ->
+    $submenu.find('li').removeClass('active')
+    $menu.addClass('active')
+
+  triggerContent = ($content, $submenu, $menu, callback) ->
+    $block = $content.find("[data-content=#{ $menu.data('menu') }]")
+    if $block.is('.active')
+      return true
+
+    offContent $content
+    onMenu $submenu, $menu
+
+    state = $block.data('state')
+    if state is "0" or state < new Date().getTime() - mintpresso.loadingInterval
+      callback $block
+    else
+      onBlock $block
+    true
+
   $meta = $('meta[name=panel]')
   if $meta.length > 0 and $meta isnt undefined
     mintpresso.page = $meta[0].getAttribute('content')
@@ -58,38 +89,36 @@ jQuery ->
       $content = $("#content")
 
       $submenu.find('[data-menu=usage]').click (e) ->
-        console.log "dd"
-        $block = $content.find('[data-content=usage]')
-        if $block.is('.active')
-          return true
-
-        $content.find('.active').fadeOut {
-          duration: 300
-          easing: 'easeOutQuint'
-        }
-
-        $submenu.removeClass('active')
-        $(this).addClass('active')
-
-        state = $block.data('state')
-        if state is "0" or state < new Date().getTime() - mintpresso.loadingInterval
-          routes.controllers.Panel.overview_index(sessionStorage.id)
+        triggerContent $content, $submenu, $(this), ($block) ->
+          routes.controllers.Panel.overview_usage(sessionStorage.id)
             .ajax()
             .success (e) ->
-              console.log "zzz"
               $block.html e
-              $block.addClass('active').fadeIn {
-                duration: 300
-                easing: 'easeOutQuint'
-              }
-        else
-          $block.addClass('active').fadeIn {
-            duration: 300
-            easing: 'easeOutQuint'
-          }
-        true
+              onBlock $block
 
+      $submenu.find('[data-menu=account]').click (e) ->
+        triggerContent $content, $submenu, $(this), ($block) ->
+          routes.controllers.Panel.overview_account(sessionStorage.id)
+            .ajax()
+            .success (e) ->
+              $block.html e
+              onBlock $block
 
+      $submenu.find('[data-menu=transaction]').click (e) ->
+        triggerContent $content, $submenu, $(this), ($block) ->
+          routes.controllers.Panel.overview_transaction(sessionStorage.id)
+            .ajax()
+            .success (e) ->
+              $block.html e
+              onBlock $block
+
+      $submenu.find('[data-menu=api]').click (e) ->
+        triggerContent $content, $submenu, $(this), ($block) ->
+          routes.controllers.Panel.overview_api(sessionStorage.id)
+            .ajax()
+            .success (e) ->
+              $block.html e
+              onBlock $block
 
       mintpresso.waitForLoading = false
     else if mintpresso.page is 'data'
