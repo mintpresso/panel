@@ -1,3 +1,8 @@
-@()(implicit flash: Flash)
+@(types: String, tables: String)(implicit flash: Flash)
 
 <h1>VIEW DETAILS</h1>
+<div id="types"></div>
+<script>
+  mintpresso._types = @Html(types);
+  mintpresso._tables = @Html(tables);
+</script>

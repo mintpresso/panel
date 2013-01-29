@@ -10,7 +10,7 @@ import play.api.libs._
 import play.api.cache._
 import play.api.libs.json._
 
-import com.mintpresso.MintpressoCore
+import com.mintpresso._
 import play.api.libs.concurrent.Execution.Implicits._
 
 object Users extends Controller with Secured {

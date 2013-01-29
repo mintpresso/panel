@@ -10,6 +10,9 @@ import play.api.libs._
 import play.api.cache._
 import play.api.libs.json._
 
+import com.mintpresso._
+import play.api.libs.concurrent.Execution.Implicits._
+
 object Panel extends Controller with Secured {
   def overview(accountId: Int) = SignedAccount(accountId) { implicit request =>
     Ok(views.html.panel.overview())
@@ -34,10 +37,25 @@ object Panel extends Controller with Secured {
     Ok(views.html.panel.data())
   }
   def data_index(accountId: Int) = SignedAccount(accountId) { implicit request =>
-    Ok(views.html.panel._data.index())
+    Async {
+      MintpressoAPI("user", accountId).getLatestPoints().map { res =>
+        res.status match {
+          case 200 =>
+            Ok(views.html.panel._data.index(res.body))
+          case 404 =>
+            Ok(views.html.panel._data.index(""))
+          case _ =>
+            InternalServerError
+        }
+      }
+    }
   }
   def data_view(accountId: Int, json: String) = SignedAccount(accountId) { implicit request =>
-    Ok(views.html.panel._data.view())
+    Async {
+      MintpressoAPI("user", accountId).getPointTypes().map { res =>
+        Ok(views.html.panel._data.view(res.body, "{\"points\": []}"))
+      }
+    }
   }
   def data_filter(accountId: Int) = SignedAccount(accountId) { implicit request =>
     Ok(views.html.panel._data.filter())
