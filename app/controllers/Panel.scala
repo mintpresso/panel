@@ -29,7 +29,25 @@ object Panel extends Controller with Secured {
   def overview_api(accountId: Int) = SignedAccount(accountId) { implicit request =>
   	Ok(views.html.panel._overview.api())
   }
-  def data(accountId: Int) = TODO
+
+  def data(accountId: Int) = SignedAccount(accountId) { implicit request =>
+    Ok(views.html.panel.data())
+  }
+  def data_index(accountId: Int) = SignedAccount(accountId) { implicit request =>
+    Ok(views.html.panel._data.index())
+  }
+  def data_view(accountId: Int, json: String) = SignedAccount(accountId) { implicit request =>
+    Ok(views.html.panel._data.view())
+  }
+  def data_filter(accountId: Int) = SignedAccount(accountId) { implicit request =>
+    Ok(views.html.panel._data.filter())
+  }
+  def data_import(accountId: Int) = SignedAccount(accountId) { implicit request =>
+    Ok(views.html.panel._data.imports())
+  }
+  def data_export(accountId: Int) = SignedAccount(accountId) { implicit request =>
+    Ok(views.html.panel._data.exports())
+  }
   def order(accountId: Int) = TODO
   def pickup(accountId: Int) = TODO
   def support(accountId: Int) = TODO

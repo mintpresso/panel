@@ -96,10 +96,11 @@ jQuery ->
   triggerHash = ($content, $submenu) ->
     path = document.location.pathname
     hash = document.location.hash
+    menu = $('#menu li.active').data('menu')
 
     if hash is undefined or hash.length is 0
       triggerIndex $content, ($block) ->
-        routes.controllers.Panel.overview_index(sessionStorage.id)
+        routes.controllers.Panel[menu + '_index'](sessionStorage.id)
           .ajax()
           .success (e) ->
             $block.html e
@@ -112,13 +113,14 @@ jQuery ->
         console.log "Invalid data-menu=? at method triggerHash"
         document.location.hash = '!/index'
         triggerIndex $content, ($block) ->
-          routes.controllers.Panel.overview_index(sessionStorage.id)
+          routes.controllers.Panel[menu + '_index'](sessionStorage.id)
             .ajax()
             .success (e) ->
               $block.html e
               onBlock $block
     else
       false
+
 
   $meta = $('meta[name=panel]')
   if $meta.length > 0 and $meta isnt undefined
@@ -161,9 +163,52 @@ jQuery ->
               onBlock $block
 
       triggerHash $content, $submenu
-
       mintpresso.waitForLoading = false
     else if mintpresso.page is 'data'
+      $submenu = $("#submenu")
+      $content = $("#content")
+
+      $submenu.find('[data-menu=view]').click (e) ->
+        triggerContent $content, $submenu, $(this), ($block) ->
+          routes.controllers.Panel.data_view(sessionStorage.id)
+            .ajax()
+            .success (e) ->
+              $block.html e
+              onBlock $block
+
+      $submenu.find('[data-menu=filter]').click (e) ->
+        triggerContent $content, $submenu, $(this), ($block) ->
+          routes.controllers.Panel.data_filter(sessionStorage.id)
+            .ajax()
+            .success (e) ->
+              $block.html e
+              onBlock $block
+
+      $submenu.find('[data-menu=import]').click (e) ->
+        triggerContent $content, $submenu, $(this), ($block) ->
+          routes.controllers.Panel.data_import(sessionStorage.id)
+            .ajax()
+            .success (e) ->
+              $block.html e
+              onBlock $block
+
+      $submenu.find('[data-menu=export]').click (e) ->
+        triggerContent $content, $submenu, $(this), ($block) ->
+          routes.controllers.Panel.data_export(sessionStorage.id)
+            .ajax()
+            .success (e) ->
+              $block.html e
+              onBlock $block
+
+      triggerHash $content, $submenu
+      mintpresso.waitForLoading = false
+      mintpresso.triggerContentWith = (name, json) ->
+        triggerContent $content, $submenu, $(this), ($block) ->
+          routes.controllers.Panel['data_' + name](sessionStorage.id, JSON.stringify(json))
+            .ajax()
+            .success (e) ->
+              $block.html e
+              onBlock $block
     else if mintpresso.page is 'support'
     else
       alert("페이지를 불러올 수 없습니다. ")
