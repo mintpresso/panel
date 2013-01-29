@@ -17,10 +17,10 @@ object MintpressoCore {
   val server = "http://localhost:9001"
   val versionPrefix = "/v1"
   val urls: Map[String, String] = Map(
-      "authenticate" -> (versionPrefix + "/account/authenticate"),
-      "addAccount" -> (versionPrefix + "/account"),
-      "getAccount" -> (versionPrefix + "/v1")
-    )
+    "authenticate" -> (versionPrefix + "/account/authenticate"),
+    "addAccount" -> (versionPrefix + "/account"),
+    "getAccount" -> (versionPrefix + "/v1")
+  )
   def addAccount(email: String, password: String, name: String): Future[Response] = {
     WS.url(server + urls("addAccount"))
       .withQueryString(("email", email), ("password", password), ("name", name))
@@ -31,8 +31,53 @@ object MintpressoCore {
       .withQueryString(("email", email), ("password", password))
       .post(Map("key" -> Seq("value")))
   }
-  
-  def get(json: JsObject) = {
-    
+}
+
+object MintpressoAPI {
+  var connections: Map[String, Mintpresso] = Map()
+  def apply(label: String, accountId: Int): Mintpresso = {
+    if(!connections.contains(label)){
+      val m: Mintpresso = new Mintpresso(accountId)
+      connections += ((label, m))
+    }
+    connections(label)
+  }
+}
+class Mintpresso(accId: Int) {
+  val server = "http://localhost:9001"
+  val versionPrefix = "/v1"
+  val urls: Map[String, String] = Map(
+    "getPoint" -> (versionPrefix + "/account/%d/point/%d"),
+    "getPointType" -> (versionPrefix + "/account/%d/points/type"),
+    "getLatestPoint" -> (versionPrefix + "/account/%d/points/latest"),
+    "getPointByTypeOrIdentifier" -> (versionPrefix + "/account/%d/point")
+  )
+
+  def getPoint(id: Int): Future[Response] = {
+    WS.url(server + urls("getPoint").format(accId, id))
+      .get()
+  }
+  def getPointTypes(): Future[Response] = {
+    WS.url(server + urls("getPointType").format(accId))
+      .get() 
+  }
+  def getLatestPoints(): Future[Response] = {
+    WS.url(server + urls("getLatestPoint").format(accId))
+      .get()  
+  }
+  def findByType(typeString: String, limit: Int = 30, offset: Int = 0): Future[Response] = {
+    WS.url(server + urls("getPointByTypeOrIdentifier").format(accId))
+      .withQueryString(("type", typeString), ("limit", limit.toString), ("offset", offset.toString))
+      .get()
+  }
+  def findByIdentifier(identifier: String, limit: Int = 30, offset: Int = 0): Future[Response] = {
+    WS.url(server + urls("getPointByTypeOrIdentifier").format(accId))
+      .withQueryString(("identifier", identifier), ("limit", limit.toString), ("offset", offset.toString))
+      .get()
+  }
+  def findByTypeAndIdentifier(typeString: String, identifier: String, limit: Int = 30, offset: Int = 0): Future[Response] = {
+    WS.url(server + urls("getPointByTypeOrIdentifier").format(accId))
+      .withQueryString(("type", typeString), ("identifier", identifier), ("limit", limit.toString), ("offset", offset.toString))
+      .get()
   }
 }
