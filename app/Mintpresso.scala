@@ -21,6 +21,19 @@ object MintpressoCore {
     "addAccount" -> (versionPrefix + "/account"),
     "getAccount" -> (versionPrefix + "/v1")
   )
+  val Type: Map[String, Long] = Map(
+      "user" -> 10,
+      "page" -> 20,
+      "post" -> 30
+    )
+  val TypeString: Map[Long, String] = Map(
+      10L -> "user",
+      20L -> "page",
+      30L -> "post"
+    )
+
+  val Types: List[String] = List("user", "page", "post")
+
   def addAccount(email: String, password: String, name: String): Future[Response] = {
     WS.url(server + urls("addAccount"))
       .withQueryString(("email", email), ("password", password), ("name", name))
