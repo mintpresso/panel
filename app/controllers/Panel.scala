@@ -61,7 +61,10 @@ object Panel extends Controller with Secured {
     Ok(views.html.panel._data.filter())
   }
   def data_import(accountId: Int) = SignedAccount(accountId) { implicit request =>
-    Ok(views.html.panel._data.imports())
+    Ok(views.html.panel._data.imports( getUser, MintpressoCore.Types))
+  }
+  def data_import_add(accountId: Int) = SignedAccount(accountId) { implicit request =>
+    Ok("sd")
   }
   def data_export(accountId: Int) = SignedAccount(accountId) { implicit request =>
     Ok(views.html.panel._data.exports())

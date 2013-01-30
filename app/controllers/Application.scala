@@ -52,6 +52,7 @@ object Application extends Controller with Secured {
         Panel.data_view,
         Panel.data_filter,
         Panel.data_import,
+        Panel.data_import_add,
         Panel.data_export,
         Panel.order,
         Panel.pickup,

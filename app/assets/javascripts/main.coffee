@@ -191,6 +191,7 @@ jQuery ->
             .success (e) ->
               $block.html e
               onBlock $block
+              $block.find('input[name=modelType]').typeahead { source: mintpresso._sTypes }
 
       $submenu.find('[data-menu=export]').click (e) ->
         triggerContent $content, $submenu, $(this), ($block) ->
