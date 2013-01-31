@@ -63,7 +63,8 @@ class Mintpresso(accId: Int) {
     "getPoint" -> (versionPrefix + "/account/%d/point/%d"),
     "getPointType" -> (versionPrefix + "/account/%d/points/type"),
     "getLatestPoint" -> (versionPrefix + "/account/%d/points/latest"),
-    "getPointByTypeOrIdentifier" -> (versionPrefix + "/account/%d/point")
+    "getPointByTypeOrIdentifier" -> (versionPrefix + "/account/%d/point"),
+    "addPoint" -> (versionPrefix + "/account/%d/point")
   )
 
   def getPoint(id: Int): Future[Response] = {
@@ -92,5 +93,28 @@ class Mintpresso(accId: Int) {
     WS.url(server + urls("getPointByTypeOrIdentifier").format(accId))
       .withQueryString(("type", typeString), ("identifier", identifier), ("limit", limit.toString), ("offset", offset.toString))
       .get()
+  }
+  def addPoint(typeString: String, identifier: String, json: String) = {
+    var p1: String = ""
+    var p2: String = ""
+    if(identifier.length > 0){
+      p1 = "\"identifier\": \"%s\",".format(identifier)
+    }
+    if(json.length > 0){
+      val p2 = "\"data\": %s".format(json)
+    }
+    val body = 
+    """
+{
+  "point": {
+    "type": "%s",
+    %s
+    %s
+  }
+}
+    """.format(p1, p2)
+
+    WS.url(server + urls("addPoint").format(accId))
+      .post[String](body)
   }
 }
