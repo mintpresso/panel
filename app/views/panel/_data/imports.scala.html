@@ -3,29 +3,24 @@
 <h1>IMPORTS</h1>
 <form class="form-inline" action="@routes.Panel.data_import_add(user.id)" method="POST">
   <fieldset>
-    <div style="text-align: center">
-      <input type="text" name="modelType" placeholder="Type of model" value="@flash.get("typeString")" />
-      <input type="text" name="identifier" placeholder="Identifier" value="@flash.get("identifier")" />
-      <span class="help-block">
-        @flash.get("error").map { message =>
-          @message
-        }
-        @flash.get("msg").map { message =>
-          @message
-        }.getOrElse {
-          <a href="@routes.Application.signup">회원이 아니세요? 새로운 아이디로 회원가입하기</a>
-        }
-      </span>
-    </div>
-    <div style="text-align: right; ">
-      @*
-      <label class="checkbox">
-        <input type="checkbox"> Remember me for 2 weeks
-      </label>
-      *@
+    <textarea name="data" style="width: 700px; margin-bottom: 16px;" placeholder="JSON Object - Example: {&quot;age&quot;: 22}"></textarea>
+    <input type="text" name="model" placeholder="Type of model" class="span3" value="@flash.get("typeString")" />
+    <input type="text" name="identifier" placeholder="Identifier" class="span5" value="@flash.get("identifier")" />
+    <button type="submit" class="btn btn-small btn-primary">추가</button>
+    <span class="help-block">
+      @flash.get("error").map { message =>
+        @message
+      }
+      @flash.get("msg").map { message =>
+        @message
+      }.getOrElse {
+        <span class="good hide" id="guide1">?</span>
+      }
+    </span>
     </div>
   </fieldset>
 </form>
+<hr />
 <script>
   mintpresso._sTypes = []
   @for(p <- pointTypes){

@@ -64,7 +64,60 @@ object Panel extends Controller with Secured {
     Ok(views.html.panel._data.imports( getUser, MintpressoCore.Types))
   }
   def data_import_add(accountId: Int) = SignedAccount(accountId) { implicit request =>
-    Ok("sd")
+    val f = Form(
+      tuple(
+        "model" -> text,
+        "identifier" -> optional(text),
+        "data" -> optional(text)
+      )
+    )
+    val form = f.bindFromRequest
+    if(form.hasErrors){
+      Redirect(routes.Panel.data(accountId)).flashing("hash" -> "import", "error" -> Messages("data.import.fill"), "msg" -> "")
+    }else{
+      form.get match {
+        case (model: String, identifier: Option[String], data: Option[String]) => {
+          val _i = identifier.getOrElse("")
+          val _d = data.getOrElse("")
+          if(!MintpressoCore.Type.contains(model)){
+            Redirect(routes.Panel.data(accountId)).flashing("hash" -> "import", "error" -> Messages("data.import.model"), "msg" -> "", "identifier" -> _i, "data" -> _d)
+          }else{
+            Async {
+              MintpressoAPI("user", accountId).addPoint(model, _i, _d).map { response => 
+                response.status match {
+                  case 200 => {
+                    Redirect(routes.Panel.data(accountId))
+                      .flashing(
+                        "hash" -> "import", 
+                        "created" -> "zzz",
+                        "msg" -> "이미 해당 식벽자를 가진 모델이 있습니다. 추가하지 않았습니다.",
+                        "model" -> model, "identifier" -> _i, "data" -> _d
+                      )
+                  }
+                  case 201 => {
+                    //(response.json \ "account").asOpt[JsObject].map { obj =>
+                    Redirect(routes.Panel.data(accountId))
+                      .flashing(
+                        "hash" -> "import", 
+                        "created" -> "zzz",
+                        "msg" -> "모델을 추가했습니다.",
+                        "model" -> model, "identifier" -> _i, "data" -> _d
+                      )
+                  }
+                  case 500 => {
+                    Redirect(routes.Panel.data(accountId)).flashing("hash" -> "import", "error" -> Messages("data.import.retry"), "msg" -> "", "model" -> model, "identifier" -> _i, "data" -> _d)
+                  }
+                  case _ => {
+                    Redirect(routes.Panel.data(accountId)).flashing("hash" -> "import", "error" -> Messages("data.import.retry"), "msg" -> "", "model" -> model, "identifier" -> _i, "data" -> _d)
+                  }
+                }
+              }
+            }
+          }
+        }
+        case _ => Redirect(routes.Panel.data(accountId)).flashing("hash" -> "import", "error" -> Messages("data.import.fill"), "msg" -> "")
+      }
+    }
   }
   def data_export(accountId: Int) = SignedAccount(accountId) { implicit request =>
     Ok(views.html.panel._data.exports())
