@@ -76,7 +76,7 @@ jQuery ->
       return true
 
     if $menu.is('.reactive')
-
+      $menu.removeClass('reactive')
     else
       offContent $content
 
