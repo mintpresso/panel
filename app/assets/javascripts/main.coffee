@@ -66,7 +66,7 @@ jQuery ->
     }
 
   onMenu = ($submenu, $menu) ->
-    $submenu.find('li').removeClass('active')
+    $submenu.find('li:not(.reactive)').removeClass('active')
     $menu.addClass('active')
     document.location.hash = '!/' + $menu.data 'menu'
 
@@ -75,7 +75,11 @@ jQuery ->
     if $menu.is('.active')
       return true
 
-    offContent $content
+    if $menu.is('.reactive')
+
+    else
+      offContent $content
+
     onMenu $submenu, $menu
 
     state = $block.data('state')
@@ -91,6 +95,7 @@ jQuery ->
     el = $submenu.find "[data-menu=#{ block }]"
     if el.length > 0
       el.removeClass 'active'
+      el.addClass 'reactive'
       el.trigger 'click'
       callback $block
     else
@@ -189,6 +194,10 @@ jQuery ->
             .ajax()
             .success (e) ->
               $block.html e
+              $byType = $block.find('#selector div.byType')
+              for t in mintpresso._types
+                $byType.append """<a href="#" class="btn btn-small">#{ t }</a>"""
+
               onBlock $block
 
       $submenu.find('[data-menu=filter]').click (e) ->
@@ -209,6 +218,7 @@ jQuery ->
               $block.find('input[name=model]').typeahead { source: mintpresso._sTypes }
               $form = $block.find('form#model')
               $form.submit () ->
+                offContent $content
                 args =
                   data: {
                     model: $form.find('input[name=model]').val()
@@ -224,6 +234,7 @@ jQuery ->
 
                 routes.controllers.Panel.data_import_add(sessionStorage.id).ajax args
                 return false
+              $block.find('time.timeago').timeago()
 
       $submenu.find('[data-menu=export]').click (e) ->
         triggerContent $content, $submenu, $(this), ($block) ->
