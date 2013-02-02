@@ -50,6 +50,10 @@ jQuery ->
         event.afterLoad()
 
   onBlock = ($block) ->
+    state = $block.data('state')
+    if state is 0
+      $block.data 'state', Math.round(Date.now()/1000)
+
     $block.addClass('active').fadeIn {
         duration: 300
         easing: 'easeOutQuint'
@@ -75,11 +79,19 @@ jQuery ->
     onMenu $submenu, $menu
 
     state = $block.data('state')
-    if state is "0" or state < new Date().getTime() - mintpresso.loadingInterval
+    console.log state, (new Date().getTime() - mintpresso.loadingInterval - state), state < new Date().getTime() - mintpresso.loadingInterval
+    if state is 0 or state < Math.round(Date.now()/1000) - mintpresso.loadingInterval
+      console.log 'call'
       callback $block
     else
+      console.log 'cache'
       onBlock $block
     true
+
+  refreshContent = ($content, block, callback) ->
+    $block = $content.find("[data-content=#{block}]")
+    $block.data('state', 0)
+    callback $block
 
   triggerIndex = ($content, callback) ->
     $block = $content.find('[data-content=index]')
@@ -87,7 +99,7 @@ jQuery ->
     $submenu.find('li').removeClass('active')
 
     state = $block.data('state')
-    if state is "0" or state < new Date().getTime() - mintpresso.loadingInterval
+    if state is 0 or state < Math.round(Date.now()/1000) - mintpresso.loadingInterval
       callback $block
     else
       onBlock $block
@@ -192,6 +204,21 @@ jQuery ->
               $block.html e
               onBlock $block
               $block.find('input[name=modelType]').typeahead { source: mintpresso._sTypes }
+              $form = $block.find('form#model')
+              $form.submit () ->
+                args =
+                  data: {
+                    model: $form.find('input[name=model]').val()
+                    identifier: $form.find('input[name=identifier]').val()
+                    data: $form.find('textarea[name=data]').val()
+                  }
+                  success: (e) ->
+                    refreshContent $content, 'import', ($block) ->
+                      $form.find('span.help-block').html e
+                      onBlock $block
+
+                routes.controllers.Panel.data_import_add(sessionStorage.id).ajax args
+                return false
 
       $submenu.find('[data-menu=export]').click (e) ->
         triggerContent $content, $submenu, $(this), ($block) ->
