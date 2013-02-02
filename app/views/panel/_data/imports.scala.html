@@ -14,7 +14,7 @@
         @message
       }
       @flash.get("msg").map { message =>
-        @message <time datetime="@Locale.getDateString(flash.get("created").getOrElse("1000").toLong)" title="@Locale.getDateString(flash.get("created").getOrElse("1000").toLong)" class="timeago">@flash.get("created")</abbr>
+        @message <time datetime="@Locale.getDateString(flash.get("created").getOrElse("-1").toLong)" title="@Locale.getDateString(flash.get("created").getOrElse("1000").toLong)" class="timeago">@flash.get("created")</time>
       }.getOrElse {
         <span class="good hide" id="guide1">?</span>
       }
