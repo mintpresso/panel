@@ -198,6 +198,23 @@ jQuery ->
               for t in mintpresso._types
                 $byType.append """<a href="#" class="btn btn-small">#{ t }</a>"""
 
+              $tbody = $block.find('table tbody')
+              for p in mintpresso._points.points
+                p = p.point
+                d1 = moment(p.createdAt).format('YYYY-MM-DD HH:mm:ss')
+                $tbody.prepend """
+                  <tr>
+                    <td><a href="#{p._url}">#{p.id}</a></td>
+                    <td>#{p.type}</td>
+                    <td>#{p.identifier}</td>
+                    <td>#{JSON.stringify(p.data)}</td>
+                    <td>
+                      <time datetime="#{d1}" class="timeago">#{d1}</time>
+                    </td>
+                  </tr>
+                  """
+
+              $block.find('time.timeago').timeago()
               onBlock $block
 
       $submenu.find('[data-menu=filter]').click (e) ->

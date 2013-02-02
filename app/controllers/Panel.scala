@@ -37,23 +37,31 @@ object Panel extends Controller with Secured {
     Ok(views.html.panel.data())
   }
   def data_index(accountId: Int) = SignedAccount(accountId) { implicit request =>
-    Async {
-      MintpressoAPI("user", accountId).getLatestPoints().map { res =>
-        res.status match {
-          case 200 =>
-            Ok(views.html.panel._data.index(res.body))
-          case 404 =>
-            Ok(views.html.panel._data.index(""))
-          case _ =>
-            InternalServerError
-        }
-      }
-    }
+    Ok(views.html.panel._data.index(""))
   }
   def data_view(accountId: Int, json: String) = SignedAccount(accountId) { implicit request =>
     Async {
+      var body: String = ""
+      var points: String = ""
       MintpressoAPI("user", accountId).getPointTypes().map { res =>
-        Ok(views.html.panel._data.view(res.body, "{\"points\": []}"))
+        res.status match {
+          case 200 =>
+            body = res.body
+          case 404 =>
+            body = "[]"
+        }
+      }
+      MintpressoAPI("user", accountId).getLatestPoints().map { res =>
+        res.status match {
+          case 200 =>
+            points = res.body
+            Ok(views.html.panel._data.view(body, points))
+          case 404 =>
+            points = "{\"points\": []}"
+            Ok(views.html.panel._data.view(body, points))
+          case _ =>
+            InternalServerError
+        }
       }
     }
   }
