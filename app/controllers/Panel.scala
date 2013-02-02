@@ -87,7 +87,7 @@ object Panel extends Controller with Secured {
                 response.status match {
                   case 200 => {
                     Ok.flashing(
-                        "created" -> "zzz",
+                        "created" -> (System.currentTimeMillis).toString,
                         "msg" -> Messages("data.import.notCreated"),
                         "model" -> model, "identifier" -> _i, "data" -> _d
                       )
@@ -95,7 +95,7 @@ object Panel extends Controller with Secured {
                   case 201 => {
                     //(response.json \ "account").asOpt[JsObject].map { obj =>
                     Ok.flashing(
-                        "created" -> "zzz",
+                        "created" -> (System.currentTimeMillis).toString,
                         "msg" -> Messages("data.import.created"),
                         "model" -> model, "identifier" -> _i, "data" -> _d
                       )

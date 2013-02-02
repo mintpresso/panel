@@ -1,4 +1,4 @@
-@(user: User)(implicit flash: Flash)
+@(user: User)(implicit flash: Flash, lang: Lang)
 
 @main("로그인 중 ...") {
 
@@ -12,7 +12,8 @@
     sessionStorage.id = @user.id;
     sessionStorage.name = "@user.name";
     sessionStorage.email = "@user.email";
-    document.location.href = '@flash.get("redirectUrl").getOrElse(routes.Application.index.url)'
+    sessionStorage.locale = lang.language;
+    document.location.href = '@flash.get("redirectUrl").getOrElse(routes.Application.index.url)';
   }
 </script>
 }

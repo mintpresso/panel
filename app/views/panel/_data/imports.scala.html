@@ -1,4 +1,6 @@
-@(user: User, pointTypes: List[String])(implicit flash: Flash)
+@(user: User, pointTypes: List[String])(implicit flash: Flash, lang: Lang)
+
+@import com.mintpresso.i18n.Locale
 
 <h1>IMPORTS</h1>
 <form id="model" class="form-inline" method="POST" onsubmit="return false;">
@@ -6,13 +8,13 @@
     <textarea name="data" style="width: 700px; margin-bottom: 16px;" placeholder="JSON Object - Example: {&quot;age&quot;: 22}">@flash.get("data")</textarea>
     <input type="text" name="model" placeholder="Type of model" style="width:200px" value="@flash.get("model")" />
     <input type="text" name="identifier" placeholder="Identifier" style="width:400px" value="@flash.get("identifier")" />
-    <button type="submit" class="btn btn-small btn-primary">추가</button>
+    <button type="submit" class="btn btn-small btn-primary" data-loading-text="추가하는 중 ...">추가</button>
     <span class="help-block" style="text-align: center">
       @flash.get("error").map { message =>
         @message
       }
       @flash.get("msg").map { message =>
-        @message
+        @message <time datetime="@Locale.getDateString(flash.get("created").getOrElse("1000").toLong)" title="@Locale.getDateString(flash.get("created").getOrElse("1000").toLong)" class="timeago">@flash.get("created")</abbr>
       }.getOrElse {
         <span class="good hide" id="guide1">?</span>
       }
