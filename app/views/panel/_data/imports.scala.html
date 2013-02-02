@@ -1,13 +1,13 @@
 @(user: User, pointTypes: List[String])(implicit flash: Flash)
 
 <h1>IMPORTS</h1>
-<form class="form-inline" action="@routes.Panel.data_import_add(user.id)" method="POST">
+<form id="model" class="form-inline" method="POST" onsubmit="return false;">
   <fieldset>
-    <textarea name="data" style="width: 700px; margin-bottom: 16px;" placeholder="JSON Object - Example: {&quot;age&quot;: 22}"></textarea>
-    <input type="text" name="model" placeholder="Type of model" class="span3" value="@flash.get("typeString")" />
-    <input type="text" name="identifier" placeholder="Identifier" class="span5" value="@flash.get("identifier")" />
+    <textarea name="data" style="width: 700px; margin-bottom: 16px;" placeholder="JSON Object - Example: {&quot;age&quot;: 22}">@flash.get("data")</textarea>
+    <input type="text" name="model" placeholder="Type of model" style="width:200px" value="@flash.get("model")" />
+    <input type="text" name="identifier" placeholder="Identifier" style="width:400px" value="@flash.get("identifier")" />
     <button type="submit" class="btn btn-small btn-primary">추가</button>
-    <span class="help-block">
+    <span class="help-block" style="text-align: center">
       @flash.get("error").map { message =>
         @message
       }
