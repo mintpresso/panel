@@ -79,19 +79,22 @@ jQuery ->
     onMenu $submenu, $menu
 
     state = $block.data('state')
-    console.log state, (new Date().getTime() - mintpresso.loadingInterval - state), state < new Date().getTime() - mintpresso.loadingInterval
     if state is 0 or state < Math.round(Date.now()/1000) - mintpresso.loadingInterval
-      console.log 'call'
       callback $block
     else
-      console.log 'cache'
       onBlock $block
     true
 
-  refreshContent = ($content, block, callback) ->
-    $block = $content.find("[data-content=#{block}]")
+  refreshContent = ($content, $submenu, block, callback) ->
+    $block = $content.find("[data-content=#{ block }]")
     $block.data('state', 0)
-    callback $block
+    el = $submenu.find "[data-menu=#{ block }]"
+    if el.length > 0
+      el.removeClass 'active'
+      el.trigger 'click'
+      callback $block
+    else
+      console.log "Invalid data-menu=? at method refreshContent"
 
   triggerIndex = ($content, callback) ->
     $block = $content.find('[data-content=index]')
@@ -203,7 +206,7 @@ jQuery ->
             .success (e) ->
               $block.html e
               onBlock $block
-              $block.find('input[name=modelType]').typeahead { source: mintpresso._sTypes }
+              $block.find('input[name=model]').typeahead { source: mintpresso._sTypes }
               $form = $block.find('form#model')
               $form.submit () ->
                 args =
@@ -213,9 +216,11 @@ jQuery ->
                     data: $form.find('textarea[name=data]').val()
                   }
                   success: (e) ->
-                    refreshContent $content, 'import', ($block) ->
-                      $form.find('span.help-block').html e
-                      onBlock $block
+                    refreshContent $content, $submenu, 'import', ($block) ->
+                      true
+                      #onBlock $block
+                      #$form.find('span.help-block').html e
+                      
 
                 routes.controllers.Panel.data_import_add(sessionStorage.id).ajax args
                 return false
