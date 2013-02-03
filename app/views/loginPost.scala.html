@@ -12,7 +12,7 @@
     sessionStorage.id = @user.id;
     sessionStorage.name = "@user.name";
     sessionStorage.email = "@user.email";
-    sessionStorage.locale = lang.language;
+    sessionStorage.locale = "@lang.language";
     document.location.href = '@flash.get("redirectUrl").getOrElse(routes.Application.index.url)';
   }
 </script>

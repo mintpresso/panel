@@ -97,7 +97,6 @@ object Users extends Controller with Secured {
     }else{
       form.get match {
         case (email: String, pw: String, name: String, subscription: String) => {
-          println(subscription)
           if(email.length == 0){
             Redirect(routes.Application.signup).flashing(
               "retry" -> "true", 
