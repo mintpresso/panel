@@ -2,6 +2,7 @@
 
 <h1>VIEW DETAILS</h1>
 <div id="selector">
+  <form class="form-inline">
   <div class="btn-toolbar">
     <div class="btn-group">
       최근
@@ -11,10 +12,21 @@
       <a href="#" class="btn btn-small">1개월</a>
       <a href="#" class="btn btn-small">전체</a>
     </div>
-    <div class="btn-group custom-filter">
+    <div class="input-prepend btn-group custom-filter">
+      <a href="#" class="btn btn-small dropdown-toggle" data-toggle="dropdown">
+        필터 없음 <i class="icon-caret-down"></i>
+      </a>
+      <ul class="dropdown-menu">
+        <li><a href="#">로그인한 회원</a></li>
+        <li><a href="#">1주일 이상 활동한 회원</a></li>
+        <li><a href="#">최소 1번 결제한 회원</a></li>
+        <li class="divider"></li>
+        <li><a href="#">주문(상품추천)을 받은 회원</a></li>
+      </ul>
       <a href="#" class="btn btn-small add"><i class="icon-plus"></i></a>
     </div>
   </div>
+  </form>
 </div>
 <form id="model" class="form-inline" method="POST" onsubmit="return false;">
   <fieldset>
