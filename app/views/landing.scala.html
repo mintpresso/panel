@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(title: String, user: Option[User])(content: Html)
 
 @active(menu: String) = @{
   if(title.contains(menu)){

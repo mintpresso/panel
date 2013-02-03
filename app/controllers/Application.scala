@@ -5,20 +5,20 @@ import play.api.mvc._
 
 object Application extends Controller with Secured {
   
-  def index = Action {
-    Ok(views.html.overview())
+  def index = Action { implicit request =>
+    Ok(views.html.overview(getOptionUser))
   }
 
-  def features = Action {
-    Ok(views.html.features())
+  def features = Action { implicit request =>
+    Ok(views.html.features(getOptionUser))
   }
 
   def docs = Action { implicit request =>
-    Ok(views.html.docs())
+    Ok(views.html.docs(getOptionUser))
   }
 
-  def plans = Action {
-    Ok(views.html.plans())
+  def plans = Action { implicit request =>
+    Ok(views.html.plans(getOptionUser))
   }
 
   def login = Action { implicit request =>
@@ -33,8 +33,8 @@ object Application extends Controller with Secured {
     Ok(views.html.signup())
   }
 
-  def company = Action {
-    Ok(views.html.company())
+  def company = Action { implicit request =>
+    Ok(views.html.company(getOptionUser))
   }
 
   def javascriptRoutes = Action { implicit request =>

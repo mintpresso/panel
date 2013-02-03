@@ -26,9 +26,16 @@ trait Secured {
   def getUser(implicit request: RequestHeader): User = {
     User(
       request.session.get("accountId").getOrElse(-1).toString.toInt,
-      request.session.get("name").getOrElse("Unknown"),
-      request.session.get("email").getOrElse("anonymous@mintpresso.com")
+      request.session.get("email").getOrElse("anonymous@mintpresso.com"),
+      request.session.get("name").getOrElse("Unknown")
     )
+  }
+  def getOptionUser(implicit request: RequestHeader): Option[User] = {
+    request.session.get("accountId").map { id =>
+      Some(getUser)
+    } getOrElse {
+      None
+    }
   }
   def authenticated(implicit request: RequestHeader): Boolean = {
   	request.session.get("accountId").map { id =>
