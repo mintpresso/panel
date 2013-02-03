@@ -12,6 +12,9 @@ body {
   background-image: url("@{imagePath}/gray_jean.png");
 
   min-height: 700px; height: 101%;
+
+  margin-top: -40px;
+  padding-top: 20px;
 }
 
 a {
@@ -111,7 +114,7 @@ footer {
 #animation-mask {
   width: 100%;
   height: 100%;
-
+  top: 0px; left: 0px;
   position: fixed;
   z-index: @zindexAnimationMask;
 
@@ -258,12 +261,15 @@ footer {
     #selector {
       text-align: right;
       margin-top: -62px;
+      .btn-group {
+        text-align: initial;
+      }
     }
     div[data-content] {
       display: none;
       background-color: @white;
       min-height: 800px;
-      padding: 0px 30px;
+      padding: 0px 30px 30px 30px;
 
       h1 {
         font-weight: 100;
