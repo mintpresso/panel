@@ -31,7 +31,19 @@
             <li class="@active("Features")"><a href="@routes.Application.features">Features</a></li>
             <li class="@active("Documentation")"><a href="@routes.Application.docs">Documentation</a></li>
             <li class="@active("Pricing")"><a href="@routes.Application.plans">Plans &amp; Pricing</a></li>
-            <li class=""><a href="@routes.Application.login">Login</a></li>
+            @user.map { u =>
+            <li class="">
+              <a href="@routes.Panel.overview(u.id)" style="background-color:#555; color:#fff"><i class="icon-cloud-upload"></i> @u.name</a>
+            </li>
+            <li>
+              <a href="@routes.Users.logout" title="로그아웃 합니다." style="background-color: #369;"><i class="icon-signout"></i> SIGN OUT
+              </a>
+            </li>
+            }.getOrElse {
+            <li class="">
+              <a href="@routes.Application.login">Login</a>
+            </li>
+            }
             @*
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Jinhyuk Lee <b class="caret"></b></a>
