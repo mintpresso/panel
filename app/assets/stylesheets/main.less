@@ -5,13 +5,13 @@
 -------------------------------------------------- */
 /* Padding below the footer and lighter body text */
 
+html { height: 100%; }
 body {
-  padding-bottom: 40px;
+  //padding-bottom: 40px;
   color: #5a5a5a;
-  background-image: url(http://subtlepatterns.subtlepatterns.netdna-cdn.com/patterns/gray_jean.png);
+  background-image: url("@{imagePath}/gray_jean.png");
 
-  min-height: 700px;
-  overflow: scroll;
+  min-height: 700px; height: 101%;
 }
 
 a {
@@ -73,10 +73,8 @@ footer {
 }
 
 #single-page {
-  overflow: hidden;
   width: 100%;
   height: 100%;
-  position: fixed;
   &.white {
     footer {
       background-color: #f0f0f0;
@@ -145,6 +143,7 @@ footer {
 }
 
 #panel {
+  height: 100%;
   #menu {
     width: 100px; height: 100%;
     background-color: #444;
@@ -157,13 +156,32 @@ footer {
       li {
         list-style: none;
         text-align: center;
-        padding-top: 80px;
-        width:100px; height: 20px;
+        //padding-top: 80px - 32px;
+        i {
+          margin-top: 18px;
+          margin-bottom: 6px;
+          // text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3) !important;
+          // .transition(all 300ms);
+        }
+        // &[data-menu=data]:hover i {
+        //   text-shadow: 0px 0px 15px rgba(255,255,255, 0.5) !important;
+        //   .transition(all 300ms);
+        // }
+        width:100px; height: 100px;
         color: @white;
         font-size: 8pt;
         line-height: 10pt;
+        .transition(all 200ms);
         &:hover {
           cursor: pointer;
+          background-color: #333;
+          .transition(all 200ms);
+        }
+        &.active {
+          background-color: #333;
+          &:hover {
+            background-color: #000;
+          }
         }
         &.mintpresso {
           background-image: url("@{imagePath}/logotype-black-v.png");
@@ -229,7 +247,7 @@ footer {
   #content {
     margin-left: 350px;
     margin-top: -20px;
-    width: 800px; min-height: 800px;
+    width: 800px; min-height: 800px; height: 100%;
     background-color: #fff;
     border-right: solid #e4e4e4 1px;
     background-image: url("@{imagePath}/loading.gif");
@@ -237,6 +255,10 @@ footer {
     background-position: 50% 25%;
     background-repeat: no-repeat;
 
+    #selector {
+      text-align: right;
+      margin-top: -62px;
+    }
     div[data-content] {
       display: none;
       background-color: @white;
