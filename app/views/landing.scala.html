@@ -33,7 +33,7 @@
             <li class="@active("Pricing")"><a href="@routes.Application.plans">Plans &amp; Pricing</a></li>
             @user.map { u =>
             <li class="">
-              <a href="@routes.Panel.overview(u.id)" style="background-color:#555; color:#fff"><i class="icon-cloud-upload"></i> @u.name</a>
+              <a href="@routes.Panel.overview(u.id)" style="background-color:#555; color:#fff">@u.name</a>
             </li>
             <li>
               <a href="@routes.Users.logout" title="로그아웃 합니다." style="background-color: #369;"><i class="icon-signout"></i> SIGN OUT

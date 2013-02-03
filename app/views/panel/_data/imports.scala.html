@@ -8,7 +8,7 @@
     <textarea name="data" style="width: 700px; margin-bottom: 16px;" placeholder="JSON Object - Example: {&quot;age&quot;: 22}">@flash.get("data")</textarea>
     <input type="text" name="model" placeholder="Type of model" style="width:200px" value="@flash.get("model")" />
     <input type="text" name="identifier" placeholder="Identifier" style="width:400px" value="@flash.get("identifier")" />
-    <button type="submit" class="btn btn-small btn-primary" data-loading-text="추가하는 중 ...">추가</button>
+    <button type="submit" class="btn btn-small btn-primary" data-loading-text="<i class=&quot;icon-refresh icon-spin&quot; style=&quot;color:black&quot;></i>">추가</button>
     <span class="help-block" style="text-align: center">
       @flash.get("error").map { message =>
         @message
