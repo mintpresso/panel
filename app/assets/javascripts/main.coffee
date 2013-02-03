@@ -194,9 +194,10 @@ jQuery ->
             .ajax()
             .success (e) ->
               $block.html e
-              $byType = $block.find('#selector div.byType')
-              for t in mintpresso._types
-                $byType.append """<a href="#" class="btn btn-small">#{ t }</a>"""
+              $block.find('input[name=s]').typeahead { source: mintpresso._types }
+              $block.find('input[name=o]').typeahead { source: mintpresso._types }
+
+              $block.find('#selector div.custom-filter a.add').tooltip {title: "Add new filter"}
 
               $tbody = $block.find('table tbody')
               for p in mintpresso._points.points
