@@ -20,7 +20,9 @@ object MintpressoCore {
   val urls: Map[String, String] = Map(
     "authenticate" -> (versionPrefix + "/account/authenticate"),
     "addAccount" -> (versionPrefix + "/account"),
-    "getAccount" -> (versionPrefix + "/v1")
+    "getAccount" -> (versionPrefix + "/account/%d"),
+    "getToken" -> (versionPrefix + "/account/%d/token"),
+    "updateToken" -> (versionPrefix + "/account/%d/token")
   )
   val Type: Map[String, Long] = Map(
       "user" -> 10,
@@ -38,12 +40,26 @@ object MintpressoCore {
   def addAccount(email: String, password: String, name: String): Future[Response] = {
     WS.url(server + urls("addAccount"))
       .withQueryString(("email", email), ("password", password), ("name", name))
+      .withHeaders( ("X-Requested-With", initial) )
       .post(Map("key" -> Seq("value")))
   }
   def authenticate(email: String, password: String): Future[Response] = {
     WS.url(server + urls("authenticate"))
+      .withHeaders( ("X-Requested-With", initial) )
       .withQueryString(("email", email), ("password", password))
       .post(Map("key" -> Seq("value")))
+  }
+  def getToken(id: Int): Future[Response] = {
+    WS.url(server + urls("getToken").format(id))
+      .withHeaders( ("X-Requested-With", initial) )
+      .get()
+  }
+
+  def setToken(id: Int, password: String, url: List[String]): Future[Response] = {
+    WS.url(server + urls("setToken").format(id))
+      .withHeaders( ("X-Requested-With", initial) )
+      .withQueryString(("pw", password), ("url", url.mkString("|")))
+      .put(Map("key" -> Seq("value")))
   }
 }
 
