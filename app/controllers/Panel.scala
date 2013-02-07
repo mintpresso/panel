@@ -30,7 +30,19 @@ object Panel extends Controller with Secured {
   	Ok(views.html.panel._overview.transaction())
   }
   def overview_api(accountId: Int) = SignedAccount(accountId) { implicit request =>
-  	Ok(views.html.panel._overview.api())
+  	Async {
+      MintpressoCore.getToken(accountId).map { res =>
+        res.status match {
+          case 200 =>
+            Ok(views.html.panel._overview.api(getUser, res.body))
+          case 404 =>
+            NotFound
+          //case 403 =>
+          case _ =>
+            Forbidden
+        }
+      }
+    }
   }
 
   def data(accountId: Int) = SignedAccount(accountId) { implicit request =>

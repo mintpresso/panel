@@ -180,6 +180,8 @@ jQuery ->
             .ajax()
             .success (e) ->
               $block.html e
+              $block.find('div.well span').html mintpresso._api.token
+              $block.find('textarea').html mintpresso._api.urls.join '\n'
               onBlock $block
 
       triggerHash $content, $submenu
