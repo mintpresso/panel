@@ -3,6 +3,42 @@
 ###
 
 jQuery ->
+  $.extend {
+    getParameters: () ->
+      vars = []
+      if window.location.hash.indexOf('?') is -1
+        return []
+      for hash in window.location.hash.slice(window.location.hash.indexOf('?') + 1).split('&')
+        continue if hash.length is 0
+        kv = hash.split('=')
+        vars.push kv[0]
+        vars[kv[0]] = kv[1]
+      return vars
+    getParameter: (name) ->
+      return $.getParameters()[name]
+
+    getParameterHash: () ->
+      if window.location.hash.indexOf('?') == -1 
+        return ""
+      else
+        window.location.hash.slice(window.location.hash.indexOf('?'))
+
+    setParameter: (key, value) ->
+      if $.getParameter(key) is undefined
+        if window.location.hash.indexOf('?') is -1
+          window.location.hash += "?"
+        window.location.hash += key + '=' + value + '&'
+      else
+        params = $.getParameters
+        temp = "?"
+        for p in params
+          temp += p + '=' + params[p] + '&'
+        temp += key + '=' + value + '&'
+        window.location.hash = window.location.hash.slice(0, window.location.hash.indexOf('?')) + temp
+      $('#submenu li.active').data('parameter', $.getParameterHash())
+
+  }
+
   $body = $('body')
 
   event =
@@ -68,7 +104,9 @@ jQuery ->
   onMenu = ($submenu, $menu) ->
     $submenu.find('li:not(.reactive)').removeClass('active')
     $menu.addClass('active')
-    document.location.hash = '!/' + $menu.data 'menu'
+    if $submenu.data('parameter') is undefined
+      $submenu.data('parameter', '')
+    document.location.hash = '!/' + $menu.data('menu') + $.getParameterHash()
 
   triggerContent = ($content, $submenu, $menu, callback) ->
     $block = $content.find("[data-content=#{ $menu.data('menu') }]")
@@ -115,7 +153,11 @@ jQuery ->
 
   triggerHash = ($content, $submenu) ->
     path = document.location.pathname
-    hash = document.location.hash
+    if $.getParameterHash().length > 0
+      hash = window.location.hash.slice(3, window.location.hash.indexOf('?'))
+    else
+      hash = window.location.hash.slice(3)
+
     menu = $('#menu li.active').data('menu')
 
     if hash is undefined or hash.length is 0
@@ -126,12 +168,13 @@ jQuery ->
             $block.html e
             onBlock $block
     else if path.charAt(path.length - 1) is "/"
-      el = $submenu.find "[data-menu=#{ hash.substr(3) }]"
+      el = $submenu.find "[data-menu=#{ hash }]"
+      $submenu.data('data-parameter', $.getParameterHash())
       if el.length > 0
         el.trigger 'click'
       else
-        console.log "Invalid data-menu=? at method triggerHash"
-        document.location.hash = '!/index'
+        console.log "Invalid data-menu='#{hash}' at method triggerHash"
+        document.location.hash = '!/index' + $.getParameterHash()
         triggerIndex $content, ($block) ->
           routes.controllers.Panel[menu + '_index'](sessionStorage.id)
             .ajax()
@@ -140,7 +183,6 @@ jQuery ->
               onBlock $block
     else
       false
-
 
   $meta = $('meta[name=panel]')
   if $meta.length > 0 and $meta isnt undefined
@@ -206,9 +248,11 @@ jQuery ->
 
       $submenu.find('[data-menu=view]').click (e) ->
         triggerContent $content, $submenu, $(this), ($block) ->
-          routes.controllers.Panel.data_view(sessionStorage.id)
+          routes.controllers.Panel.data_view(sessionStorage.id, $.getParameter('filter'))
             .ajax()
             .success (e) ->
+              #console.log ">>", e
+              #return true
               $block.html e
               $block.find('input[name=s]').typeahead { source: mintpresso._types }
               $block.find('input[name=o]').typeahead { source: mintpresso._types }
@@ -235,6 +279,24 @@ jQuery ->
                   """
 
               $block.find('time.timeago').timeago()
+              
+              $modelForm = $block.find('form#model')
+              $modelForm.submit () ->
+                offContent $content
+
+                query = {
+                  s: $modelForm.find('input[name=s]').val()
+                  v: $modelForm.find('input[name=v]').val()
+                  o: $modelForm.find('input[name=o]').val()
+                }
+                
+                $.setParameter "filter", JSON.stringify query
+
+                refreshContent $content, $submenu, 'view', ($block) ->
+                  true
+
+              $relForm = $block.find('form#relation')
+
               onBlock $block
 
       $submenu.find('[data-menu=filter]').click (e) ->
