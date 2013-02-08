@@ -82,7 +82,8 @@ class Mintpresso(accId: Int) {
     "getPointType" -> (versionPrefix + "/account/%d/points/type"),
     "getLatestPoint" -> (versionPrefix + "/account/%d/points/latest"),
     "getPointByTypeOrIdentifier" -> (versionPrefix + "/account/%d/point"),
-    "addPoint" -> (versionPrefix + "/account/%d/point")
+    "addPoint" -> (versionPrefix + "/account/%d/point"),
+    "findEdges" -> (versionPrefix + "/account/%d/edge")
   )
 
   def getPoint(id: Int): Future[Response] = {
@@ -139,5 +140,11 @@ class Mintpresso(accId: Int) {
     WS.url(server + urls("addPoint").format(accId))
       .withHeaders( ("Content-Type", "application/json"), ("X-Requested-With", initial) )
       .post[String](body)
+  }
+  def findRelations(query: Map[String, String]) = {
+    WS.url(server + urls("findEdges").format(accId))
+      .withHeaders( ("X-Requested-With", initial) )
+      .withQueryString(query.toSeq:_*)
+      .get()
   }
 }
