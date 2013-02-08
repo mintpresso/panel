@@ -125,7 +125,7 @@ class Mintpresso(accId: Int) {
       p1 = "\"identifier\": \"%s\",".format(identifier)
     }
     if(json.length > 0){
-      val p2 = "\"data\": %s,".format(json)
+      p2 = "\"data\": %s,".format(json)
     }
     val body = 
     """
