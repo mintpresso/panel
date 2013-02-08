@@ -182,6 +182,20 @@ jQuery ->
               $block.html e
               $block.find('div.well span').html mintpresso._api.token
               $block.find('textarea').html mintpresso._api.urls.join '\n'
+              $form = $block.find('form#domain')
+              $form.submit () ->
+                offContent $content
+                args =
+                  data: {
+                    domain: $form.find('textarea[name=domain]').val()
+                  }
+                  success: (e) ->
+                    refreshContent $content, $submenu, 'api', ($block) ->
+                      true
+
+                routes.controllers.Panel.overview_api_set(sessionStorage.id).ajax args
+                return false
+              
               onBlock $block
 
       triggerHash $content, $submenu
@@ -205,12 +219,15 @@ jQuery ->
               for p in mintpresso._points.points
                 p = p.point
                 d1 = moment(p.createdAt).format('YYYY-MM-DD HH:mm:ss')
+                d = JSON.stringify(p.data.data)
+                if d is "{}"
+                  d = "<small> - </small>"
                 $tbody.prepend """
                   <tr>
                     <td><a href="#{p._url}">#{p.id}</a></td>
                     <td>#{p.type}</td>
                     <td>#{p.identifier}</td>
-                    <td>#{JSON.stringify(p.data)}</td>
+                    <td class="code">#{d}</td>
                     <td>
                       <time datetime="#{d1}" class="timeago">#{d1}</time>
                     </td>
@@ -238,7 +255,6 @@ jQuery ->
               $block.find('input[name=model]').typeahead { source: mintpresso._sTypes }
               $form = $block.find('form#model')
               $form.submit () ->
-                offContent $content
                 args =
                   data: {
                     model: $form.find('input[name=model]').val()
@@ -248,10 +264,15 @@ jQuery ->
                   success: (e) ->
                     refreshContent $content, $submenu, 'import', ($block) ->
                       true
-                      #onBlock $block
-                      #$form.find('span.help-block').html e
                       
-
+                try
+                  if args.data.data.length > 0
+                    JSON.parse args.data.data
+                catch error
+                  $form.find('span.help-block').html "JSON 데이터가 유효하지 않습니다: " + error.toString()
+                  return false
+                
+                offContent $content
                 routes.controllers.Panel.data_import_add(sessionStorage.id).ajax args
                 return false
               $block.find('time.timeago').timeago()

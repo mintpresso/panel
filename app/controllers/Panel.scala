@@ -30,7 +30,7 @@ object Panel extends Controller with Secured {
   	Ok(views.html.panel._overview.transaction())
   }
   def overview_api(accountId: Int) = SignedAccount(accountId) { implicit request =>
-  	Async {
+    Async {
       MintpressoCore.getToken(accountId).map { res =>
         res.status match {
           case 200 =>
@@ -41,6 +41,47 @@ object Panel extends Controller with Secured {
           case _ =>
             Forbidden
         }
+      }
+    }
+  }
+  def overview_api_set(accountId: Int) = SignedAccount(accountId) { implicit request =>
+    val f = Form(
+      tuple(
+        "data" -> text,
+        "password" -> text
+      )
+    )
+    val form = f.bindFromRequest
+    if(form.hasErrors){
+      Ok.flashing("error" -> Messages("overview.api.fill"), "msg" -> "")
+    }else{
+      form.get match {
+        case (domain: String, password: String) => {
+          val url: Array[String] = domain.trim.split('\n')
+          if(url.length == 0){
+            Ok.flashing("error" -> Messages("overview.api.domain.fill"), "msg" -> "")  
+          }else{
+            Async {
+              MintpressoCore.setToken(accountId, password, url.toList).map { response => 
+                response.status match {
+                  case 200 => {
+                    Ok.flashing(
+                        "created" -> (System.currentTimeMillis).toString,
+                        "msg" -> Messages("overview.api.domain.updated")
+                      )
+                  }
+                  case 403 => {
+                    Ok.flashing("error" -> Messages("overview.api.password.invalid"), "domain" -> domain)
+                  }
+                  case _ => {
+                    Ok.flashing("error" -> Messages("overview.api.retry"), "domain" -> domain)
+                  }
+                }
+              }
+            }
+          }
+        }
+        case _ => Ok.flashing("error" -> Messages("overview.api.domain.fill"), "msg" -> "")
       }
     }
   }
@@ -93,14 +134,14 @@ object Panel extends Controller with Secured {
     )
     val form = f.bindFromRequest
     if(form.hasErrors){
-      Redirect(routes.Panel.data(accountId)).flashing("hash" -> "import", "error" -> Messages("data.import.fill"), "msg" -> "")
+      Ok.flashing("error" -> Messages("data.import.fill"), "msg" -> "")
     }else{
       form.get match {
         case (model: String, identifier: Option[String], data: Option[String]) => {
           val _i = identifier.getOrElse("")
           val _d = data.getOrElse("")
           if(!MintpressoCore.Type.contains(model)){
-            Ok.flashing("hash" -> "import", "error" -> Messages("data.import.model"), "msg" -> "", "identifier" -> _i, "data" -> _d)
+            Ok.flashing("error" -> Messages("data.import.model"), "msg" -> "", "identifier" -> _i, "data" -> _d)
           }else{
             Async {
               MintpressoAPI("user", accountId).addPoint(model, _i, _d).map { response => 
@@ -116,7 +157,7 @@ object Panel extends Controller with Secured {
                     //(response.json \ "account").asOpt[JsObject].map { obj =>
                     Ok.flashing(
                         "created" -> (System.currentTimeMillis).toString,
-                        "msg" -> Messages("data.import.created"),
+                        "msg" -> (Messages("data.import.created") + Messages((response.json \ "status" \ "message").asOpt[String].getOrElse(""))),
                         "model" -> model, "identifier" -> _i, "data" -> _d
                       )
                   }

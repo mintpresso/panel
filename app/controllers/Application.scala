@@ -47,6 +47,7 @@ object Application extends Controller with Secured {
         Panel.overview_account,
         Panel.overview_transaction,
         Panel.overview_api,
+        Panel.overview_api_set,
         Panel.data,
         Panel.data_index,
         Panel.data_view,

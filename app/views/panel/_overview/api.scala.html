@@ -8,8 +8,8 @@
 </div>
 <hr />
 <p>@user.name에 대한 데이터 클라우드 및 주문 가져오기 요청(API)을 이용할 수 있는 도메인을 제한시킬 수 있습니다. <br />예제: <small>모든 하위 도메인 <span class="label label-inverse">mintpresso.com</span> &middot; 특정 하위 도메인 <span class="label label-inverse">docs.mintpresso.com</span> &middot; 모든 도메인 <span class="label label-inverse">*</span></small></p>
-<form>
-  <textarea style="width:90%; padding:5%; height: 200px;" class="code"></textarea>
+<form id="domain">
+  <textarea name="domain" style="width:90%; padding:5%; height: 200px;" class="code"></textarea>
   <button type="submit" class="btn btn-small btn-primary btn-block" data-loading-text="<i class=&quot;icon-refresh icon-spin&quot; style=&quot;color:black&quot;></i>">반영하기</button>
 </form>
 <script>

@@ -21,6 +21,13 @@ data.import.fill=모든 항목을 채워주세요.
 data.import.model=모델의 종류를 입력해주세요. 대표적으로 user, page, post가 있습니다.
 data.import.retry=일시적으로 데이터를 업로드 할수 없습니다. 다시 시도해주세요. (500)
 data.import.notCreated=이미 같은 모델 종류와 같은 식별자를 가진 모델이 있습니다. 추가하지 않았습니다.
-data.import.created=모델을 추가했습니다.
+data.import.created=모델을 추가했습니다. 
+
+overview.api.fill=모든 항목을 채워주세요.
+overview.api.domain.fill=최소 1개 이상의 도메인을 입력주세요. 제한을 원치않는 경우 '*' 모두 허용으로 지정하시면 됩니다.
+overview.api.domain.updated=API 설정이 반영되었습니다.
+overview.api.password.invalid=비밀번호가 틀립니다. API 설정을 반영하지 못했습니다.
+overview.api.retry=일시적으로 API 설정을 반영할 수 없습니다. 다시 시도해주세요.
 
 date.fullstring=yyyy-dd-MM HH:mm:ss
+json.invalid=(JSON 데이터가 유효하지 않아 빈 데이터로 처리함)
