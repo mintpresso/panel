@@ -93,27 +93,109 @@ object Panel extends Controller with Secured {
     Ok(views.html.panel._data.index(""))
   }
   def data_view(accountId: Int, json: String) = SignedAccount(accountId) { implicit request =>
-    Async {
-      var body: String = ""
-      var points: String = ""
-      MintpressoAPI("user", accountId).getPointTypes().map { res =>
-        res.status match {
-          case 200 =>
-            body = res.body
-          case 404 =>
-            body = "[]"
+    var types: String = "[]"
+    var points: String = "{\"points\": []}"
+    var edges: String = "{\"edges\": []}"
+    if(json.length == 0){
+      Async {
+        MintpressoAPI("user", accountId).getPointTypes().map { res =>
+          res.status match {
+            case 200 =>
+              types = res.body
+          }
+        }
+        MintpressoAPI("user", accountId).getLatestPoints().map { res =>
+          res.status match {
+            case 200 =>
+              points = res.body
+          }
+          Ok(views.html.panel._data.view(types, points, edges))
         }
       }
-      MintpressoAPI("user", accountId).getLatestPoints().map { res =>
-        res.status match {
-          case 200 =>
-            points = res.body
-            Ok(views.html.panel._data.view(body, points))
-          case 404 =>
-            points = "{\"points\": []}"
-            Ok(views.html.panel._data.view(body, points))
-          case _ =>
-            InternalServerError
+    }else{
+      val obj = Json.parse(json)
+
+      val form = ((obj \ "s").asOpt[String], (obj \ "c").asOpt[String], (obj \ "o").asOpt[String])
+      form match {
+        case (s: Option[String], v: Option[String], o: Option[String]) => {
+          val _s = s.getOrElse("")
+          val _v = v.getOrElse("")
+          val _o = o.getOrElse("")
+          if( (_s.length + _v.length + _o.length) == 0 ){
+            Async {
+              MintpressoAPI("user", accountId).getPointTypes().map { res =>
+                res.status match {
+                  case 200 => {
+                    types = res.body
+                  }
+                  case _ => {
+                    println("get p t" + res.status)
+                  }
+                }
+              }
+              MintpressoAPI("user", accountId).getLatestPoints().map { res =>
+                res.status match {
+                  case 200 => {
+                    points = res.body
+                  }
+                  case _ => {
+                    println("g l p " + res.status)
+                  }
+                }
+                Ok(views.html.panel._data.view(types, points, edges))
+              }
+            }
+          }else{
+            var query: Map[String, String] = Map()
+            val Number = "([0-9]+)".r
+            _s match {
+              case Number(_s) => {
+                query += (("subjectId", _s))
+              }
+              case _ => {
+                query += (("subjectType", _s))
+              }
+            }
+            _o match {
+              case Number(_o) => {
+                query += (("objectId", _o))
+              }
+              case _ => {
+                query += (("objectType", _o))
+              }
+            }
+            if(_v.length > 0){
+              query += (("verb", _v))
+            }
+
+            Async {
+              MintpressoAPI("user", accountId).getPointTypes().map { res =>
+                res.status match {
+                  case 200 => {
+                    types = res.body
+                  }
+                  case _ => {
+                    println("g p t 2" + res.status)
+                  }
+                }
+              }
+              MintpressoAPI("user", accountId).findRelations(query).map { res =>
+                res.status match {
+                  case 200 => {
+                    Ok(views.html.panel._data.view(types, points, edges)).flashing(
+                      "msg" -> "응답 시간: "
+                    )
+                  }
+                  case _ => {
+                    println(">>" + res.status)
+                    Ok(views.html.panel._data.view(types, points, edges)).flashing(
+                      "error" -> (res.json + (res.json \ "status" \ "message").as[String])
+                    )
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
