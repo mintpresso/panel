@@ -61,7 +61,7 @@ setting 'file.encoding' to 'UTF-8'
 setting 'java.specification.version' to '1.6'
 setting 'java.class.path' to './framework/sbt/sbt-launch.jar'
 setting 'user.name' to 'eces'
-setting 'play.version' to '2.1-RC2'
+setting 'play.version' to '2.1.0'
 setting 'java.vm.specification.version' to '1.0'
 setting 'sun.java.command' to './framework/sbt/sbt-launch.jar play'
 setting 'java.home' to '/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home'
@@ -269,7 +269,7 @@ Module descriptor is processed : org.fusesource.jansi#jansi;1.4
 		tried /Users/eces/panel/repository/local/org.scala-lang/jline/2.10.0/jars/jline.jar
 	[NOT REQUIRED] org.scala-lang#jline;2.10.0!jline.jar
 	[NOT REQUIRED] org.fusesource.jansi#jansi;1.4!jansi.jar
-:: resolution report :: resolve 78ms :: artifacts dl 5ms
+:: resolution report :: resolve 84ms :: artifacts dl 4ms
 Nbr of module to sort : 5
 Sort dependencies of : org.scala-lang#scala-compiler;2.10.0 / Number of dependencies = 3
 Sort dependencies of : org.scala-lang#scala-library;2.10.0 / Number of dependencies = 0
@@ -287,7 +287,7 @@ Module descriptor is processed : org.scala-lang#scala-reflect;2.10.0
 Module descriptor is processed : org.scala-lang#jline;2.10.0
 Module descriptor is processed : org.fusesource.jansi#jansi;1.4
 	report for org.scala-sbt#boot-scala;1.0 default produced in /Users/eces/panel/repository/cache/org.scala-sbt-boot-scala-default.xml
-	resolve done (78ms resolve - 5ms download)
+	resolve done (84ms resolve - 4ms download)
 setting 'scala' to '2.10.0'
 :: retrieving :: org.scala-sbt#boot-scala
 	checkUpToDate=true
@@ -295,15 +295,15 @@ no explicit confs given for retrieve, using ivy file: /Users/eces/panel/reposito
 using ivy parser to parse /Users/eces/panel/repository/cache/resolved-org.scala-sbt-boot-scala-1.0.xml
 post 1.3 ivy file: using exact as default matcher
 	confs: [default]
-	retrieving /Users/eces/panel/repository/local/org.scala-lang/scala-compiler/2.10.0/jars/scala-compiler.jar
-		to /Users/eces/panel/framework/sbt/boot/scala-2.10.0/lib/scala-compiler.jar
-	retrieving /Users/eces/panel/repository/local/org.scala-lang/scala-library/2.10.0/jars/scala-library.jar
-		to /Users/eces/panel/framework/sbt/boot/scala-2.10.0/lib/scala-library.jar
-	retrieving /Users/eces/panel/repository/local/org.fusesource.jansi/jansi/1.4/jars/jansi.jar
-		to /Users/eces/panel/framework/sbt/boot/scala-2.10.0/lib/jansi.jar
 	retrieving /Users/eces/panel/repository/local/org.scala-lang/jline/2.10.0/jars/jline.jar
 		to /Users/eces/panel/framework/sbt/boot/scala-2.10.0/lib/jline.jar
 	retrieving /Users/eces/panel/repository/local/org.scala-lang/scala-reflect/2.10.0/jars/scala-reflect.jar
 		to /Users/eces/panel/framework/sbt/boot/scala-2.10.0/lib/scala-reflect.jar
-	5 artifacts copied, 0 already retrieved (24106kB/1185ms)
-	retrieve done (1185ms)
+	retrieving /Users/eces/panel/repository/local/org.scala-lang/scala-compiler/2.10.0/jars/scala-compiler.jar
+		to /Users/eces/panel/framework/sbt/boot/scala-2.10.0/lib/scala-compiler.jar
+	retrieving /Users/eces/panel/repository/local/org.fusesource.jansi/jansi/1.4/jars/jansi.jar
+		to /Users/eces/panel/framework/sbt/boot/scala-2.10.0/lib/jansi.jar
+	retrieving /Users/eces/panel/repository/local/org.scala-lang/scala-library/2.10.0/jars/scala-library.jar
+		to /Users/eces/panel/framework/sbt/boot/scala-2.10.0/lib/scala-library.jar
+	5 artifacts copied, 0 already retrieved (24106kB/1448ms)
+	retrieve done (1448ms)
