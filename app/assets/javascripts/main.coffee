@@ -362,4 +362,11 @@ jQuery ->
     else
       alert("페이지를 불러올 수 없습니다. ")
 
+  $meta = $('meta[name=docs]')
+  if $meta.length > 0 and $meta isnt undefined
+    mintpresso.page = $meta[0].getAttribute('content')
+
+    if mintpresso.page is 'jsapi-example'
+      console.log "JavaScript API example"
+
 

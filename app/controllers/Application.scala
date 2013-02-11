@@ -13,8 +13,10 @@ object Application extends Controller with Secured {
     Ok(views.html.features(getOptionUser))
   }
 
-  def docs = Action { implicit request =>
-    Ok(views.html.docs(getOptionUser))
+  def docsIndex = docs("index")
+  def docs(page: String = "index") = Action { implicit request =>
+    println(views.html.docs)
+    Ok(views.html.document(page, getOptionUser))
   }
 
   def plans = Action { implicit request =>

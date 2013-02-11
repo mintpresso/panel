@@ -29,7 +29,7 @@
           <ul class="nav">
             <li class="@active("Overview")"><a href="@routes.Application.index">Overview</a></li>
             <li class="@active("Features")"><a href="@routes.Application.features">Features</a></li>
-            <li class="@active("Documentation")"><a href="@routes.Application.docs">Documentation</a></li>
+            <li class="@active("Documentation")"><a href="@routes.Application.docs("index")">Documentation</a></li>
             <li class="@active("Pricing")"><a href="@routes.Application.plans">Plans &amp; Pricing</a></li>
             @user.map { u =>
             <li class="">
