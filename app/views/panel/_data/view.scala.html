@@ -1,4 +1,4 @@
-@(types: String, points: String, edges: String)(implicit flash: Flash)
+@(types: String, points: String, edges: String, values: Map[String, String])(implicit flash: Flash)
 
 <h1>VIEW DETAILS</h1>
 <div id="selector">
@@ -6,11 +6,13 @@
   <div class="btn-toolbar">
     <div class="btn-group">
       최근
-      <a href="#" class="btn btn-small active">최근 30개</a>
-      <a href="#" class="btn btn-small">1일</a>
-      <a href="#" class="btn btn-small">2주</a>
-      <a href="#" class="btn btn-small">1개월</a>
-      <a href="#" class="btn btn-small">전체</a>
+      @*
+      <button class="btn btn-small">최근 30개</button>
+      <button class="btn btn-small">1일</button>
+      <button class="btn btn-small">2주</button>
+      <button class="btn btn-small">1개월</button>
+      *@
+      <button class="btn btn-small active">전체</button>
     </div>
     <div class="input-prepend btn-group custom-filter">
       <a href="#" class="btn btn-small dropdown-toggle" data-toggle="dropdown">
@@ -30,21 +32,34 @@
 </div>
 <form id="model" class="form-inline" method="POST" onsubmit="return false;">
   <fieldset>
-    <input type="text" name="s" placeholder="Type of subject model" style="width:200px" value="@flash.get("s")" />
-    <input type="text" name="v" placeholder="Verb string" style="width:200px" value="@flash.get("v")" />
-    <input type="text" name="o" placeholder="Type of object model" style="width:200px" value="@flash.get("o")" />
+    <input type="text" name="s" placeholder="Type of subject model" style="width:200px" value="@values.get("s").getOrElse("")" />
+    <input type="text" name="v" placeholder="Verb string" style="width:200px" value="@values.get("v").getOrElse("")" />
+    <input type="text" name="o" placeholder="Type of object model" style="width:200px" value="@values.get("o").getOrElse("")" />
     <button type="submit" class="btn btn-small btn-primary" data-loading-text="<i class=&quot;icon-refresh icon-spin&quot; style=&quot;color:black&quot;></i>">검색</button>
   </fieldset>
 </form>
 <form id="relation" class="form-inline hide" method="POST" onsubmit="return false;">
     <fieldset>
       <span class="label label-inverse">User(100)</span>
-      <input type="text" name="v" placeholder="Verb string" style="width:200px" value="@flash.get("rV")" />
+      <input type="text" name="v" placeholder="Verb string" style="width:200px" value="@values.get("rV").getOrElse("")" />
       <span class="label label-inverse">Page(300)</span>
       <button type="submit" class="btn btn-small btn-primary" data-loading-text="<i class=&quot;icon-refresh icon-spin&quot; style=&quot;color:black&quot;></i>">추가</button>
     </fieldset>
   </form>
 
+@values.get("error").map { error =>
+  <div class="alert alert-block">
+  @Html(error)
+  </div>
+}.getOrElse{
+  @values.get("msg").map { msg =>
+    <div class="alert alert-info">
+    @msg
+    </div>
+  }.getOrElse{
+
+  }
+}
 @flash.get("error").map { error =>
   <div class="alert alert-block">
   @error

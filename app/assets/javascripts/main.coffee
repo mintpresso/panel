@@ -252,11 +252,9 @@ jQuery ->
 
       $submenu.find('[data-menu=view]').click (e) ->
         triggerContent $content, $submenu, $(this), ($block) ->
-          routes.controllers.Panel.data_view(sessionStorage.id, $.getParameter('filter'))
+          routes.controllers.Panel.data_view(sessionStorage.id, $.getParameter('_filter'))
             .ajax()
             .success (e) ->
-              #console.log ">>", e
-              #return true
               $block.html e
               $block.find('input[name=s]').typeahead { source: mintpresso._types }
               $block.find('input[name=o]').typeahead { source: mintpresso._types }
@@ -294,7 +292,7 @@ jQuery ->
                   o: $modelForm.find('input[name=o]').val()
                 }
                 
-                $.setParameter "filter", JSON.stringify query
+                $.setParameter "_filter", JSON.stringify query
 
                 refreshContent $content, $submenu, 'view', ($block) ->
                   true

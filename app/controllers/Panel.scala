@@ -109,18 +109,19 @@ object Panel extends Controller with Secured {
             case 200 =>
               points = res.body
           }
-          Ok(views.html.panel._data.view(types, points, edges))
+          Ok(views.html.panel._data.view(types, points, edges, Map()))
         }
       }
     }else{
       val obj = Json.parse(json)
 
-      val form = ((obj \ "s").asOpt[String], (obj \ "c").asOpt[String], (obj \ "o").asOpt[String])
+      val form = ((obj \ "s").asOpt[String], (obj \ "v").asOpt[String], (obj \ "o").asOpt[String])
       form match {
         case (s: Option[String], v: Option[String], o: Option[String]) => {
           val _s = s.getOrElse("")
           val _v = v.getOrElse("")
           val _o = o.getOrElse("")
+          var values: Map[String, String] = Map(("s" -> _s), ("v" -> _v), ("o" -> _o))
           if( (_s.length + _v.length + _o.length) == 0 ){
             Async {
               MintpressoAPI("user", accountId).getPointTypes().map { res =>
@@ -142,7 +143,7 @@ object Panel extends Controller with Secured {
                     println("g l p " + res.status)
                   }
                 }
-                Ok(views.html.panel._data.view(types, points, edges))
+                Ok(views.html.panel._data.view(types, points, edges, values))
               }
             }
           }else{
@@ -168,6 +169,8 @@ object Panel extends Controller with Secured {
               query += (("verb", _v))
             }
 
+            val _before = System.currentTimeMillis
+
             Async {
               MintpressoAPI("user", accountId).getPointTypes().map { res =>
                 res.status match {
@@ -180,17 +183,15 @@ object Panel extends Controller with Secured {
                 }
               }
               MintpressoAPI("user", accountId).findRelations(query).map { res =>
+                val _after = System.currentTimeMillis
                 res.status match {
                   case 200 => {
-                    Ok(views.html.panel._data.view(types, points, edges)).flashing(
-                      "msg" -> "응답 시간: "
-                    )
+                    values += (("msg" -> (" - <time>(" + ((_after - _before)/1000.0).toString +" seconds)</time>")))
+                    Ok(views.html.panel._data.view(types, points, edges, values))
                   }
                   case _ => {
-                    println(">>" + res.status)
-                    Ok(views.html.panel._data.view(types, points, edges)).flashing(
-                      "error" -> (res.json + (res.json \ "status" \ "message").as[String])
-                    )
+                    values += (("error" -> ((res.json \ "status" \ "message").as[String] + " - <time>(" + ((_after - _before)/1000.0).toString +" seconds)</time>")))
+                    Ok(views.html.panel._data.view(types, points, edges, values))
                   }
                 }
               }
