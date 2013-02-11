@@ -59,6 +59,21 @@ span.help {
   border-radius: 9999px;
 }
 
+span.seal {
+  background-color: #d4d4d4;
+  color: #d4d4d4;
+  cursor: pointer;
+
+  &::selection {
+    background: #d4d4d4; /* Safari */
+    color: #d4d4d4;
+  }
+  &::-moz-selection {
+    background: #d4d4d4; /* Firefox */
+    color: #d4d4d4;
+  }
+}
+
 .code {
   font-family: consolas, inconsolas;
 }
