@@ -15,7 +15,6 @@ object Application extends Controller with Secured {
 
   def docsIndex = docs("index")
   def docs(page: String = "index") = Action { implicit request =>
-    println(views.html.docs)
     Ok(views.html.document(page, getOptionUser))
   }
 
