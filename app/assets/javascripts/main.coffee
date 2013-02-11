@@ -15,7 +15,11 @@ jQuery ->
         vars[kv[0]] = kv[1]
       return vars
     getParameter: (name) ->
-      return $.getParameters()[name]
+      temp = $.getParameters()[name]
+      if temp is undefined
+        ""
+      else
+        temp
 
     getParameterHash: () ->
       if window.location.hash.indexOf('?') == -1 
@@ -96,7 +100,7 @@ jQuery ->
       }
 
   offContent = ($content) ->
-    $content.find('.active').fadeOut {
+    $content.find('div.active').fadeOut {
       duration: 300
       easing: 'easeOutQuint'
     }
