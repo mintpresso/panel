@@ -1,6 +1,6 @@
-@(user: Option[User])(implicit flash: Flash)
+@(user: User)(implicit flash: Flash)
 
-@document("JavaScript API", user) {
+@document("JavaScript API", Some(user)) {
   <h1>JavaScript API</h1>
   <ul class="breadcrumb">
     <li><a href="@routes.Application.docs("index")">Index</a> <span class="divider">/</span></li>

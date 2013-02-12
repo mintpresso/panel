@@ -17,7 +17,11 @@ object Application extends Controller with Secured {
   def docs(page: String = "index") = Action { implicit request =>
     page match {
       case "index" => Ok(views.html.docs.index(getOptionUser))
-      case "javascript/api" => Ok(views.html.docs.javascript.api(getOptionUser))
+      case "javascript/api" => getOptionUser map { user =>
+        Ok(views.html.docs.javascript.api(user))
+      } getOrElse {
+        Forbidden
+      }
       case _ => NotFound
     }
   }
