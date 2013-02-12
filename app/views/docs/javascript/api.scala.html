@@ -1,0 +1,9 @@
+@(user: Option[User])(implicit flash: Flash)
+
+@document("JavaScript API", user) {
+  <h1>JavaScript API</h1>
+  <ul class="breadcrumb">
+    <li><a href="@routes.Application.docs("index")">Index</a> <span class="divider">/</span></li>
+    <li><a href="@routes.Application.docs("javascript/api")">Javascript API</a>
+  </ul>
+}
