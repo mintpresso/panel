@@ -6,7 +6,179 @@
     <li><a href="@routes.Application.docs("index")">Index</a> <span class="divider">/</span></li>
     <li><a href="@routes.Application.docs("javascript/api")">Javascript API</a>
   </ul>
+  <div id="body">
+<p>2013년 2월 기준, 자바스크립트 API를 통해 할수 있는 것들은 아래와 같습니다.</p>
+
+<ol>
+<li>모델 데이터 넣기</li>
+<li>모델과 관계 연결하기</li>
+<li>관계 검색 결과 가져오기</li>
+<li>주문 결과 가져오기</li>
+<li>네트워크 장애 발생시 로컬에 백업 및 자동 복구</li>
+</ol>
+
+<p>반면, 아래의 기능은 현재 불가능합니다.</p>
+
+<ol>
+<li>OAuth 인증하기</li>
+<li>Push 알림 받기 (Publish &amp; Subscribe)</li>
+</ol>
+
+<h3 id="">시작하기</h3>
+
+<h4 id="">설치하기</h4>
+
+<p><code>&lt;head&gt; ... &lt;/head&gt;</code> 태그 안에 아래의 코드를 넣습니다.</p>
+
+<p><code>
+&lt;script type=&quot;text/javascript&quot;&gt;
+  (function(a,b){window.mintpresso=b;})(document, window.mintpresso||[]);mintpresso.init(&quot;&quot;);
+&lt;/script&gt;
+</code></p>
+
+<p>위의 코드는 민트프레소 API 스크립트 파일을 브라우저에서 비동기<small>asynchronously</small>적으로 불러오게하여 사이트 전반적인 스크립트 로딩 속도에 영향을 주지 않도록 하였습니다.</p>
+
+<p>이제 민트프레소 패널에서 해당 사이트로부터 데이터를 받기 시작합니다. 추가적으로, API 키 조회/변경 그리고 설정은 자신의 <a href="@routes.Panel.overview(user.id)">패널</a>에서 할 수 있습니다.</p>
+
+<blockquote>
+  기본적으로 <code>window.mintpresso</code>에 API가 초기화되므로 <code>mintpresso.set</code> 이와 같이 이용할 수 있습니다. 만약 scope가 겹치거나 여러가지 이유로 API Object 이름을 바꾸는 경우 <a href="@routes.Panel.overview(user.id)#!/api" target="_blank">API 설정</a>에서 가능합니다.
+</blockquote>
+
+<h4 id="">데이터가 잘 들어오는지 확인하기</h4>
+
+<p>이미지</p>
+
+<p>자신의 <a href="@routes.Panel.overview(user.id)" target="_blank">패널</a>에서 설치여부를 바로 확인할 수 있습니다. 메뉴의 &#8216;syncing &#8230;&#8217; 아이콘이 회전하고 있고, OVERVIEW에서 최근에 데이터를 받은 시간이 표시됩니다.</p>
+
+<h4 id="">모델 데이터를 넣기</h4>
+
+<blockquote>
+<p>mintpresso.set( jsonObject[, updateIfExists = true] )</p>
+
+<p>{
+ <strong>String</strong> type: <strong>String</strong> identifier *[,
+ <strong>String</strong> key: <strong>String</strong> value
+ ]
+}</p>
+</blockquote>
+
+<p>민트프레소 <a href="" target="_blank">모델 정의</a>에 따라 type, identifier, data를 지정해야합니다.</p>
+
+<p>이메일 주소가 @user.email인 사용자를 추가하려면</p>
+
+<blockquote>
+<p><code>
+mintpresso.set({
+  &quot;type&quot;: &quot;user&quot;,
+  &quot;identifier&quot;: &quot;@user.email&quot;
+})
+/* key가 모델의 종류, value가 식별자. 회원은 unique 해야함 */
+</code></p>
+</blockquote>
+
+<p>또는 이와 같이 쓸 수도 있습니다.</p>
+
+<blockquote>
+<p><code>
+mintpresso.set({
+  &quot;user&quot;: &quot;@user.email&quot;
+})
+/* String인 경우 identifer로, Number인 경우 모델의 아이디로 간주함 */
+</code></p>
+</blockquote>
+
+<p>이메일 주소가 @user.email인 회원의 최근 로그인 시간을 업데이트 하려면</p>
+
+<blockquote>
+<p><code>
+mintpresso.set({
+  &quot;user&quot;: &quot;@user.email&quot;,
+  &quot;logged_at&quot;: Date.now
+})
+/* 모델 타입과 동사 지시어인 &quot;user&quot;, &quot;page&quot;, do&quot;, &quot;does&quot;, &quot;did&quot; 등을 제외한 모든 문자열이 key가 될 수 있음 */
+</code></p>
+</blockquote>
+
+<p>내부 데이터베이스 상 회원 아이디가 1001인 사용자의 첫 방문 페이지를 추가하려면</p>
+
+<blockquote>
+<p><code>
+mintpresso.set({
+  &quot;user&quot;: &quot;1001&quot;,
+  &quot;landing_page&quot;: window.location.href
+}, false) /* 이미 landing_page 값이 있으면 업데이트 안함 */
+</code></p>
+</blockquote>
+
+<p>위와 같은 의도로, 1001 아이디를 가진 사용자에게 최초 결제일을 추가하려면</p>
+
+<blockquote>
+<p><code>
+mintpresso.set_once({
+  &quot;user&quot;: &quot;10020&quot;,
+  &quot;initial_purchase_at&quot;: Date.now()
+}) /* set의 두번째 parameter에 false를 준 것과 똑같이 작동함 */
+</code></p>
+</blockquote>
+
+<h4 id="">모델과 관계를 만들고 가져오기</h4>
+
+<pre>
+mintpresso.get({
+  <strong>String</strong> subject type: (<strong>String</strong> identifier | <strong>Number</strong> modelNo | "?"),
+  <strong>String</strong> (verb | do | does | did): (<strong>String</strong> verb | "?"),
+  <strong>String</strong> object type: (<strong>String</strong> identifier | <strong>Number</strong> modelNo | "?"),
+})
+</pre>
+
+<p>사용자별 상품페이지 이동을 tracking하기 위해 아래와 같이 현재 페이지의 정보를 매번 추가할 수 있습니다. 사용자는 같은 페이지를 여러번 방문할 수 있고 중복 또한 저장해야하므로 identifier를 지정하지 않습니다. (non-unique)</p>
+
+<blockquote>
+<p><code>
+mintpresso.set({
+  &quot;type&quot;: &quot;page&quot;,
+  &quot;url&quot;: window.location.href,
+  &quot;user_id&quot;: user.id
+})
+</code></p>
+</blockquote>
+
+<p>하지만 만약 @user.email 이메일주소를 가진 회원이 최근에 본 상품들을 가져오려면 어떻게 해야할까요? 민트프레소에서는 조건문을 입력하는 복잡한 방법을 쓰지 않습니다.</p>
+
+<blockquote>
+<p><code>
+mintpresso.get({
+  &quot;user&quot;: &quot;@user.email&quot;,
+  &quot;do&quot;: &quot;view&quot;,
+  &quot;page&quot;: &quot;?&quot;
+})
+</code></p>
+</blockquote>
+
+<p>즉, &#8220;Who<small>(user)</small> reads what<small>(page)</small>?&#8221;를 질문하는 것과 같습니다. 질문에서 user에게 힌트를 주었으므로 모르고 있는 page를 쉽고 빠르게 가져올 수 있습니다. 이와 비슷하게 &#8220;who follows me?&#8221;, &#8220;who am I following?&#8221;를 매우 쉽게 처리할 수 있습니다.</p>
+
+<p>동사는 자유롭게 지정가능하며 가급적 단수-현재형 동사<small>(singular present verb)</small>를 권장합니다. 대표적으로 &#8216;read&#8217;, &#8216;like&#8217;, &#8216;follow&#8217;, &#8216;view&#8217;, &#8217;star&#8217;가 있습니다. 반드시 &#8216;do&#8217;, &#8216;does&#8217;, &#8216;did&#8217;, &#8217;verb&#8217;를 <code>key</code>로 하여 있을 때만 검색으로 처리됩니다.</p>
+
+<pre><code>
+/* example */
+
+function getPreviousProducts(callback) {
+  var result = mintpresso.get({
+    user: user.email, do: "view", "product": "?"
+  }, {limit: 3});
+  callback(result);
+}
+</code></pre>
+
+<p>위의 예제와 같이 limit와 offset을 지정 가능합니다.</p>
+
+<ul>
+<li><code>get({ ... }, { “limit”: 20, “offset”: 40})</code></li>
+<li><code>getLimit({ ... }, 20)</code></li>
+<li><code>getLimitOffset({ ... }, 20, 40)</code></li>
+</ul>
   <hr />
   Last updated <time class="updatedAt">2013-02-12</time>.
   <hr />
+  </div>
 }
