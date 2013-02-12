@@ -15,7 +15,11 @@ object Application extends Controller with Secured {
 
   def docsIndex = docs("index")
   def docs(page: String = "index") = Action { implicit request =>
-    Ok(views.html.document(page, getOptionUser))
+    page match {
+      case "index" => Ok(views.html.docs.index(getOptionUser))
+      case "javascript/api" => Ok(views.html.docs.javascript.api(getOptionUser))
+      case _ => NotFound
+    }
   }
 
   def plans = Action { implicit request =>
@@ -42,6 +46,7 @@ object Application extends Controller with Secured {
     import routes.javascript._
     Ok(
       Routes.javascriptRouter("routes")(
+        routes.javascript.Application.docs,
         Panel.overview,
         Panel.overview_index,
         Panel.overview_usage,
