@@ -1,3 +1,22 @@
-@()
+@(user: Option[User])(implicit flash: Flash)
 
-<h1>Documentation</h1>
+@document("Index", user) {
+  <h1>Documentation</h1>
+  <ul class="breadcrumb">
+    <li><a href="@routes.Application.docs("index")">Index</a></li>
+  </ul>
+  <div id="body">
+    <h3>Advanced Usage</h3>
+    -
+    <h3>API</h3>
+    <ul>
+      <li><a href="@routes.Application.docs("javascript/api")">JavaScript</a></li>
+      <li><a href="@routes.Application.docs("php/api")">PHP</a></li>
+      <li><a href="@routes.Application.docs("java/api")">Java</a></li>
+      <li><a href="@routes.Application.docs("scala/api")">Scala</a></li>
+      <li><a href="@routes.Application.docs("ios/api")">iOS</a></li>
+      <li><a href="@routes.Application.docs("android/api")">Android</a></li>
+    </ul>
+    <h3>Examples &amp; Use cases</h3>
+  </div>
+}

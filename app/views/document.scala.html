@@ -1,8 +1,8 @@
-@(page: String, user: Option[User])(implicit flash: Flash)
+@(page: String, user: Option[User])(content: Html)(implicit flash: Flash)
 
 @single("Documentation - MINTPRESSO")("white") {
   <div id="document" class="container" style="">
-	@docs.index()
+  	@content
     @footer()
     <!-- FOOTER -->
   </div> <!-- /.container -->
