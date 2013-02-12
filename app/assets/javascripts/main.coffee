@@ -365,6 +365,10 @@ jQuery ->
   $meta = $('meta[name=docs]')
   if $meta.length > 0 and $meta isnt undefined
     mintpresso.page = $meta[0].getAttribute('content')
+    $body = $('#document #body')
+    $body.find('time.updatedAt').each (k,v) ->
+      $this = $(v)
+      $this.html moment($this.html(), "YYYY-MM-DD").fromNow()
 
     if mintpresso.page is 'jsapi-example'
       console.log "JavaScript API example"
