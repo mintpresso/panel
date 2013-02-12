@@ -362,7 +362,7 @@ jQuery ->
     else
       alert("페이지를 불러올 수 없습니다. ")
 
-  $meta = $('meta[name=docs]')
+  $meta = $('meta[name=document]')
   if $meta.length > 0 and $meta isnt undefined
     mintpresso.page = $meta[0].getAttribute('content')
     $body = $('#document #body')
