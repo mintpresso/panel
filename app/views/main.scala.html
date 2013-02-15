@@ -48,7 +48,9 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script>
-      window.mintpresso = {}
+      if(window.mint === void 0){
+        window.mint = {}
+      }
     </script>
     <script type="text/javascript" src="@routes.Application.javascriptRoutes"></script>
     <script src="@routes.Assets.at("javascripts/jquery-1.8.3.min.js")"></script>

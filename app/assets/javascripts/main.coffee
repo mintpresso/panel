@@ -371,7 +371,8 @@ jQuery ->
       $this = $(v)
       $this.html moment($this.html(), "YYYY-MM-DD").fromNow()
 
-      console.log "JavaScript API example"
     if mint.page is 'javascript/api'
+      $code = $('div#body textarea.code');
+      $code.val($code.val().replace("YOUR API KEY HERE", mint._api.token + '::' + sessionStorage.id))
 
 
