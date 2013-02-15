@@ -265,6 +265,7 @@ jQuery ->
               for p in mint._points.points
                 p = p.point
                 d1 = moment(p.createdAt).format('YYYY-MM-DD HH:mm:ss')
+                d2 = moment(p.createdAt).fromNow()
                 d = JSON.stringify(p.data.data)
                 if d is "{}"
                   d = "<small> - </small>"
@@ -275,12 +276,10 @@ jQuery ->
                     <td>#{p.identifier}</td>
                     <td class="code">#{d}</td>
                     <td>
-                      <time datetime="#{d1}" class="timeago">#{d1}</time>
+                      <time datetime="#{d1}">#{d2}</time>
                     </td>
                   </tr>
                   """
-
-              $block.find('time.timeago').timeago()
               
               $modelForm = $block.find('form#model')
               $modelForm.submit () ->
@@ -339,7 +338,9 @@ jQuery ->
                 offContent $content
                 routes.controllers.Panel.data_import_add(sessionStorage.id).ajax args
                 return false
-              $block.find('time.timeago').timeago()
+              $block.find('time').each (k,v) ->
+                $time = $(v)
+                $time.html moment($time.html()).fromNow()
 
       $submenu.find('[data-menu=export]').click (e) ->
         triggerContent $content, $submenu, $(this), ($block) ->
