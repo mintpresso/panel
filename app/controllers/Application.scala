@@ -15,10 +15,30 @@ object Application extends Controller with Secured {
 
   def docsIndex = docs("index")
   def docs(page: String = "index") = Action { implicit request =>
+    import com.mintpresso._
+    import play.api.libs.concurrent.Execution.Implicits._
+    
     page match {
       case "index" => Ok(views.html.docs.index(getOptionUser))
       case "javascript/api" => getOptionUser map { user =>
-        Ok(views.html.docs.javascript.api(user))
+        Async {
+          MintpressoCore.getToken(user.id).map { res =>
+            res.status match {
+              case 200 =>
+                Ok(views.html.docs.javascript.api(user, res.body))
+              case 404 =>
+                NotFound
+              //case 403 =>
+              case _ =>
+                Forbidden
+            }
+          }
+        }
+      } getOrElse {
+        Forbidden
+      }
+      case "javascript/test" => getOptionUser map { user =>
+        Ok(views.html.docs.javascript.test(user))
       } getOrElse {
         Forbidden
       }

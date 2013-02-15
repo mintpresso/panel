@@ -17,11 +17,11 @@
 `<head> ... </head>` 태그 안에 아래의 코드를 넣습니다.
 
 
-```
+<textarea class="code" style="width:95%; height:200px">
 <script type="text/javascript">
-  (function(a,b){window.mintpresso=b;})(document, window.mintpresso||[]);mintpresso.init("");
+(function(e){var t,n,r;n=e.createElement("script");n.type="text/javascript";n.async=!0;r="//192.168.0.5:9000/assets/javascripts/mintpresso-0.1.min.js";if("https:"===e.location.protocol){n.src="https:"+r}else{n.src="http:"+r}t=e.getElementsByTagName("script")[0];return t.parentNode.insertBefore(n,t)})(document);window.mintpresso.init("YOUR API KEY HERE")
 </script>
-```
+</textarea>
 
 위의 코드는 민트프레소 API 스크립트 파일을 브라우저에서 비동기<small>asynchronously</small>적으로 불러오게하여 사이트 전반적인 스크립트 로딩 속도에 영향을 주지 않도록 하였습니다.
 
@@ -147,8 +147,3 @@ function getPreviousProducts(callback) {
 * `get({ ... }, { “limit”: 20, “offset”: 40})`
 * `getLimit({ ... }, 20)`
 * `getLimitOffset({ ... }, 20, 40)`
-
-
-
-
-

@@ -1,10 +1,10 @@
-@(user: User)(implicit flash: Flash)
+@(user: User, json: String)(implicit flash: Flash)
 
-@document("JavaScript API", Some(user)) {
+@document("javascript/api", Some(user)) {
   <h1>JavaScript API</h1>
   <ul class="breadcrumb">
     <li><a href="@routes.Application.docs("index")">Index</a> <span class="divider">/</span></li>
-    <li><a href="@routes.Application.docs("javascript/api")">Javascript API</a>
+    <li><a href="@routes.Application.docs("javascript/api")">Javascript API</a></li>
   </ul>
   <div id="body">
 <p>2013년 2월 기준, 자바스크립트 API를 통해 할수 있는 것들은 아래와 같습니다.</p>
@@ -30,11 +30,11 @@
 
 <p><code>&lt;head&gt; ... &lt;/head&gt;</code> 태그 안에 아래의 코드를 넣습니다.</p>
 
-<p><code>
-&lt;script type=&quot;text/javascript&quot;&gt;
-  (function(a,b){window.mintpresso=b;})(document, window.mintpresso||[]);mintpresso.init(&quot;&quot;);
-&lt;/script&gt;
-</code></p>
+<p><textarea class="code" style="width:95%; height:200px">
+<script type="text/javascript">
+(function(e){var t,n,r;n=e.createElement(&#8220;script&#8221;);n.type=&#8220;text/javascript&#8221;;n.async=!0;r=&#8220;//192.168.0.5:9000/assets/javascripts/mintpresso&#8211;0.1.min.js&#8221;;if(&#8220;https:&#8221;===e.location.protocol){n.src=&#8220;https:&#8221;+r}else{n.src=&#8220;http:&#8221;+r}t=e.getElementsByTagName(&#8220;script&#8221;)<a href="#">0</a>;return t.parentNode.insertBefore(n,t)})(document);window.mintpresso.init(&#8220;YOUR API KEY HERE&#8221;)
+</script>
+</textarea></p>
 
 <p>위의 코드는 민트프레소 API 스크립트 파일을 브라우저에서 비동기<small>asynchronously</small>적으로 불러오게하여 사이트 전반적인 스크립트 로딩 속도에 영향을 주지 않도록 하였습니다.</p>
 
@@ -177,8 +177,16 @@ function getPreviousProducts(callback) {
 <li><code>getLimit({ ... }, 20)</code></li>
 <li><code>getLimitOffset({ ... }, 20, 40)</code></li>
 </ul>
+
+<h3 id="">개발 도구들</h3>
+
+<p><a href="@routes.Application.docs("javascript/test")">Javascript API Tester</a></p>
   <hr />
   Last updated <time class="updatedAt">2013-02-12</time>.
   <hr />
   </div>
+  <script>
+  mint = {}
+  mint._api = @Html(json);
+  </script>
 }

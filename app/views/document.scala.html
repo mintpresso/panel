@@ -1,7 +1,7 @@
 @(page: String, user: Option[User])(content: Html)(implicit flash: Flash)
 
 @single("Documentation - MINTPRESSO")("white") {
-  <meta name="document" content="page">
+  <meta name="document" content="@page">
   <div id="document" class="container" style="">
   	@content
     @footer()
