@@ -15,13 +15,13 @@
 
 @if(!flash.get("retry").getOrElse("").startsWith("true")){
   @if(title.startsWith("Log in -")){
-    window.mintpresso.waitForLoading = true
+    window.mint.waitForLoading = true
     setTimeout(function(){
-      window.mintpresso.waitForLoading = false
+      window.mint.waitForLoading = false
     }, 1300)
   }
   @if(title.endsWith("MINTPRESSO Panel")){
-    window.mintpresso.waitForLoading = true
+    window.mint.waitForLoading = true
   }
 }
   </script>

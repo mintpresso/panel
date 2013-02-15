@@ -48,8 +48,8 @@ jQuery ->
   event =
     afterLoad: () ->
       logo = $('#animation-mask #logo')
-      if mintpresso.doneLoading is true
-        if mintpresso.waitForLoading is true
+      if mint.doneLoading is true
+        if mint.waitForLoading is true
           if logo.is(':hidden')
             logo.fadeIn 1000, 'easeInQuint', (e) ->
               event.afterLoad()
@@ -70,9 +70,9 @@ jQuery ->
           setTimeout event.afterLoad, 500
       true
 
-  mintpresso.waitForLoading = false if mintpresso.waitForLoading is undefined
-  mintpresso.doneLoading = false if mintpresso.doneLoading is undefined
-  mintpresso.loadingInterval = 60 * 3
+  mint.waitForLoading = false if mint.waitForLoading is undefined
+  mint.doneLoading = false if mint.doneLoading is undefined
+  mint.loadingInterval = 60 * 3
 
   $meta = $('meta[name=animation]')
   if $meta.length > 0 and $meta isnt undefined
@@ -86,7 +86,7 @@ jQuery ->
       """
       $('#single-page').show()
       $(window).load (e) ->
-        mintpresso.doneLoading = true
+        mint.doneLoading = true
         event.afterLoad()
 
   onBlock = ($block) ->
@@ -125,7 +125,7 @@ jQuery ->
     onMenu $submenu, $menu
 
     state = $block.data('state')
-    if state is 0 or state < Math.round(Date.now()/1000) - mintpresso.loadingInterval
+    if state is 0 or state < Math.round(Date.now()/1000) - mint.loadingInterval
       callback $block
     else
       onBlock $block
@@ -149,7 +149,7 @@ jQuery ->
     $submenu.find('li').removeClass('active')
 
     state = $block.data('state')
-    if state is 0 or state < Math.round(Date.now()/1000) - mintpresso.loadingInterval
+    if state is 0 or state < Math.round(Date.now()/1000) - mint.loadingInterval
       callback $block
     else
       onBlock $block
@@ -190,9 +190,9 @@ jQuery ->
 
   $meta = $('meta[name=panel]')
   if $meta.length > 0 and $meta isnt undefined
-    mintpresso.page = $meta[0].getAttribute('content')
+    mint.page = $meta[0].getAttribute('content')
 
-    if mintpresso.page is 'overview'
+    if mint.page is 'overview'
       $submenu = $("#submenu")
       $content = $("#content")
 
@@ -226,8 +226,8 @@ jQuery ->
             .ajax()
             .success (e) ->
               $block.html e
-              $block.find('div.well span').html mintpresso._api.token
-              $block.find('textarea').html mintpresso._api.urls.join '\n'
+              $block.find('div.well span').html mint._api.token
+              $block.find('textarea').html mint._api.urls.join '\n'
               $form = $block.find('form#domain')
               $form.submit () ->
                 offContent $content
@@ -245,8 +245,8 @@ jQuery ->
               onBlock $block
 
       triggerHash $content, $submenu
-      mintpresso.waitForLoading = false
-    else if mintpresso.page is 'data'
+      mint.waitForLoading = false
+    else if mint.page is 'data'
       $submenu = $("#submenu")
       $content = $("#content")
 
@@ -256,13 +256,13 @@ jQuery ->
             .ajax()
             .success (e) ->
               $block.html e
-              $block.find('input[name=s]').typeahead { source: mintpresso._types }
-              $block.find('input[name=o]').typeahead { source: mintpresso._types }
+              $block.find('input[name=s]').typeahead { source: mint._types }
+              $block.find('input[name=o]').typeahead { source: mint._types }
 
               $block.find('#selector div.custom-filter a.add').tooltip {title: "Add new filter"}
 
               $tbody = $block.find('table tbody')
-              for p in mintpresso._points.points
+              for p in mint._points.points
                 p = p.point
                 d1 = moment(p.createdAt).format('YYYY-MM-DD HH:mm:ss')
                 d = JSON.stringify(p.data.data)
@@ -316,7 +316,7 @@ jQuery ->
             .success (e) ->
               $block.html e
               onBlock $block
-              $block.find('input[name=model]').typeahead { source: mintpresso._sTypes }
+              $block.find('input[name=model]').typeahead { source: mint._sTypes }
               $form = $block.find('form#model')
               $form.submit () ->
                 args =
@@ -350,27 +350,27 @@ jQuery ->
               onBlock $block
 
       triggerHash $content, $submenu
-      mintpresso.waitForLoading = false
-      mintpresso.triggerContentWith = (name, json) ->
+      mint.waitForLoading = false
+      mint.triggerContentWith = (name, json) ->
         triggerContent $content, $submenu, $(this), ($block) ->
           routes.controllers.Panel['data_' + name](sessionStorage.id, JSON.stringify(json))
             .ajax()
             .success (e) ->
               $block.html e
               onBlock $block
-    else if mintpresso.page is 'support'
+    else if mint.page is 'support'
     else
       alert("페이지를 불러올 수 없습니다. ")
 
   $meta = $('meta[name=document]')
   if $meta.length > 0 and $meta isnt undefined
-    mintpresso.page = $meta[0].getAttribute('content')
+    mint.page = $meta[0].getAttribute('content')
     $body = $('#document #body')
     $body.find('time.updatedAt').each (k,v) ->
       $this = $(v)
       $this.html moment($this.html(), "YYYY-MM-DD").fromNow()
 
-    if mintpresso.page is 'jsapi-example'
       console.log "JavaScript API example"
+    if mint.page is 'javascript/api'
 
 
