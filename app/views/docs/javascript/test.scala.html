@@ -1,0 +1,24 @@
+@(user: User)(implicit flash: Flash)
+
+@document("JavaScript API Test", Some(user)) {
+  <h1>JavaScript API Test</h1>
+  <ul class="breadcrumb">
+    <li><a href="@routes.Application.docs("index")">Index</a> <span class="divider">/</span></li>
+    <li><a href="@routes.Application.docs("javascript/api")">Javascript API</a> <span class="divider">/</span></li>
+    <li><a href="@routes.Application.docs("javascript/test")">Javascript API Tester</a></li>
+  </ul>
+  <div id="body">
+  <script>
+  window.__mintpresso__ = true;
+  </script>
+
+  <script type="text/javascript">
+(function(e){var t,n,r;n=e.createElement(“script”);n.type=“text/javascript”;n.async=!0;r=//192.168.0.5:9000/assets/javascripts/mintpresso–0.1.min.js”;if(“https:”===e.location.protocol){n.src=“https:”+r}else{n.src=“http:”+r}t=e.getElementsByTagName(“script”)<a href="#">0</a>;return t.parentNode.insertBefore(n,t)})(document);window.mintpresso.init(“8563847d3c46688a633fffa7c806b3bf::7”)
+</script>
+
+
+  <hr />
+  Last updated <time class="updatedAt">2013-02-15</time>.
+  <hr />
+  </div>
+}
