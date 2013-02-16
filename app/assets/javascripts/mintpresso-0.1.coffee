@@ -2,10 +2,12 @@
 * MINTPRESSO JavaScript API by Jinhyuk Lee at MINTPRESSO and trinity.so
 ###
 
-__init__ = (d) ->
+__init__ = (d, key) ->
   script = d.createElement "script"
   script.type = "text/javascript"
   script.async = !0
+  script.onload = () ->
+    window['mintpresso'].init key
   server = '//192.168.0.5:9000/assets/javascripts/mintpresso-0.1.min.js'
   if 'https:' is d.location.protocol
     script.src = 'https:' + server
@@ -87,7 +89,7 @@ try
       temp = key.split '::'
       _key = temp[0]
       _accId = temp[1]
-      _initialized is true
+      _initialized = true
       true
 
     get: () ->
