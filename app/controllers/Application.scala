@@ -17,7 +17,7 @@ object Application extends Controller with Secured {
   def docs(page: String = "index") = Action { implicit request =>
     import com.mintpresso._
     import play.api.libs.concurrent.Execution.Implicits._
-    
+
     page match {
       case "index" => Ok(views.html.docs.index(getOptionUser))
       case "javascript/api" => getOptionUser map { user =>
@@ -71,6 +71,7 @@ object Application extends Controller with Secured {
     Ok(
       Routes.javascriptRouter("routes")(
         routes.javascript.Application.docs,
+        routes.javascript.Application.javascriptValues,
         Panel.overview,
         Panel.overview_index,
         Panel.overview_usage,
@@ -91,6 +92,18 @@ object Application extends Controller with Secured {
         Users.logout
       )
     ).as("text/javascript")
+  }
+
+  def javascriptValues = Action { implicit request =>
+    var kv: Map[String, String] = Map()
+    getOptionUser map { user =>
+      kv += (("id" -> user.id.toString))
+      kv += (("email" -> user.email))
+      kv += (("name" -> user.name))
+    } getOrElse {
+
+    }
+    Ok( views.html.javascriptValues(kv) ).as("text/javascript")
   }
 
 }

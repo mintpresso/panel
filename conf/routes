@@ -39,4 +39,5 @@ GET 	/:accId/support				controllers.Panel.support(accId: Int)
 
 # Map static resources from the /public folder to the /assets URL path
 GET 	/jsRoutes 					controllers.Application.javascriptRoutes
+GET 	/jsValues 					controllers.Application.javascriptValues
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

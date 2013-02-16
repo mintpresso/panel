@@ -166,7 +166,7 @@ jQuery ->
 
     if hash is undefined or hash.length is 0
       triggerIndex $content, ($block) ->
-        routes.controllers.Panel[menu + '_index'](sessionStorage.id)
+        routes.controllers.Panel[menu + '_index'](mint.id)
           .ajax()
           .success (e) ->
             $block.html e
@@ -180,7 +180,7 @@ jQuery ->
         console.log "Invalid data-menu='#{hash}' at method triggerHash"
         document.location.hash = '!/index' + $.getParameterHash()
         triggerIndex $content, ($block) ->
-          routes.controllers.Panel[menu + '_index'](sessionStorage.id)
+          routes.controllers.Panel[menu + '_index'](mint.id)
             .ajax()
             .success (e) ->
               $block.html e
@@ -198,7 +198,7 @@ jQuery ->
 
       $submenu.find('[data-menu=usage]').click (e) ->
         triggerContent $content, $submenu, $(this), ($block) ->
-          routes.controllers.Panel.overview_usage(sessionStorage.id)
+          routes.controllers.Panel.overview_usage(mint.id)
             .ajax()
             .success (e) ->
               $block.html e
@@ -206,7 +206,7 @@ jQuery ->
 
       $submenu.find('[data-menu=account]').click (e) ->
         triggerContent $content, $submenu, $(this), ($block) ->
-          routes.controllers.Panel.overview_account(sessionStorage.id)
+          routes.controllers.Panel.overview_account(mint.id)
             .ajax()
             .success (e) ->
               $block.html e
@@ -214,7 +214,7 @@ jQuery ->
 
       $submenu.find('[data-menu=transaction]').click (e) ->
         triggerContent $content, $submenu, $(this), ($block) ->
-          routes.controllers.Panel.overview_transaction(sessionStorage.id)
+          routes.controllers.Panel.overview_transaction(mint.id)
             .ajax()
             .success (e) ->
               $block.html e
@@ -222,7 +222,7 @@ jQuery ->
 
       $submenu.find('[data-menu=api]').click (e) ->
         triggerContent $content, $submenu, $(this), ($block) ->
-          routes.controllers.Panel.overview_api(sessionStorage.id)
+          routes.controllers.Panel.overview_api(mint.id)
             .ajax()
             .success (e) ->
               $block.html e
@@ -239,7 +239,7 @@ jQuery ->
                     refreshContent $content, $submenu, 'api', ($block) ->
                       true
 
-                routes.controllers.Panel.overview_api_set(sessionStorage.id).ajax args
+                routes.controllers.Panel.overview_api_set(mint.id).ajax args
                 return false
               
               onBlock $block
@@ -252,7 +252,7 @@ jQuery ->
 
       $submenu.find('[data-menu=view]').click (e) ->
         triggerContent $content, $submenu, $(this), ($block) ->
-          routes.controllers.Panel.data_view(sessionStorage.id, $.getParameter('_filter'))
+          routes.controllers.Panel.data_view(mint.id, $.getParameter('_filter'))
             .ajax()
             .success (e) ->
               $block.html e
@@ -302,7 +302,7 @@ jQuery ->
 
       $submenu.find('[data-menu=filter]').click (e) ->
         triggerContent $content, $submenu, $(this), ($block) ->
-          routes.controllers.Panel.data_filter(sessionStorage.id)
+          routes.controllers.Panel.data_filter(mint.id)
             .ajax()
             .success (e) ->
               $block.html e
@@ -310,7 +310,7 @@ jQuery ->
 
       $submenu.find('[data-menu=import]').click (e) ->
         triggerContent $content, $submenu, $(this), ($block) ->
-          routes.controllers.Panel.data_import(sessionStorage.id)
+          routes.controllers.Panel.data_import(mint.id)
             .ajax()
             .success (e) ->
               $block.html e
@@ -336,7 +336,7 @@ jQuery ->
                   return false
                 
                 offContent $content
-                routes.controllers.Panel.data_import_add(sessionStorage.id).ajax args
+                routes.controllers.Panel.data_import_add(mint.id).ajax args
                 return false
               $block.find('time').each (k,v) ->
                 $time = $(v)
@@ -344,7 +344,7 @@ jQuery ->
 
       $submenu.find('[data-menu=export]').click (e) ->
         triggerContent $content, $submenu, $(this), ($block) ->
-          routes.controllers.Panel.data_export(sessionStorage.id)
+          routes.controllers.Panel.data_export(mint.id)
             .ajax()
             .success (e) ->
               $block.html e
@@ -354,7 +354,7 @@ jQuery ->
       mint.waitForLoading = false
       mint.triggerContentWith = (name, json) ->
         triggerContent $content, $submenu, $(this), ($block) ->
-          routes.controllers.Panel['data_' + name](sessionStorage.id, JSON.stringify(json))
+          routes.controllers.Panel['data_' + name](mint.id, JSON.stringify(json))
             .ajax()
             .success (e) ->
               $block.html e
@@ -373,6 +373,6 @@ jQuery ->
 
     if mint.page is 'javascript/api'
       $code = $('div#body textarea.code');
-      $code.val($code.val().replace("YOUR API KEY HERE", mint._api.token + '::' + sessionStorage.id))
+      $code.val($code.val().replace("YOUR API KEY HERE", mint._api.token + '::' + mint.id))
 
 

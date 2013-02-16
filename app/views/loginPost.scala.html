@@ -9,10 +9,12 @@
   if(sessionStorage == undefined){
     alert("해당 브라우저는 최신 업데이트를 하지 않아 보안적 결함이 있습니다. 이와 같은 문제로 로그인이 불가능합니다. 자세한 문의는 support@@mintpresso.com 으로 연락바랍니다.")
   }else{
+    @*
     sessionStorage.id = @user.id;
     sessionStorage.name = "@user.name";
     sessionStorage.email = "@user.email";
     sessionStorage.locale = "@lang.language";
+    *@
     document.location.href = '@flash.get("redirectUrl").getOrElse(routes.Application.index.url)';
   }
 </script>

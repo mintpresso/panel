@@ -24,11 +24,11 @@
 </form>
 <hr />
 <script>
-  mintpresso._sTypes = []
+  mint._sTypes = []
   @for(p <- pointTypes){
-  	mintpresso._sTypes.push("@p")
+  	mint._sTypes.push("@p")
   }
   @flash.get("guide-model").map { message =>
-    mintpresso.help('guide1', message)
+    mint.help('guide1', message)
   }
 </script>

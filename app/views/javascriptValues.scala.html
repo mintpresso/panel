@@ -1,0 +1,6 @@
+@(kv: Map[String, String])(implicit flash: Flash, lang: Lang)
+
+@for( (key, value) <- kv ){
+  mint.@key = "@value"
+}
+mint.locale = "@lang.language";
