@@ -17,9 +17,9 @@
 `<head> ... </head>` 태그 안에 아래의 코드를 넣습니다.
 
 
-<textarea class="code" style="width:95%; height:200px">
+<textarea class="code" style="width:95%; height:250px">
 <script type="text/javascript">
-(function(e){var t,n,r;n=e.createElement("script");n.type="text/javascript";n.async=!0;r="//192.168.0.5:9000/assets/javascripts/mintpresso-0.1.min.js";if("https:"===e.location.protocol){n.src="https:"+r}else{n.src="http:"+r}t=e.getElementsByTagName("script")[0];return t.parentNode.insertBefore(n,t)})(document);window.mintpresso.init("YOUR API KEY HERE")
+(function(e,t){var n,r,i;r=e.createElement("script");r.type="text/javascript";r.async=!0;r.onload=function(){return window["mintpresso"].init(t)};i="//192.168.0.5:9000/assets/javascripts/mintpresso-0.1.min.js";if("https:"===e.location.protocol){r.src="https:"+i}else{r.src="http:"+i}n=e.getElementsByTagName("script")[0];return n.parentNode.insertBefore(r,n)})(document,"YOUR API KEY HERE")
 </script>
 </textarea>
 

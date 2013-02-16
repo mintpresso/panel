@@ -30,9 +30,9 @@
 
 <p><code>&lt;head&gt; ... &lt;/head&gt;</code> 태그 안에 아래의 코드를 넣습니다.</p>
 
-<p><textarea class="code" style="width:95%; height:200px">
+<p><textarea class="code" style="width:95%; height:250px">
 <script type="text/javascript">
-(function(e){var t,n,r;n=e.createElement(&#8220;script&#8221;);n.type=&#8220;text/javascript&#8221;;n.async=!0;r=&#8220;//192.168.0.5:9000/assets/javascripts/mintpresso&#8211;0.1.min.js&#8221;;if(&#8220;https:&#8221;===e.location.protocol){n.src=&#8220;https:&#8221;+r}else{n.src=&#8220;http:&#8221;+r}t=e.getElementsByTagName(&#8220;script&#8221;)<a href="#">0</a>;return t.parentNode.insertBefore(n,t)})(document);window.mintpresso.init(&#8220;YOUR API KEY HERE&#8221;)
+(function(e,t){var n,r,i;r=e.createElement("script");r.type="text/javascript";r.async=!0;r.onload=function(){return window["mintpresso"].init(t)};i="//192.168.0.5:9000/assets/javascripts/mintpresso-0.1.min.js";if("https:"===e.location.protocol){r.src="https:"+i}else{r.src="http:"+i}n=e.getElementsByTagName("script")[0];return n.parentNode.insertBefore(r,n)})(document,"YOUR API KEY HERE")
 </script>
 </textarea></p>
 
@@ -177,10 +177,6 @@ function getPreviousProducts(callback) {
 <li><code>getLimit({ ... }, 20)</code></li>
 <li><code>getLimitOffset({ ... }, 20, 40)</code></li>
 </ul>
-
-<h3 id="">개발 도구들</h3>
-
-<p><a href="@routes.Application.docs("javascript/test")">Javascript API Tester</a></p>
   <hr />
   Last updated <time class="updatedAt">2013-02-12</time>.
   <hr />
