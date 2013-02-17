@@ -42,11 +42,13 @@ object Users extends Controller with Secured {
                       val id = (obj \ "id").as[Int]
                       val name = (obj \ "name").as[String]
                       val email = (obj \ "email").as[String]
+                      val api_token = (obj \ "api_token").as[String]
                       Redirect(routes.Users.postAuth)
                         .withSession(
                           "accountId" -> id.toString,
                           "name" -> name,
-                          "email" -> email
+                          "email" -> email,
+                          "apiToken" -> api_token
                         ).flashing(
                           "redirectUrl" -> routes.Panel.overview(id).url
                         )

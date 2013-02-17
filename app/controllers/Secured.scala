@@ -20,9 +20,12 @@ import play.api.libs.json._
 **/
 
 trait Secured {
-  private var accountId: Int = -1
-
-  def getAccountId(): Int = accountId
+  def getAccountId(implicit request: RequestHeader): Int = {
+    request.session.get("accountId").getOrElse(-1).toString.toInt
+  }
+  def getAPIToken(implicit request: RequestHeader): String = {
+    request.session.get("apiToken").getOrElse("")
+  }
   def getUser(implicit request: RequestHeader): User = {
     User(
       request.session.get("accountId").getOrElse(-1).toString.toInt,
@@ -39,7 +42,6 @@ trait Secured {
   }
   def authenticated(implicit request: RequestHeader): Boolean = {
   	request.session.get("accountId").map { id =>
-  	  accountId = id.toInt
   	  true
   	} getOrElse {
   	  false
@@ -54,8 +56,8 @@ trait Secured {
   }
 
   def SignedAccount(accessId: Int)(f: Request[AnyContent] => Result) = Action { implicit request =>
-    if(authenticated && (accountId == accessId)){
-        f(request)
+    if(getAccountId == accessId){
+      f(request)
     }else{
       Results.Forbidden
     }
