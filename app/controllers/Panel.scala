@@ -98,16 +98,22 @@ object Panel extends Controller with Secured {
     var edges: String = "{\"edges\": []}"
     if(json.length == 0){
       Async {
-        MintpressoAPI("user", accountId).getPointTypes().map { res =>
+        MintpressoAPI("user", accountId, "").getPointTypes().map { res =>
           res.status match {
             case 200 =>
               types = res.body
+            case _ => {
+              Logger.warn(res.status + " at getPointTypes")
+            }
           }
         }
-        MintpressoAPI("user", accountId).getLatestPoints().map { res =>
+        MintpressoAPI("user", accountId, "").getLatestPoints().map { res =>
           res.status match {
             case 200 =>
               points = res.body
+            case _ => {
+              Logger.warn(res.status + " at getLatestPoints")
+            }
           }
           Ok(views.html.panel._data.view(types, points, edges, Map()))
         }
@@ -124,7 +130,7 @@ object Panel extends Controller with Secured {
           var values: Map[String, String] = Map(("s" -> _s), ("v" -> _v), ("o" -> _o))
           if( (_s.length + _v.length + _o.length) == 0 ){
             Async {
-              MintpressoAPI("user", accountId).getPointTypes().map { res =>
+              MintpressoAPI("user", accountId, "").getPointTypes().map { res =>
                 res.status match {
                   case 200 => {
                     types = res.body
@@ -134,7 +140,7 @@ object Panel extends Controller with Secured {
                   }
                 }
               }
-              MintpressoAPI("user", accountId).getLatestPoints().map { res =>
+              MintpressoAPI("user", accountId, "").getLatestPoints().map { res =>
                 res.status match {
                   case 200 => {
                     points = res.body
@@ -172,7 +178,7 @@ object Panel extends Controller with Secured {
             val _before = System.currentTimeMillis
 
             Async {
-              MintpressoAPI("user", accountId).getPointTypes().map { res =>
+              MintpressoAPI("user", accountId, "").getPointTypes().map { res =>
                 res.status match {
                   case 200 => {
                     types = res.body
@@ -182,7 +188,7 @@ object Panel extends Controller with Secured {
                   }
                 }
               }
-              MintpressoAPI("user", accountId).findRelations(query).map { res =>
+              MintpressoAPI("user", accountId, "").findRelations(query).map { res =>
                 val _after = System.currentTimeMillis
                 res.status match {
                   case 200 => {
@@ -227,7 +233,7 @@ object Panel extends Controller with Secured {
             Ok.flashing("error" -> Messages("data.import.model"), "msg" -> "", "identifier" -> _i, "data" -> _d)
           }else{
             Async {
-              MintpressoAPI("user", accountId).addPoint(model, _i, _d).map { response => 
+              MintpressoAPI("user", accountId, "").addPoint(model, _i, _d).map { response => 
                 response.status match {
                   case 200 => {
                     Ok.flashing(
