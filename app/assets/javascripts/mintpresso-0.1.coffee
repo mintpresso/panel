@@ -51,6 +51,7 @@ try
     _servers.push 'http:' + '//192.168.0.5:9001'
     _servers.push 'http:' + '//192.168.0.5:9002'
   _serverIteration = 0
+  _timeout = 1000
 
   _pageTracker = true
   _urls = []
@@ -64,10 +65,10 @@ try
     true
   _getPoint = (id) ->
     retry = () ->
-      if _serverIteration == _servers.length
+      if _serverIteration == _servers.length-1
+        _serverIteration = 0
         _log () ->
           arg = id
-          _serverIteration = 0
           return _getPoint(arg)
       else
         _serverIteration++
@@ -78,17 +79,16 @@ try
       async: true
       cache: false
       crossDomain: true
-      contentType: 'application/json'
       dataType: 'jsonp'
       jsonpCallback: 'mintpressoCallback'
       success: (json) ->
         console.log res.body
         true
-      error: retry,
-      timeout: 300
+      timeout: _timeout
     }
     true
 
+    return true
 
   window.mintpresso = {}
   window.mintpresso =
