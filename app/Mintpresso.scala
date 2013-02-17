@@ -65,16 +65,18 @@ object MintpressoCore {
 
 object MintpressoAPI {
   var connections: Map[String, Mintpresso] = Map()
-  def apply(label: String, accountId: Int): Mintpresso = {
+  def apply(label: String, accountId: Int, token: String): Mintpresso = {
+    // API Token consists of {api token}::{account id}
+    val tokens = token.split("::")
     if(!connections.contains(label)){
-      val m: Mintpresso = new Mintpresso(accountId)
+      val m: Mintpresso = new Mintpresso(accountId, tokens(0))
       connections += ((label, m))
     }
     connections(label)
   }
 }
-class Mintpresso(accId: Int) {
   val server = "http://localhost:9001"
+class Mintpresso(accId: Int, token: String) {
   val initial = "Play 2.1 API"
   val versionPrefix = "/v1"
   val urls: Map[String, String] = Map(
@@ -89,34 +91,37 @@ class Mintpresso(accId: Int) {
   def getPoint(id: Int): Future[Response] = {
     WS.url(server + urls("getPoint").format(accId, id))
       .withHeaders( ("X-Requested-With", initial) )
+      .withQueryString( ("api_token", token) )
       .get()
   }
   def getPointTypes(): Future[Response] = {
     WS.url(server + urls("getPointType").format(accId))
       .withHeaders( ("X-Requested-With", initial) )
+      .withQueryString( ("api_token", token) )
       .get() 
   }
   def getLatestPoints(): Future[Response] = {
     WS.url(server + urls("getLatestPoint").format(accId))
       .withHeaders( ("X-Requested-With", initial) )
+      .withQueryString( ("api_token", token) )
       .get()  
   }
   def findByType(typeString: String, limit: Int = 30, offset: Int = 0): Future[Response] = {
     WS.url(server + urls("getPointByTypeOrIdentifier").format(accId))
       .withHeaders( ("X-Requested-With", initial) )
-      .withQueryString(("type", typeString), ("limit", limit.toString), ("offset", offset.toString))
+      .withQueryString(("api_token", token), ("type", typeString), ("limit", limit.toString), ("offset", offset.toString))
       .get()
   }
   def findByIdentifier(identifier: String, limit: Int = 30, offset: Int = 0): Future[Response] = {
     WS.url(server + urls("getPointByTypeOrIdentifier").format(accId))
       .withHeaders( ("X-Requested-With", initial) )
-      .withQueryString(("identifier", identifier), ("limit", limit.toString), ("offset", offset.toString))
+      .withQueryString(("api_token", token), ("identifier", identifier), ("limit", limit.toString), ("offset", offset.toString))
       .get()
   }
   def findByTypeAndIdentifier(typeString: String, identifier: String, limit: Int = 30, offset: Int = 0): Future[Response] = {
     WS.url(server + urls("getPointByTypeOrIdentifier").format(accId))
       .withHeaders( ("X-Requested-With", initial) )
-      .withQueryString(("type", typeString), ("identifier", identifier), ("limit", limit.toString), ("offset", offset.toString))
+      .withQueryString(("api_token", token), ("type", typeString), ("identifier", identifier), ("limit", limit.toString), ("offset", offset.toString))
       .get()
   }
   def addPoint(typeString: String, identifier: String, json: String) = {
@@ -139,12 +144,14 @@ class Mintpresso(accId: Int) {
     """.format(p1, p2, typeString)
     WS.url(server + urls("addPoint").format(accId))
       .withHeaders( ("Content-Type", "application/json"), ("X-Requested-With", initial) )
+      .withQueryString( ("api_token", token) )
       .post[String](body)
   }
   def findRelations(query: Map[String, String]) = {
+    val queries = query + (("api_token" -> token))
     WS.url(server + urls("findEdges").format(accId))
       .withHeaders( ("X-Requested-With", initial) )
-      .withQueryString(query.toSeq:_*)
+      .withQueryString(queries.toSeq:_*)
       .get()
   }
 }
