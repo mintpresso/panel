@@ -63,7 +63,7 @@ try
   _log = (f) ->
     console.log _logPrefix + 'backlog executed due to network problems.'
     true
-  _getPoint = (id) ->
+  _getPoint = (id, callback) ->
     retry = () ->
       if _serverIteration == _servers.length-1
         _serverIteration = 0
@@ -82,12 +82,16 @@ try
       dataType: 'jsonp'
       jsonpCallback: 'mintpressoCallback'
       success: (json) ->
-        console.log res.body
-        true
+        callback json
+      error: (xhr, status, error) ->
+        callback {
+          status: {
+            code: 400
+            message: "status (#{error})"
+          }
+        }
       timeout: _timeout
     }
-    true
-
     return true
 
   window.mintpresso = {}
@@ -107,11 +111,14 @@ try
         return console.warn _logPrefix + 'Not initialized. Add mintpress.init in your code with API key.'
       if arguments.length is 0
         console.warn _logPrefix + 'An argument is required for mintpresso.get method.'
-      else if arguments.length is 1
+      else if arguments.length <= 2
         if typeof arguments[0] is 'number'
-          _getPoint arguments[0]
+          if arguments[1] isnt undefined and typeof arguments[1] is 'function'
+            return _getPoint arguments[0], arguments[1]
+          else
+            console.warn _logPrefix + 'A callback function is required for mintpresso.get method.'
         else if typeof arguments[0] is 'object'
-          _getPointByTypeOrIdentifier arguments[0]
+          return _getPointByTypeOrIdentifier arguments[0]
         else
           console.warn _logPrefix + 'An argument type of Number or String is required for mintresso.get method.'
       else
@@ -127,7 +134,7 @@ try
       true
 
 catch e
-  if __mintpresso__ isnt undefined and true
+  if window['__mintpresso__'] isnt undefined and true
     throw e
   else
     console.warn '[MINTPRESSO] API Load failed.'
