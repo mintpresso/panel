@@ -75,8 +75,8 @@ object MintpressoAPI {
     connections(label)
   }
 }
-  val server = "http://localhost:9001"
 class Mintpresso(accId: Int, token: String) {
+  val server = "http://192.168.0.5:9001"
   val initial = "Play 2.1 API"
   val versionPrefix = "/v1"
   val urls: Map[String, String] = Map(
