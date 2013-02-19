@@ -15,11 +15,12 @@ pre {
 
 // Inline code
 code {
-  padding: 2px 4px;
-  color: #d14;
-  background-color: #f7f7f9;
-  border: 1px solid #e1e1e8;
+  padding: 7px;
+  color: #f0f0f0;
+  background-color: #333;
+  border: 0;
   white-space: nowrap;
+  margin: 0 2px;
 }
 
 // Blocks of code
@@ -41,6 +42,14 @@ pre {
   // Make prettyprint styles more spaced out for readability
   &.prettyprint {
     margin-bottom: @baseLineHeight;
+  }
+
+  &.code {
+    padding: 10px;
+    color: #f0f0f0;
+    background-color: #333;
+    border: 0;
+    white-space: nowrap;
   }
 
   // Account for some code outputs that place code tags in pre tags
