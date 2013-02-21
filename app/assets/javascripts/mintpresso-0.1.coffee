@@ -68,11 +68,10 @@ try
       if _serverIteration == _servers.length-1
         _serverIteration = 0
         _log () ->
-          arg = id
-          return _getPoint(arg)
+          return _getPoint id, callback
       else
         _serverIteration++
-        return _getPoint id
+        return _getPoint id, callback
     jQuery.ajax {
       url: "#{ _servers[_serverIteration] }#{ _versionPrefix }/account/#{_accId}/point/#{id}?api_token=#{_key}"
       type: 'GET'
@@ -84,6 +83,7 @@ try
       success: (json) ->
         callback json
       error: (xhr, status, error) ->
+        retry()
         callback {
           status: {
             code: 400
@@ -99,8 +99,7 @@ try
       if _serverIteration == _servers.length-1
         _serverIteration = 0
         _log () ->
-          arg = id
-          return _getPointByTypeOrIdentifier(arg)
+          return _getPointByTypeOrIdentifier json, callback
       else
         _serverIteration++
         return _getPointByTypeOrIdentifier json, callback
@@ -188,7 +187,7 @@ try
 
     # For debug 
     callback: (response) ->
-      console.log "[MINTPRESSO] Response: ", response
+      console.log _logPrefix + "Response: ", response
 
 catch e
   if window['__mintpresso__'] isnt undefined and true
