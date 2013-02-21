@@ -349,8 +349,42 @@ try
     trackPage: () ->
       true
 
-    set: (json) ->
-      console.warn "dd"
+    set: () ->
+      ###
+      @param
+        Object json[, Boolean updateIfExists = true]
+      ###
+      if _initialized is false
+        return console.warn _logPrefix + 'Not initialized. Add mintpress.init in your code with API key.'
+      if arguments.length is 0
+        console.warn _logPrefix + 'An argument is required for mintpresso.set method.'
+      else if arguments.length <= 3
+        if typeof arguments[0] is 'object'
+          isEdgeOperation = false
+          for key of arguments[0]
+            if _verbs.indexOf(key) isnt -1
+              isEdgeOperation = true
+              break
+          if arguments[1] isnt undefined and typeof arguments[1] is 'function'
+            callback = arguments[1]
+            option = arguments[2]
+          else if arguments[1] isnt undefined and typeof arguments[1] is 'boolean'
+            callback = mintpresso.callback
+            option = arguments[1]
+          else
+            callback = mintpresso.callback
+            option = true
+          if isEdgeOperation is true
+            _addEdge arguments[0], callback, option
+          else
+            if arguments[1] is undefined or arguments[1] is false
+              _addPoint arguments[0], callback, option
+            else
+              _addPoint arguments[0], callback, option
+        else
+          console.warn _logPrefix + 'An JSON object is required for mintpresso.set method.'
+      else
+        console.warn _logPrefix + 'Too many arguments in mintpresso.get method.'
       true
 
     # For debug 
