@@ -107,14 +107,12 @@ try
         _serverIteration++
         return _getPointByTypeOrIdentifier json, callback
 
-    data = {}
     i = 0
-
     type = ""
     identifier = ""
     for key of json
       if i > 0
-        console.log _logPrefix + 'Too many arguments are given to be an informative query though no question marks are found.'
+        console.log _logPrefix + 'Too many arguments are given to be an informative query though no question marks are found - mintpresso.get'
         break
       type = key
       identifier = json[key]
@@ -131,6 +129,17 @@ try
       success: (json) ->
         callback json
       error: (xhr, status, error) ->
+        retry()
+        callback {
+          status: {
+            code: 400
+            message: "status (#{error})"
+          }
+        }
+      timeout: _timeout
+    }
+    return true
+
         callback {
           status: {
             code: 400
@@ -153,6 +162,10 @@ try
       true
 
     get: () ->
+      ###
+      @param
+        Object json, Function callback[, Object optionsObject]
+      ###
       if _initialized is false
         return console.warn _logPrefix + 'Not initialized. Add mintpress.init in your code with API key.'
       if arguments.length is 0
@@ -178,8 +191,6 @@ try
           console.warn _logPrefix + 'An argument type of Number or String is required for mintresso.get method.'
       else
         console.warn _logPrefix + 'Too many arguments in mintpresso.get method.'
-
-
 
     trackPage: () ->
       true
