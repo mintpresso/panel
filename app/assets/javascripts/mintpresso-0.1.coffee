@@ -118,7 +118,16 @@ try
           else
             console.warn _logPrefix + 'A callback function is required for mintpresso.get method.'
         else if typeof arguments[0] is 'object'
-          return _getPointByTypeOrIdentifier arguments[0]
+          json = arguments[0]
+          hasMark = false
+          for key of json
+            if key is "?" or json[key] is "?"
+              hasMark = true
+              break
+          if hasMark
+            _findRelations arguments[0], arguments[1]
+          else
+            _getPointByTypeOrIdentifier arguments[0], arguments[1]
         else
           console.warn _logPrefix + 'An argument type of Number or String is required for mintresso.get method.'
       else
