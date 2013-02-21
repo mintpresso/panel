@@ -149,6 +149,50 @@ try
       timeout: _timeout
     }
     return true
+
+  _addPoint = (json, callback, update) ->
+    retry = () ->
+      if _serverIteration == _servers.length-1
+        _serverIteration = 0
+        _log () ->
+          arg = id
+          return _addPoint json, callback, update
+      else
+        _serverIteration++
+        return _addPoint json, callback, update
+
+    value = {}
+    value.point = {}
+    value.point.data = {}
+
+    # Promote first citizen keys
+    for key of json
+      if _point_proto.indexOf(key) isnt -1
+        value.point[key] = json[key]
+      else
+        value.point.data[key] = json[key]
+
+    jQuery.ajax {
+      url: "#{ _servers[_serverIteration] }#{ _versionPrefix }/post/account/#{_accId}/point?json=#{ JSON.stringify(value) }&api_token=#{_key}"
+      type: 'GET'
+      async: true
+      cache: false
+      crossDomain: true
+      dataType: 'jsonp'
+      jsonpCallback: 'mintpressoCallback'
+      success: (json) ->
+        callback json
+      error: (xhr, status, error) ->
+        # retry()
+        callback {
+          status: {
+            code: 400
+            message: "status (#{error})"
+          }
+        }
+      timeout: _timeout
+    }
+    return true
   window.mintpresso = {}
   window.mintpresso =
     init: (key) ->
