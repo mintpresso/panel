@@ -62,6 +62,7 @@ try
   _verbs = Array('do', 'does', 'did', 'verb')
   _mark = '?'
   _point_proto = Array('type', 'identifier', 'data')
+  _edge_proto = Array('subjectId', 'subjectType', 'verb', 'objectId', 'objectType')
 
   _log = (f) ->
     console.log _logPrefix + 'backlog executed due to network problems.'
@@ -97,7 +98,7 @@ try
     }
     return true
 
-  _getPointByTypeOrIdentifier = (json, callback) ->
+  _getPointByTypeOrIdentifier = (json, callback, option) ->
     retry = () ->
       if _serverIteration == _servers.length-1
         _serverIteration = 0
@@ -215,11 +216,12 @@ try
       if arguments.length is 0
         console.warn _logPrefix + 'An argument is required for mintpresso.get method.'
       else if arguments.length <= 2
+        option = {}
+        if arguments[1] isnt undefined and typeof arguments[1] is 'function'
+          callback = arguments[1]
+        else
+          callback = mintpresso.callback
         if typeof arguments[0] is 'number'
-          if arguments[1] isnt undefined and typeof arguments[1] is 'function'
-            return _getPoint arguments[0], arguments[1]
-          else
-            console.warn _logPrefix + 'A callback function is required for mintpresso.get method.'
         else if typeof arguments[0] is 'object'
           json = arguments[0]
           hasMark = false
@@ -245,7 +247,7 @@ try
 
     # For debug 
     callback: (response) ->
-      console.log _logPrefix + "Response: ", response
+      console.log _logPrefix + "Response(#{response.status.code}): ", response
 
 catch e
   if window['__mintpresso__'] isnt undefined and true
