@@ -133,6 +133,10 @@ try
       console.warn "dd"
       true
 
+    # For debug 
+    callback: (response) ->
+      console.log "[MINTPRESSO] Response: ", response
+
 catch e
   if window['__mintpresso__'] isnt undefined and true
     throw e
