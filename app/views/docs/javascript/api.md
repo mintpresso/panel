@@ -99,7 +99,7 @@ mintpresso.set_once({
 #### 모델과 관계를 만들고 가져오기
 
 >
-mintpresso.get(**Object** json, **Function** callback[, **Object** optionsObject])
+mintpresso.get( **Object** json, **Function** callback[, **Object** optionsObject] )
 
 <!--
 <pre>jsonObject =
