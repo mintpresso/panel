@@ -266,7 +266,7 @@ jQuery ->
                 p = p.point
                 d1 = moment(p.createdAt).format('YYYY-MM-DD HH:mm:ss')
                 d2 = moment(p.createdAt).fromNow()
-                d = JSON.stringify(p.data.data)
+                d = JSON.stringify(p.data)
                 if d is "{}"
                   d = "<small> - </small>"
                 $tbody.prepend """
