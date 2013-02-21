@@ -94,6 +94,50 @@ try
     }
     return true
 
+  _getPointByTypeOrIdentifier = (json, callback) ->
+    retry = () ->
+      if _serverIteration == _servers.length-1
+        _serverIteration = 0
+        _log () ->
+          arg = id
+          return _getPointByTypeOrIdentifier(arg)
+      else
+        _serverIteration++
+        return _getPointByTypeOrIdentifier json, callback
+
+    data = {}
+    i = 0
+
+    type = ""
+    identifier = ""
+    for key of json
+      if i > 0
+        console.log _logPrefix + 'Too many arguments are given to be an informative query though no question marks are found.'
+        break
+      type = key
+      identifier = json[key]
+      i++
+
+    jQuery.ajax {
+      url: "#{ _servers[_serverIteration] }#{ _versionPrefix }/account/#{_accId}/point?type=#{type}&identifier=#{identifier}&api_token=#{_key}"
+      type: 'GET'
+      async: true
+      cache: false
+      crossDomain: true
+      dataType: 'jsonp'
+      jsonpCallback: 'mintpressoCallback'
+      success: (json) ->
+        callback json
+      error: (xhr, status, error) ->
+        callback {
+          status: {
+            code: 400
+            message: "status (#{error})"
+          }
+        }
+      timeout: _timeout
+    }
+    return true
   window.mintpresso = {}
   window.mintpresso =
     init: (key) ->
