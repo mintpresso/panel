@@ -59,6 +59,9 @@ try
   _urls['getPointByTypeOrIdentifier'] = _versionPrefix + '/account/{0}/point'
   _urls['addPoint'] = _versionPrefix + '/account/%d/point'
   _urls['findEdges'] = _versionPrefix + '/account/%d/edge'
+  _verbs = Array('do', 'does', 'did', 'verb')
+  _mark = '?'
+  _point_proto = Array('type', 'identifier', 'data')
 
   _log = (f) ->
     console.log _logPrefix + 'backlog executed due to network problems.'
