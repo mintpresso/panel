@@ -141,6 +141,56 @@ try
     }
     return true
 
+  _findRelations = (json, callback, option) ->
+    retry = () ->
+      if _serverIteration == _servers.length-1
+        _serverIteration = 0
+        _log () ->
+          arg = id
+          return _findRelations json, callback
+      else
+        _serverIteration++
+        return _findRelations json, callback
+
+    i = 1
+
+    sType = ""
+    sId = ""
+    v = ""
+    oType = ""
+    oId = ""
+    for key of json
+      switch i
+        when 1
+          sType = key
+          sId = json[key] if json[key] isnt _mark and typeof json[key] is 'number'
+        when 2
+          if _verbs.indexOf(key) is -1
+            console.log _logPrefix + 'Verb isn\'t match with do/does/did/verb. - mintpresso.get'
+          else
+            v = json[key]
+        when 3
+          oType = key
+          oId = json[key] if json[key] isnt _mark and typeof json[key] is 'number'
+        else
+          console.log _logPrefix + 'Too many arguments are given to be a form of subject/verb/object query - mintpresso.get'
+          return false
+          break
+      i++
+
+    console.log "#{ _servers[_serverIteration] }#{ _versionPrefix }/account/#{_accId}/edge?subjectId=#{sId}&subjectType=#{sType}&verb=#{v}&objectId=#{oId}&objectType=#{oType}&api_token=#{_key}"
+    jQuery.ajax {
+      url: "#{ _servers[_serverIteration] }#{ _versionPrefix }/account/#{_accId}/edge?subjectId=#{sId}&subjectType=#{sType}&verb=#{v}&objectId=#{oId}&objectType=#{oType}&api_token=#{_key}"
+      type: 'GET'
+      async: true
+      cache: false
+      crossDomain: true
+      dataType: 'jsonp'
+      jsonpCallback: 'mintpressoCallback'
+      success: (json) ->
+        callback json
+      error: (xhr, status, error) ->
+        retry()
         callback {
           status: {
             code: 400
@@ -222,6 +272,7 @@ try
         else
           callback = mintpresso.callback
         if typeof arguments[0] is 'number'
+          return _getPoint arguments[0], callback, option
         else if typeof arguments[0] is 'object'
           json = arguments[0]
           hasMark = false
@@ -230,7 +281,7 @@ try
               hasMark = true
               break
           if hasMark
-            _findRelations arguments[0], arguments[1]
+            _findRelations arguments[0], callback, option
           else
             _getPointByTypeOrIdentifier arguments[0], arguments[1]
         else
