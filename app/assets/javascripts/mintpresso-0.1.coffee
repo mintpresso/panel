@@ -244,6 +244,63 @@ try
       timeout: _timeout
     }
     return true
+
+  _addEdge = (json, callback, update) ->
+    retry = () ->
+      if _serverIteration == _servers.length-1
+        _serverIteration = 0
+        _log () ->
+          arg = id
+          return _addEdge json, callback, update
+      else
+        _serverIteration++
+        return _addEdge json, callback, update
+
+    value = {}
+    value.edge = {}
+    
+    i = 1
+    for key of json
+      switch i
+        when 1
+          value.edge.subjectType = key if key isnt _mark and _edge_proto.indexOf(key) is -1 
+          value.edge.subjectId = json[key] if json[key] isnt _mark
+        when 2
+          if _verbs.indexOf(key) is -1
+            console.log _logPrefix + 'Verb isn\'t match with do/does/did/verb. - mintpresso.set'
+          else
+            value.edge.verb = json[key]
+        when 3
+          value.edge.objectType = key if key isnt _mark and _edge_proto.indexOf(key) is -1 
+          value.edge.objectId = json[key] if json[key] isnt _mark
+        else
+          console.log _logPrefix + 'Too many arguments are given to be a form of subject/verb/object query - mintpresso.set'
+          return false
+          break
+      i++
+
+    jQuery.ajax {
+      url: "#{ _servers[_serverIteration] }#{ _versionPrefix }/post/account/#{_accId}/edge?json=#{ JSON.stringify(value) }&api_token=#{_key}"
+      type: 'GET'
+      async: true
+      cache: false
+      crossDomain: true
+      dataType: 'jsonp'
+      jsonpCallback: 'mintpressoCallback'
+      success: (json) ->
+        callback json
+      error: (xhr, status, error) ->
+        # retry()
+        callback {
+          status: {
+            code: 400
+            message: "status (#{error})"
+          }
+        }
+      timeout: _timeout
+    }
+    return true
+
   window.mintpresso = {}
   window.mintpresso =
     init: (key) ->
@@ -283,7 +340,7 @@ try
           if hasMark
             _findRelations arguments[0], callback, option
           else
-            _getPointByTypeOrIdentifier arguments[0], arguments[1]
+            _getPointByTypeOrIdentifier arguments[0], callback, option
         else
           console.warn _logPrefix + 'An argument type of Number or String is required for mintresso.get method.'
       else
