@@ -63,6 +63,9 @@ try
   _mark = '?'
   _point_proto = Array('type', 'identifier', 'data')
   _edge_proto = Array('subjectId', 'subjectType', 'verb', 'objectId', 'objectType')
+  _dataType = 'jsonp'
+  _callbackName = 'mintpressoCallback'
+  _callbackEnabled = true
 
   _log = (f) ->
     console.log _logPrefix + 'backlog executed due to network problems.'
@@ -82,8 +85,8 @@ try
       async: true
       cache: false
       crossDomain: true
-      dataType: 'jsonp'
-      jsonpCallback: 'mintpressoCallback'
+      dataType: _dataType
+      jsonpCallback: _callbackName
       success: (json) ->
         _data = undefined
         if json.status.code is 200
@@ -143,8 +146,8 @@ try
       async: true
       cache: false
       crossDomain: true
-      dataType: 'jsonp'
-      jsonpCallback: 'mintpressoCallback'
+      dataType: _dataType
+      jsonpCallback: _callbackName
       success: (json) ->
         _data = undefined
         if json.status.code is 200
@@ -230,8 +233,8 @@ try
       async: true
       cache: false
       crossDomain: true
-      dataType: 'jsonp'
-      jsonpCallback: 'mintpressoCallback'
+      dataType: _dataType
+      jsonpCallback: _callbackName
       success: (json) ->
         callback json
       error: (xhr, status, error) ->
@@ -273,8 +276,8 @@ try
       async: true
       cache: false
       crossDomain: true
-      dataType: 'jsonp'
-      jsonpCallback: 'mintpressoCallback'
+      dataType: _dataType
+      jsonpCallback: _callbackName
       success: (json) ->
         callback json
       error: (xhr, status, error) ->
@@ -328,8 +331,8 @@ try
       async: true
       cache: false
       crossDomain: true
-      dataType: 'jsonp'
-      jsonpCallback: 'mintpressoCallback'
+      dataType: _dataType
+      jsonpCallback: _callbackName
       success: (json) ->
         callback json
       error: (xhr, status, error) ->
@@ -345,13 +348,21 @@ try
 
   window.mintpresso = {}
   window.mintpresso =
-    init: (key) ->
+    init: (key, option) ->
       if typeof key isnt 'string' or key.length < 10
         return console.warn _logPrefix + 'Not initialized. Invalid API key.'
         
       temp = key.split '::'
       _key = temp[0]
       _accId = temp[1]
+
+      if option isnt undefined
+        if option['withoutCallback'] isnt undefined and option['withoutCallback'] is true
+          _dataType = 'json'
+          _callbackName = undefined
+          _callbackEnabled = false
+        else
+          _callbackEnabled = true
       _initialized = true
       true
 
@@ -380,7 +391,6 @@ try
             conditions++
             if key is "?" or json[key] is "?"
               hasMark = true
-              break
           if (hasMark and conditions > 1) or conditions is 3
             _findRelations arguments[0], callback, option
           else
