@@ -53,7 +53,7 @@
 <h4 id="">모델 데이터를 넣기</h4>
 
 <blockquote>
-<p>mintpresso.set( <strong>Object</strong> json[, <strong>Boolean</strong> updateIfExists = true] )</p>
+<p>mintpresso.set( <strong>Object</strong> json[, **Function callback = mintpresso.callback | <strong>Boolean</strong> updateIfExists = true] )</p>
 </blockquote>
 
 <p>민트프레소 <a href="" target="_blank">모델 정의</a>에 따라 type, identifier, data를 지정해야합니다.</p>
@@ -108,6 +108,21 @@ mintpresso.set_once({
   "user": "10020",
   "initial_purchase_at": Date.now()
 }) /* set의 updateIfExists parameter에 false를 준 것과 똑같이 작동함 */
+</code></pre>
+
+<p>데이터를 추가후 callback을 호출하게 하려면</p>
+
+<pre><code>
+mintpresso.set({
+  "user": "10020",
+  "subscription": "premium"
+}, function(response){
+  if(response.status.code != 200){
+    alert("구독 정보를 변경하지 못했습니다. 다시 시도해주세요.")
+  }else{
+    alert("이제부터 다음의 구독 목록을 받습니다: " + response.point.subscription)
+  }
+}, true)
 </code></pre>
 
 <h4 id="">모델과 관계를 만들고 가져오기</h4>
@@ -200,7 +215,8 @@ Option의 추가/변경에 따른 코드 변화를 최소화하기 위해 가급
 <code>get({ ... }, callback, { “limit”: 20, “offset”: 40})</code><br />
 <code>getLimit({ ... }, callback, 20)</code><br />
 <code>getLimitOffset({ ... }, callback, 20, 40)</code>
-</div>  <hr />
+</div>
+<hr />
   Last updated <time class="updatedAt">2013-02-19</time>.
   <hr />
   </div>

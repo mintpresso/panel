@@ -40,7 +40,7 @@
 #### 모델 데이터를 넣기 
 
 >
-mintpresso.set( **Object** json[, **Boolean** updateIfExists = true] )
+mintpresso.set( **Object** json[, **Function callback = mintpresso.callback | **Boolean** updateIfExists = true] )
 
 민트프레소 <a href="" target="_blank">모델 정의</a>에 따라 type, identifier, data를 지정해야합니다.
 
@@ -94,6 +94,21 @@ mintpresso.set_once({
   "user": "10020",
   "initial_purchase_at": Date.now()
 }) /* set의 updateIfExists parameter에 false를 준 것과 똑같이 작동함 */
+</code></pre>
+
+데이터를 추가후 callback을 호출하게 하려면
+
+<pre><code>
+mintpresso.set({
+  "user": "10020",
+  "subscription": "premium"
+}, function(response){
+  if(response.status.code != 200){
+    alert("구독 정보를 변경하지 못했습니다. 다시 시도해주세요.")
+  }else{
+    alert("이제부터 다음의 구독 목록을 받습니다: " + response.point.subscription)
+  }
+}, true)
 </code></pre>
 
 #### 모델과 관계를 만들고 가져오기
