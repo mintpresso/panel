@@ -192,7 +192,8 @@ object Panel extends Controller with Secured {
                 val _after = System.currentTimeMillis
                 res.status match {
                   case 200 => {
-                    values += (("msg" -> (" - <time>(" + ((_after - _before)/1000.0).toString +" seconds)</time>")))
+                    edges = res.body
+                    values += (("msg" -> ((res.json \ "_length").as[Int] + " results - <time>(" + ((_after - _before)/1000.0).toString +" seconds)</time>")))
                     Ok(views.html.panel._data.view(types, points, edges, values))
                   }
                   case _ => {
