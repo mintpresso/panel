@@ -122,14 +122,20 @@ try
         return _getPointByTypeOrIdentifier json, callback
 
     i = 0
-    type = ""
-    identifier = ""
+    _type = ""
+    _identifier = ""
     for key of json
       if i > 0
         console.log _logPrefix + 'Too many arguments are given to be an informative query though no question marks are found - mintpresso.get'
         break
-      type = key
-      identifier = json[key]
+      if key.length is 0 or key isnt _mark
+        _type = encodeURIComponent(key)
+      if json[key].length is 0 or json[key] is _mark
+        console.log _logPrefix + 'No question mark is allowed on \'identifier\' field - mintpresso.get'
+        return false
+        break
+      else
+        _identifier = encodeURIComponent(json[key])
       i++
 
     jQuery.ajax {
@@ -203,16 +209,16 @@ try
     for key of json
       switch i
         when 1
-          sType = key
-          sId = json[key] if json[key] isnt _mark and typeof json[key] is 'number'
+          sType = encodeURIComponent(key)
+          sId = encodeURIComponent(json[key]) if json[key] isnt _mark and typeof json[key] is 'number'
         when 2
           if _verbs.indexOf(key) is -1
             console.log _logPrefix + 'Verb isn\'t match with do/does/did/verb. - mintpresso.get'
           else
-            v = json[key]
+            v = encodeURIComponent(json[key]) if json[key] isnt _mark
         when 3
-          oType = key
-          oId = json[key] if json[key] isnt _mark and typeof json[key] is 'number'
+          oType = encodeURIComponent(key)
+          oId = encodeURIComponent(json[key]) if json[key] isnt _mark and typeof json[key] is 'number'
         else
           console.log _logPrefix + 'Too many arguments are given to be a form of subject/verb/object query - mintpresso.get'
           return false
@@ -374,11 +380,13 @@ try
         else if typeof arguments[0] is 'object'
           json = arguments[0]
           hasMark = false
+          conditions = 0
           for key of json
+            conditions++
             if key is "?" or json[key] is "?"
               hasMark = true
               break
-          if hasMark
+          if (hasMark and conditions > 1) or conditions is 3
             _findRelations arguments[0], callback, option
           else
             _getPointByTypeOrIdentifier arguments[0], callback, option
