@@ -85,7 +85,20 @@ try
       dataType: 'jsonp'
       jsonpCallback: 'mintpressoCallback'
       success: (json) ->
+        _data = undefined
+        if json.status.code is 200
+          if json.point['data'] isnt undefined
+            for key of json.point.data
+              if key isnt 'data'
+                json.point[key] = json.point.data[key]
+              else
+                _data = json.point.data[key]
+            if _data is undefined
+              `delete json.point.data`
+            else
+              json.point.data = _data
         callback json
+
       error: (xhr, status, error) ->
         retry()
         callback {
@@ -128,6 +141,34 @@ try
       dataType: 'jsonp'
       jsonpCallback: 'mintpressoCallback'
       success: (json) ->
+        _data = undefined
+        if json.status.code is 200
+          if json['point'] isnt undefined
+            if json.point['data'] isnt undefined
+              for key of json.point.data
+                if key isnt 'data'
+                  json.point[key] = json.point.data[key]
+                else
+                  _data = json.point.data[key]
+              if _data is undefined
+                `delete json.point.data`
+              else
+                json.point.data = _data
+          else if json['points'] isnt undefined
+            for i in [0..json.points.length-1] by 1
+              point = json.points[i]
+              if point['data'] isnt undefined
+                for key of point.data
+                  if key isnt 'data'
+                    json.points[i][key] = point.data[key]
+                  else
+                    _data = point.data[key]
+                if _data is undefined
+                  `delete json.points[i].data`
+                else
+                  json.points[i].data = _data
+          else
+            console.error _logPrefix + "Found results neither point nor points - mintpresso._getPointByTypeOrIdentifier"
         callback json
       error: (xhr, status, error) ->
         retry()
