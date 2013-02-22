@@ -1,5 +1,3 @@
-test commit
-
 # Play 2.1 
 
 Play 2.1 is a high productivity Java and Scala Web application framework, integrating all components and API needed for modern Web application development. 
