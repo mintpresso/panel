@@ -109,17 +109,16 @@ try
         }
       timeout: _timeout
     }
-    return true
 
   _getPointByTypeOrIdentifier = (json, callback, option) ->
     retry = () ->
       if _serverIteration == _servers.length-1
         _serverIteration = 0
         _log () ->
-          return _getPointByTypeOrIdentifier json, callback
+          return _getPointByTypeOrIdentifier json, callback, option
       else
         _serverIteration++
-        return _getPointByTypeOrIdentifier json, callback
+        return _getPointByTypeOrIdentifier json, callback, option
 
     i = 0
     _type = ""
@@ -139,7 +138,7 @@ try
       i++
 
     jQuery.ajax {
-      url: "#{ _servers[_serverIteration] }#{ _versionPrefix }/account/#{_accId}/point?type=#{type}&identifier=#{identifier}&api_token=#{_key}"
+      url: "#{ _servers[_serverIteration] }#{ _versionPrefix }/account/#{_accId}/point?type=#{_type}&identifier=#{_identifier}&api_token=#{_key}"
       type: 'GET'
       async: true
       cache: false
@@ -186,7 +185,6 @@ try
         }
       timeout: _timeout
     }
-    return true
 
   _findRelations = (json, callback, option) ->
     retry = () ->
@@ -194,10 +192,10 @@ try
         _serverIteration = 0
         _log () ->
           arg = id
-          return _findRelations json, callback
+          return _findRelations json, callback, option
       else
         _serverIteration++
-        return _findRelations json, callback
+        return _findRelations json, callback, option
 
     i = 1
 
@@ -246,7 +244,6 @@ try
         }
       timeout: _timeout
     }
-    return true
 
   _addPoint = (json, callback, update) ->
     retry = () ->
@@ -290,7 +287,6 @@ try
         }
       timeout: _timeout
     }
-    return true
 
   _addEdge = (json, callback, update) ->
     retry = () ->
@@ -346,7 +342,6 @@ try
         }
       timeout: _timeout
     }
-    return true
 
   window.mintpresso = {}
   window.mintpresso =
