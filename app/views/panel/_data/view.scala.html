@@ -54,7 +54,7 @@
 }.getOrElse{
   @values.get("msg").map { msg =>
     <div class="alert alert-info">
-    @msg
+    @Html(msg)
     </div>
   }.getOrElse{
 
@@ -62,12 +62,12 @@
 }
 @flash.get("error").map { error =>
   <div class="alert alert-block">
-  @error
+  @Html(error)
   </div>
 }.getOrElse{
   @flash.get("msg").map { msg =>
     <div class="alert alert-info">
-    @msg
+    @Html(msg)
     </div>
   }.getOrElse{
 
@@ -76,12 +76,25 @@
 <div class="toolbar hide">
 </div>
 
-<table class="table table-striped table-hover">
+<table id="points" class="table table-striped table-hover hide">
   <thead>
     <tr>
       <th>#</th>
       <th>Type of model</th>
       <th>Identifier</th>
+      <th>Data</th>
+      <th>Created at</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+<table id="edges" class="table table-striped table-hover hide">
+  <thead>
+    <tr>
+      <th>Object</th>
+      <th>Relationship</th>
+      <th>Subject</th>
       <th>Data</th>
       <th>Created at</th>
     </tr>

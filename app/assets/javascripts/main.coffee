@@ -261,29 +261,60 @@ jQuery ->
 
               $block.find('#selector div.custom-filter a.add').tooltip {title: "Add new filter"}
 
-              $tbody = $block.find('table tbody')
-              for p in mint._points.points
-                p = p.point
-                d1 = moment(p.createdAt).format('YYYY-MM-DD HH:mm:ss')
-                d2 = moment(p.createdAt).fromNow()
-                d = JSON.stringify(p.data)
-                if d is "{}"
-                  d = "<small> - </small>"
-                $tbody.prepend """
-                  <tr>
-                    <td><a href="#{p._url}">#{p.id}</a></td>
-                    <td>#{p.type}</td>
-                    <td>#{p.identifier}</td>
-                    <td class="code">#{d}</td>
-                    <td>
-                      <time datetime="#{d1}">#{d2}</time>
-                    </td>
-                  </tr>
-                  """
+              if mint._points isnt undefined and mint._points.points.length > 0
+                $tbody = $block.find('table#points')
+                for p in mint._points.points
+                  d1 = moment(p.createdAt).format('YYYY-MM-DD HH:mm:ss')
+                  d2 = moment(p.createdAt).fromNow()
+                  d = JSON.stringify(p.data)
+                  if d is "{}"
+                    d = "<small> - </small>"
+                  $tbody.prepend """
+                    <tr>
+                      <td><a href="#{p._url}">#{p.id}</a></td>
+                      <td>#{p.type}</td>
+                      <td>#{p.identifier}</td>
+                      <td class="code">#{d}</td>
+                      <td>
+                        <time datetime="#{d1}" title="#{d1}">#{d2}</time>
+                      </td>
+                    </tr>
+                    """
+                $tbody.fadeIn()
+              else if mint._edges isnt undefined and mint._edges.edges.length > 0
+                $tbody = $block.find('table#edges')
+                for e in mint._edges.edges
+                  d1 = moment(e.createdAt).format('YYYY-MM-DD HH:mm:ss')
+                  d2 = moment(e.createdAt).fromNow()
+                  d = JSON.stringify(e.data)
+                  if d is "{}"
+                    d = "<small> - </small>"
+                  $tbody.prepend """
+                    <tr>
+                      <td>
+                        <span class="label label-inverse">#{e.subjectType}</span>
+                        <span class="label label-info">#{e.subjectId}</span>
+                      </td>
+                      <td>#{e.verb}</td>
+                      <td>
+                        <span class="label label-inverse">#{e.objectType}</span>
+                        <span class="label label-info">#{e.objectId}</span>
+                      </td>
+                      <td class="code">#{d}</td>
+                      <td>
+                        <time datetime="#{d1}" title="#{d1}">#{d2}</time>
+                      </td>
+                    </tr>
+                    """
+                $tbody.fadeIn()
               
               $modelForm = $block.find('form#model')
               $modelForm.submit () ->
                 offContent $content
+                $block.find('table').hide()
+
+                `delete mint._points`
+                `delete mint._edges`
 
                 query = {
                   s: $modelForm.find('input[name=s]').val()
