@@ -409,7 +409,6 @@ jQuery ->
       $submenu = $("#submenu")
       $content = $("#content")
 
-      console.log ">>>", mint.page
       $submenu.find('[data-menu=conversation]').click (e) ->
         triggerContent $content, $submenu, $(this), ($block) ->
           routes.controllers.Panel.support_conversation(mint.id)
@@ -426,6 +425,16 @@ jQuery ->
               $block.html e
               onBlock $block
 
+      triggerHash $content, $submenu
+      mint.waitForLoading = false
+    else if mint.page is 'order'
+      $submenu = $("#submenu")
+      $content = $("#content")
+      triggerHash $content, $submenu
+      mint.waitForLoading = false
+    else if mint.page is 'pickup'
+      $submenu = $("#submenu")
+      $content = $("#content")
       triggerHash $content, $submenu
       mint.waitForLoading = false
     else

@@ -33,7 +33,7 @@ GET 	/:accId/data-cloud/import	controllers.Panel.data_import(accId: Int)
 POST 	/:accId/data-cloud/import	controllers.Panel.data_import_add(accId: Int)
 GET 	/:accId/data-cloud/export	controllers.Panel.data_export(accId: Int)
 
-GET 	/:accId/order-here			controllers.Panel.order(accId: Int)
+GET 	/:accId/order-here/			controllers.Panel.order(accId: Int)
 GET 	/:accId/order-here/index	controllers.Panel.order_index(accId: Int)
 
 GET 	/:accId/pick-up				controllers.Panel.pickup(accId: Int)
