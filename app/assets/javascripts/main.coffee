@@ -40,7 +40,6 @@ jQuery ->
         temp += key + '=' + value + '&'
         window.location.hash = window.location.hash.slice(0, window.location.hash.indexOf('?')) + temp
       $('#submenu li.active').data('parameter', $.getParameterHash())
-
   }
 
   $body = $('body')
@@ -258,8 +257,21 @@ jQuery ->
               $block.html e
               $block.find('input[name=s]').typeahead { source: mint._types }
               $block.find('input[name=o]').typeahead { source: mint._types }
-
               $block.find('#selector div.custom-filter a.add').tooltip {title: "Add new filter"}
+
+              $revert = $block.find('#revert')
+              if $.getParameter("_filter").length > 0
+                $revert.click () ->
+                  $.setParameter "_filter", ""
+                  refreshContent $content, $submenu, 'view', ($block) ->
+                    true
+              else
+                $revert[0].disabled = 'disabled'
+              
+              $refresh = $block.find('#refresh')
+              $refresh.click () ->
+                refreshContent $content, $submenu, 'view', ($block) ->
+                  true
 
               if mint._points isnt undefined and mint._points.points.length > 0
                 $tbody = $block.find('table#points')
@@ -286,9 +298,12 @@ jQuery ->
                 for e in mint._edges.edges
                   d1 = moment(e.createdAt).format('YYYY-MM-DD HH:mm:ss')
                   d2 = moment(e.createdAt).fromNow()
+                  ### currently not support data store in an edge.
                   d = JSON.stringify(e.data)
                   if d is "{}"
                     d = "<small> - </small>"
+                  ###
+                  d = "<small> - </small>"
                   $tbody.prepend """
                     <tr>
                       <td>
