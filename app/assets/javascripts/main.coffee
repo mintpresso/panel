@@ -406,6 +406,28 @@ jQuery ->
               $block.html e
               onBlock $block
     else if mint.page is 'support'
+      $submenu = $("#submenu")
+      $content = $("#content")
+
+      console.log ">>>", mint.page
+      $submenu.find('[data-menu=conversation]').click (e) ->
+        triggerContent $content, $submenu, $(this), ($block) ->
+          routes.controllers.Panel.support_conversation(mint.id)
+            .ajax()
+            .success (e) ->
+              $block.html e
+              onBlock $block
+
+      $submenu.find('[data-menu=consulting]').click (e) ->
+        triggerContent $content, $submenu, $(this), ($block) ->
+          routes.controllers.Panel.support_consulting(mint.id)
+            .ajax()
+            .success (e) ->
+              $block.html e
+              onBlock $block
+
+      triggerHash $content, $submenu
+      mint.waitForLoading = false
     else
       alert("페이지를 불러올 수 없습니다. ")
 

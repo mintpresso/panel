@@ -39,8 +39,10 @@ GET 	/:accId/order-here/index	controllers.Panel.order_index(accId: Int)
 GET 	/:accId/pick-up				controllers.Panel.pickup(accId: Int)
 GET 	/:accId/pick-up/index		controllers.Panel.pickup_index(accId: Int)
 
-GET 	/:accId/support				controllers.Panel.support(accId: Int)
+GET 	/:accId/support/			controllers.Panel.support(accId: Int)
 GET 	/:accId/support/index		controllers.Panel.support_index(accId: Int)
+GET 	/:accId/support/conversation		controllers.Panel.support_conversation(accId: Int)
+GET 	/:accId/support/consulting	 		controllers.Panel.support_consulting(accId: Int)
 
 # Map static resources from the /public folder to the /assets URL path
 GET 	/jsRoutes 					controllers.Application.javascriptRoutes

@@ -287,4 +287,10 @@ object Panel extends Controller with Secured {
   def support_index(accountId: Int) = SignedAccount(accountId) { implicit request =>
     Ok(views.html.panel._support.index())
   }
+  def support_conversation(accountId: Int) = SignedAccount(accountId) { implicit request =>
+    Ok(views.html.panel._support.conversation())
+  }
+  def support_consulting(accountId: Int) = SignedAccount(accountId) { implicit request =>
+    Ok(views.html.panel._support.consulting())
+  }
 }
