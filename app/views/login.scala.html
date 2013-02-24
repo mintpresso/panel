@@ -18,7 +18,7 @@
             @flash.get("msg").map { message =>
               @message
             }.getOrElse {
-              <a href="@routes.Application.signup">회원이 아니세요? 새로운 아이디로 회원가입하기</a>
+              <a href="#">아이디나 비밀번호를 잊어버리셨나요? 회원정보 찾기</a>
             }
           </span>
         </div>
@@ -32,7 +32,7 @@
       </fieldset>
     </div>
     <div class="modal-footer">
-      <a href="#" class="btn">아이디/비밀번호 찾기</a>
+      <a href="@routes.Application.signup" class="btn">회원가입</a>
       <button type="submit" class="btn btn-primary">로그인</button>
     </div>
   </div>
