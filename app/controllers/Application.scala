@@ -29,18 +29,28 @@ object Application extends Controller with Secured {
               case 404 =>
                 NotFound
               //case 403 =>
-              case _ =>
-                Forbidden
+              case _ => {
+                Results.Redirect(routes.Application.login).flashing(
+                  "msg" -> "해당 링크에 들어가려면 로그인 인증이 필요합니다.",
+                  "redirect_url" -> request.path
+                )
+              }
             }
           }
         }
       } getOrElse {
-        Forbidden
+        Results.Redirect(routes.Application.login).flashing(
+          "msg" -> "해당 링크에 들어가려면 로그인 인증이 필요합니다.",
+          "redirect_url" -> request.path
+        )
       }
       case "javascript/test" => getOptionUser map { user =>
         Ok(views.html.docs.javascript.test(user))
       } getOrElse {
-        Forbidden
+        Results.Redirect(routes.Application.login).flashing(
+          "msg" -> "해당 링크에 들어가려면 로그인 인증이 필요합니다.",
+          "redirect_url" -> request.path
+        )
       }
       case _ => NotFound
     }
@@ -51,10 +61,14 @@ object Application extends Controller with Secured {
   }
 
   def login = Action { implicit request =>
-    if(authenticated){
-      Redirect(routes.Panel.overview(getAccountId))
+    if(flash.get("account_change").getOrElse("") == "true"){
+      Ok(views.html.changeAccount())
     }else{
-      Ok(views.html.login())
+      if(authenticated){
+        Redirect(routes.Panel.overview(getAccountId))
+      }else{
+        Ok(views.html.login())
+      }
     }
   }
 

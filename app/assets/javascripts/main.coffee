@@ -422,3 +422,12 @@ jQuery ->
       $code.val($code.val().replace("YOUR API KEY HERE", mint._api.token + '::' + mint.id))
 
 
+  $meta = $('meta[name=login]')
+  if $meta.length > 0 and $meta isnt undefined
+    mint.page = $meta[0].getAttribute('content')
+
+    if mint.page is 'changeAccount'
+      $link = $('#link')
+      l = $link.html() + location.hash
+      $link.html l
+      $link[0].href = l

@@ -20,7 +20,8 @@ object Users extends Controller with Secured {
     val f = Form(
       tuple(
         "email" -> Forms.email,
-        "password" -> text
+        "password" -> text,
+        "redirect_url" -> optional(text)
       )
     )
     val form = f.bindFromRequest
@@ -28,7 +29,7 @@ object Users extends Controller with Secured {
       Redirect(routes.Application.login).flashing("retry" -> "true", "error" -> Messages("users.login.fill"), "msg" -> "")
     }else{
       form.get match {
-        case (email: String, pw: String) => {
+        case (email: String, pw: String, redirectUrl: Option[String]) => {
           if(email.trim().length == 0){
             Redirect(routes.Application.login).flashing("retry" -> "true", "error" -> Messages("users.login.fill"), "msg" -> "")
           }else if(pw.trim().length == 0){
@@ -50,7 +51,7 @@ object Users extends Controller with Secured {
                           "email" -> email,
                           "apiToken" -> api_token
                         ).flashing(
-                          "redirectUrl" -> routes.Panel.overview(id).url
+                          "redirectUrl" -> redirectUrl.getOrElse(routes.Panel.overview(id).url)
                         )
                     } getOrElse {
                       Redirect(routes.Application.login).flashing("retry" -> "true", "error" -> Messages("users.login.fill"), "msg" -> "")

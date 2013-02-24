@@ -11,6 +11,7 @@
         <div style="text-align: center">
           <input type="text" name="email" placeholder="Email" value="@flash.get("email")" />
           <input type="password" name="password" placeholder="Password" />
+          <input type="hidden" name="redirect_url" value="@flash.get("redirect_url").getOrElse("")" />
           <span class="help-block">
             @flash.get("error").map { message =>
               @message

@@ -51,7 +51,10 @@ trait Secured {
     if(authenticated){
       f(request)
     }else{
-      Results.Forbidden
+      Results.Redirect(routes.Application.login).flashing(
+        "msg" -> "해당 링크에 들어가려면 로그인 인증이 필요합니다.",
+        "redirect_url" -> request.path
+      )
     }
   }
 
@@ -59,7 +62,11 @@ trait Secured {
     if(getAccountId == accessId){
       f(request)
     }else{
-      Results.Forbidden
+      Results.Redirect(routes.Application.login).flashing(
+        "msg" -> "해당 링크에 들어가려면 로그인 인증이 필요합니다.",
+        "redirect_url" -> request.path,
+        "account_change" -> "true"
+      )
     }
   }
 
