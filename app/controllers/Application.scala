@@ -106,6 +106,8 @@ object Application extends Controller with Secured {
         Panel.pickup_index,
         Panel.support,
         Panel.support_index,
+        Panel.support_conversation,
+        Panel.support_consulting,
         Users.logout
       )
     ).as("text/javascript")

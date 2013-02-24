@@ -1,3 +1,14 @@
-@()(implicit flash: Flash)
+@(user: User)(implicit flash: Flash)
 
 <h1>SUPPORT</h1>
+
+<p>민트프레소의 귀는 항상 열려있습니다.</p>
+
+<ol>
+  <li>공휴일을 제외한 오전 10시 ~ 오후 6시를 영업일로 정합니다. <br />
+  	<small>(현재 기업회원이 아닌 일반회원도 관련 담당자의 기술 지원을 받을 수 있습니다.)</small></li>
+  <li>모든 커뮤니케이션 자료는 '1:1 상담'에 보관됩니다.</li>
+  <li>기능 개선 및 피드백을 환영합니다!</li>
+</ol>
+
+<a href="mailto:support@@mintpresso.com?subject=(@user.name) @user.email (@user.id)" class="btn"><i class="icon-envelope"></i> 메일 보내기 </a>
