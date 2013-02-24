@@ -144,7 +144,16 @@ object Users extends Controller with Secured {
                     MintpressoCore.addAccount(email, pw, name).map { response =>
                       (response.json \ "status").asOpt[JsObject].map { obj =>
                         (obj \ "code").asOpt[Int].getOrElse(0) match {
-                          case 201 => Redirect(routes.Application.login).flashing("retry" -> "true", "email" -> email, "msg" -> Messages("users.signup.confirm"))
+                          case 201 => {
+                            val json = Json.stringify(Json.obj( "name" -> name ))
+                            MintpressoAPI("internal").addPoint( "user", email, json).map { response =>
+                              response.status match {
+                                case 200 => 
+                                case _ => Logger.warn("user model not created: " + email )
+                              }
+                            }
+                            Redirect(routes.Application.login).flashing("retry" -> "true", "email" -> email, "msg" -> Messages("users.signup.confirm"))
+                          }
                           case 409 => {
                             Redirect(routes.Application.signup).flashing(
                               "retry" -> "true", 

@@ -65,10 +65,24 @@ object MintpressoCore {
 
 object MintpressoAPI {
   var connections: Map[String, Mintpresso] = Map()
+  def apply(label: String): Mintpresso = {
+    val id = Play.configuration.getString("mintpresso." + label + ".id").getOrElse("0").toInt
+    val token = Play.configuration.getString("mintpresso." + label + ".api").getOrElse("")
+    if(id == 0){
+      println(id)
+      throw new Exception("mintpresso." + label + ".id isn't configued.")
+    }
+    if(token == ""){
+      println(token)
+      throw new Exception("mintpresso." + label + ".api isn't configued.") 
+    }
+    return apply(label, id, token)
+  }
   def apply(label: String, accountId: Int, token: String): Mintpresso = {
     // API Token consists of {api token}::{account id}
     val tokens = token.split("::")
     if(!connections.contains(label)){
+      println("CREATED: " + label + accountId)
       val m: Mintpresso = new Mintpresso(accountId, tokens(0))
       connections += ((label, m))
     }
@@ -85,7 +99,8 @@ class Mintpresso(accId: Int, token: String) {
     "getLatestPoint" -> (versionPrefix + "/account/%d/points/latest"),
     "getPointByTypeOrIdentifier" -> (versionPrefix + "/account/%d/point"),
     "addPoint" -> (versionPrefix + "/account/%d/point"),
-    "findEdges" -> (versionPrefix + "/account/%d/edge")
+    "findEdges" -> (versionPrefix + "/account/%d/edge"),
+    "linkWithEdge" -> (versionPrefix + "/account/%d/edge")
   )
 
   def getPoint(id: Int): Future[Response] = {
@@ -153,5 +168,11 @@ class Mintpresso(accId: Int, token: String) {
       .withHeaders( ("X-Requested-With", initial) )
       .withQueryString(queries.toSeq:_*)
       .get()
+  }
+  def linkWithEdge(query: Map[String, Seq[String]]) = {
+    WS.url(server + urls("findWithEdge").format(accId))
+      .withHeaders( ("X-Requested-With", initial) )
+      .withQueryString( (("api_token"), token) )
+      .post( query )
   }
 }
