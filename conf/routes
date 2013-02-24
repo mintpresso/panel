@@ -34,8 +34,13 @@ POST 	/:accId/data-cloud/import	controllers.Panel.data_import_add(accId: Int)
 GET 	/:accId/data-cloud/export	controllers.Panel.data_export(accId: Int)
 
 GET 	/:accId/order-here			controllers.Panel.order(accId: Int)
+GET 	/:accId/order-here/index	controllers.Panel.order_index(accId: Int)
+
 GET 	/:accId/pick-up				controllers.Panel.pickup(accId: Int)
+GET 	/:accId/pick-up/index		controllers.Panel.pickup_index(accId: Int)
+
 GET 	/:accId/support				controllers.Panel.support(accId: Int)
+GET 	/:accId/support/index		controllers.Panel.support_index(accId: Int)
 
 # Map static resources from the /public folder to the /assets URL path
 GET 	/jsRoutes 					controllers.Application.javascriptRoutes

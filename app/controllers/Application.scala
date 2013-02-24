@@ -101,8 +101,11 @@ object Application extends Controller with Secured {
         Panel.data_import_add,
         Panel.data_export,
         Panel.order,
+        Panel.order_index,
         Panel.pickup,
+        Panel.pickup_index,
         Panel.support,
+        Panel.support_index,
         Users.logout
       )
     ).as("text/javascript")
