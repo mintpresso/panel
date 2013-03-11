@@ -167,6 +167,7 @@ jQuery ->
       triggerIndex $content, ($block) ->
         routes.controllers.Panel[menu + '_index'](mint.id)
           .ajax()
+          .error( blockError($block) )
           .success (e) ->
             $block.html e
             onBlock $block
@@ -181,11 +182,43 @@ jQuery ->
         triggerIndex $content, ($block) ->
           routes.controllers.Panel[menu + '_index'](mint.id)
             .ajax()
+            .error( blockError($block) )
             .success (e) ->
               $block.html e
               onBlock $block
     else
       false
+
+  blockError = ($block) ->
+    return (xhr, status, error) -> 
+      $block.html """
+      <h1>#{error}</h1>
+      <p>사용자 요청이 많아 일시적으로 응답이 지연되고 있습니다. 이 현상이 지속될 경우 support@mintpresso.com 또는 트위터로 연락바랍니다.</p>
+      <div class="toolbar" style="height:220px">
+        <a class="twitter-timeline" href="https://twitter.com/mintpresso" data-widget-id="310993678212665344">@mintpresso 님의 트윗</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+      </div>
+      """
+      onBlock $block
+
+  formError = ($block) ->
+    return (xhr, status, error) ->
+      $('form span.help-block').html """<span class="label label-inverse">#{error}</span> """ + '사용자 요청이 많아 일시적으로 응답이 지연되고 있습니다. 이 현상이 지속될 경우 support@mintpresso.com 또는 트위터로 연락바랍니다.'
+      $toolbar = $block.find('div.toolbar')
+      if $toolbar.length is 0
+        $block.append """
+          <div class="toolbar" style="height:220px">
+            <a class="twitter-timeline" href="https://twitter.com/mintpresso" data-widget-id="310993678212665344">@mintpresso 님의 트윗</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          </div>
+        """
+      else
+        $toolbar.html """
+          <a class="twitter-timeline" href="https://twitter.com/mintpresso" data-widget-id="310993678212665344">@mintpresso 님의 트윗</a>
+          <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+        """
+        $toolbar.height('220px')
+      onBlock $block
 
   $meta = $('meta[name=panel]')
   if $meta.length > 0 and $meta isnt undefined
@@ -199,6 +232,7 @@ jQuery ->
         triggerContent $content, $submenu, $(this), ($block) ->
           routes.controllers.Panel.overview_usage(mint.id)
             .ajax()
+            .error( blockError($block) )
             .success (e) ->
               $block.html e
               onBlock $block
@@ -207,6 +241,7 @@ jQuery ->
         triggerContent $content, $submenu, $(this), ($block) ->
           routes.controllers.Panel.overview_account(mint.id)
             .ajax()
+            .error( blockError($block) )
             .success (e) ->
               $block.html e
               onBlock $block
@@ -215,6 +250,7 @@ jQuery ->
         triggerContent $content, $submenu, $(this), ($block) ->
           routes.controllers.Panel.overview_transaction(mint.id)
             .ajax()
+            .error( blockError($block) )
             .success (e) ->
               $block.html e
               onBlock $block
@@ -223,6 +259,7 @@ jQuery ->
         triggerContent $content, $submenu, $(this), ($block) ->
           routes.controllers.Panel.overview_api(mint.id)
             .ajax()
+            .error( blockError($block) )
             .success (e) ->
               $block.html e
               $block.find('div.well span').html mint._api.token
@@ -237,6 +274,7 @@ jQuery ->
                   success: (e) ->
                     refreshContent $content, $submenu, 'api', ($block) ->
                       true
+                  error: blockError($block)
 
                 routes.controllers.Panel.overview_api_set(mint.id).ajax args
                 return false
@@ -253,6 +291,7 @@ jQuery ->
         triggerContent $content, $submenu, $(this), ($block) ->
           routes.controllers.Panel.data_view(mint.id, $.getParameter('_filter'))
             .ajax()
+            .error( blockError($block) )
             .success (e) ->
               $block.html e
               $block.find('input[name=s]').typeahead { source: mint._types }
@@ -350,6 +389,7 @@ jQuery ->
         triggerContent $content, $submenu, $(this), ($block) ->
           routes.controllers.Panel.data_filter(mint.id)
             .ajax()
+            .error( blockError($block) )
             .success (e) ->
               $block.html e
               onBlock $block
@@ -358,6 +398,7 @@ jQuery ->
         triggerContent $content, $submenu, $(this), ($block) ->
           routes.controllers.Panel.data_import(mint.id)
             .ajax()
+            .error( blockError($block) )
             .success (e) ->
               $block.html e
               onBlock $block
@@ -373,6 +414,8 @@ jQuery ->
                   success: (e) ->
                     refreshContent $content, $submenu, 'import', ($block) ->
                       true
+                  error: formError($block)
+                    
                       
                 try
                   if args.data.data.length > 0
@@ -392,6 +435,7 @@ jQuery ->
         triggerContent $content, $submenu, $(this), ($block) ->
           routes.controllers.Panel.data_export(mint.id)
             .ajax()
+            .error( blockError($block) )
             .success (e) ->
               $block.html e
               onBlock $block
@@ -402,6 +446,7 @@ jQuery ->
         triggerContent $content, $submenu, $(this), ($block) ->
           routes.controllers.Panel['data_' + name](mint.id, JSON.stringify(json))
             .ajax()
+            .error( blockError($block) )
             .success (e) ->
               $block.html e
               onBlock $block
@@ -413,6 +458,7 @@ jQuery ->
         triggerContent $content, $submenu, $(this), ($block) ->
           routes.controllers.Panel.support_conversation(mint.id)
             .ajax()
+            .error( blockError($block) )
             .success (e) ->
               $block.html e
               onBlock $block
@@ -421,6 +467,7 @@ jQuery ->
         triggerContent $content, $submenu, $(this), ($block) ->
           routes.controllers.Panel.support_consulting(mint.id)
             .ajax()
+            .error( blockError($block) )
             .success (e) ->
               $block.html e
               onBlock $block
