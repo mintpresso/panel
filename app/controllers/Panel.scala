@@ -112,6 +112,7 @@ object Panel extends Controller with Secured {
             case 200 =>
               points = res.body
             case _ => {
+              println(res.body)
               Logger.warn(res.status + " at getLatestPoints")
             }
           }
@@ -212,7 +213,18 @@ object Panel extends Controller with Secured {
     Ok(views.html.panel._data.filter())
   }
   def data_import(accountId: Int) = SignedAccount(accountId) { implicit request =>
-    Ok(views.html.panel._data.imports( getUser, MintpressoCore.Types))
+    Async {
+      MintpressoAPI("user", accountId, "").getPointTypes().map { res =>
+        res.status match {
+          case 200 => {
+            Ok(views.html.panel._data.imports( getUser, res.body))
+          }
+          case _ => {
+            Ok(views.html.panel._data.imports( getUser, "[]"))
+          }
+        }
+      }
+    }
   }
   def data_import_add(accountId: Int) = SignedAccount(accountId) { implicit request =>
     val f = Form(
@@ -230,33 +242,29 @@ object Panel extends Controller with Secured {
         case (model: String, identifier: Option[String], data: Option[String]) => {
           val _i = identifier.getOrElse("")
           val _d = data.getOrElse("")
-          if(!MintpressoCore.Type.contains(model)){
-            Ok.flashing("error" -> Messages("data.import.model"), "msg" -> "", "identifier" -> _i, "data" -> _d)
-          }else{
-            Async {
-              MintpressoAPI("user", accountId, "").addPoint(model, _i, _d).map { response => 
-                response.status match {
-                  case 200 => {
-                    Ok.flashing(
-                        "created" -> (System.currentTimeMillis).toString,
-                        "msg" -> Messages("data.import.notCreated"),
-                        "model" -> model, "identifier" -> _i, "data" -> _d
-                      )
-                  }
-                  case 201 => {
-                    //(response.json \ "account").asOpt[JsObject].map { obj =>
-                    Ok.flashing(
-                        "created" -> (System.currentTimeMillis).toString,
-                        "msg" -> (Messages("data.import.created") + Messages((response.json \ "status" \ "message").asOpt[String].getOrElse(""))),
-                        "model" -> model, "identifier" -> _i, "data" -> _d
-                      )
-                  }
-                  case 500 => {
-                    Ok.flashing("error" -> Messages("data.import.retry"), "msg" -> "", "model" -> model, "identifier" -> _i, "data" -> _d)
-                  }
-                  case _ => {
-                    Ok.flashing("error" -> Messages("data.import.retry"), "msg" -> "", "model" -> model, "identifier" -> _i, "data" -> _d)
-                  }
+          Async {
+            MintpressoAPI("user", accountId, "").addPoint(model, _i, _d).map { response => 
+              response.status match {
+                case 200 => {
+                  Ok.flashing(
+                      "created" -> (System.currentTimeMillis).toString,
+                      "msg" -> Messages("data.import.notCreated"),
+                      "model" -> model, "identifier" -> _i, "data" -> _d
+                    )
+                }
+                case 201 => {
+                  //(response.json \ "account").asOpt[JsObject].map { obj =>
+                  Ok.flashing(
+                      "created" -> (System.currentTimeMillis).toString,
+                      "msg" -> (Messages("data.import.created") + Messages((response.json \ "status" \ "message").asOpt[String].getOrElse(""))),
+                      "model" -> model, "identifier" -> _i, "data" -> _d
+                    )
+                }
+                case 500 => {
+                  Ok.flashing("error" -> Messages("data.import.retry"), "msg" -> "", "model" -> model, "identifier" -> _i, "data" -> _d)
+                }
+                case _ => {
+                  Ok.flashing("error" -> Messages("data.import.retry"), "msg" -> "", "model" -> model, "identifier" -> _i, "data" -> _d)
                 }
               }
             }

@@ -1,4 +1,4 @@
-@(user: User, pointTypes: List[String])(implicit flash: Flash, lang: Lang)
+@(user: User, types: String)(implicit flash: Flash, lang: Lang)
 
 @import com.mintpresso.i18n.Locale
 
@@ -24,10 +24,8 @@
 </form>
 <hr />
 <script>
-  mint._sTypes = []
-  @for(p <- pointTypes){
-  	mint._sTypes.push("@p")
-  }
+  alert("@types")
+  mint._sTypes = @Html(types);
   @flash.get("guide-model").map { message =>
     mint.help('guide1', message)
   }
