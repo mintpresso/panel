@@ -65,6 +65,11 @@ object MintpressoCore {
 
 object MintpressoAPI {
   var connections: Map[String, Mintpresso] = Map()
+  
+  /*
+    MintpressoAPI("internal")
+      requires to configure 'mintpresso.internal.id' and 'mintpresso.internal.api' in applicaion.conf
+  */
   def apply(label: String): Mintpresso = {
     val id = Play.configuration.getString("mintpresso." + label + ".id").getOrElse("0").toInt
     val token = Play.configuration.getString("mintpresso." + label + ".api").getOrElse("")
@@ -78,15 +83,21 @@ object MintpressoAPI {
     }
     return apply(label, id, token)
   }
+
+  /*
+    MintpressoAPI("user", accountId, "token is here")
+      token won't be verified when Panel and API servers are paired with access domain so just leave it an empty for internal use.
+  */
   def apply(label: String, accountId: Int, token: String): Mintpresso = {
     // API Token consists of {api token}::{account id}
     val tokens = token.split("::")
-    if(!connections.contains(label)){
-      println("CREATED: " + label + accountId)
+    // Set key as LABEL + AccountID combi
+    val key = label + accountId
+    if(!connections.contains(key)){
       val m: Mintpresso = new Mintpresso(accountId, tokens(0))
-      connections += ((label, m))
+      connections += ((key, m))
     }
-    connections(label)
+    connections(key)
   }
 }
 class Mintpresso(accId: Int, token: String) {
