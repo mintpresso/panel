@@ -14,9 +14,9 @@ import scala.concurrent.stm._
 import scala.concurrent._
 
 object MintpressoCore {
-  val server = "http://192.168.0.5:9001"
+  val server = "http://" + Play.configuration.getString("mintpresso.core.server").getOrElse("127.0.0.1:9001")
   val initial = "Play 2.1 Core API"
-  val versionPrefix = "/v1"
+  val versionPrefix = "/" + Play.configuration.getString("mintpresso.core.version").getOrElse("v1")
   val urls: Map[String, String] = Map(
     "authenticate" -> (versionPrefix + "/account/authenticate"),
     "addAccount" -> (versionPrefix + "/account"),
@@ -90,9 +90,9 @@ object MintpressoAPI {
   }
 }
 class Mintpresso(accId: Int, token: String) {
-  val server = "http://192.168.0.5:9001"
+  val server = "http://" + Play.configuration.getString("mintpresso.api.server").getOrElse("127.0.0.1:9001")
   val initial = "Play 2.1 API"
-  val versionPrefix = "/v1"
+  val versionPrefix = "/" + Play.configuration.getString("mintpresso.api.version").getOrElse("v1")
   val urls: Map[String, String] = Map(
     "getPoint" -> (versionPrefix + "/account/%d/point/%d"),
     "getPointType" -> (versionPrefix + "/account/%d/points/type"),

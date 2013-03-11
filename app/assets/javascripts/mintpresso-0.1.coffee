@@ -8,7 +8,7 @@ __init__ = (d, key) ->
   script.async = !0
   script.onload = () ->
     window['mintpresso'].init key
-  server = '//192.168.0.5:9000/assets/javascripts/mintpresso-0.1.min.js'
+  server = '//localhost:9000/assets/javascripts/mintpresso-0.1.min.js'
   if 'https:' is d.location.protocol
     script.src = 'https:' + server
   else
@@ -44,12 +44,6 @@ try
   _accId = ''
   _servers = []
   _initialized = false
-  if 'https:' is document.location.protocol
-    _servers.push 'https:' + '//192.168.0.5:9001'
-    _servers.push 'https:' + '//192.168.0.5:9002'
-  else
-    _servers.push 'http:' + '//192.168.0.5:9001'
-    _servers.push 'http:' + '//192.168.0.5:9002'
   _serverIteration = 0
   _timeout = 1000
 
@@ -363,6 +357,15 @@ try
           _callbackEnabled = false
         else
           _callbackEnabled = true
+        domain = '//api.mintpresso.com'
+        if option['useLocalhost'] isnt undefined and option['useLocalhost'] is true
+          domain = '//localhost'
+
+        # init server urls
+        if 'https:' is document.location.protocol
+          _servers.push 'https:' + domain + ':9001'
+        else
+          _servers.push 'http:' + domain + ':9001'
       _initialized = true
       true
 
