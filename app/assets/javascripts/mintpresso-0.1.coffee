@@ -422,6 +422,10 @@ try
     # For debug 
     callback: (response) ->
       if _debugCallbackEnabled is true
+        if response?.status?.code > 201
+          console.log _logPrefix + "Response(#{response.status.code}): #{response.status.message}", response
+        else
+          console.log _logPrefix + "Response(#{response.status.code}): ", response
 
     init: (key, option) ->
       if typeof key isnt 'string' or key.length < 10
