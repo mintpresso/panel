@@ -198,14 +198,17 @@ try
 
     sType = ""
     sId = ""
+    sString = ""
     v = ""
     oType = ""
     oId = ""
+    oString = ""
     for key of json
       switch i
         when 1
           sType = encodeURIComponent(key)
           sId = encodeURIComponent(json[key]) if json[key] isnt _mark and typeof json[key] is 'number'
+          sString = encodeURIComponent(json[key]) if json[key] isnt _mark and typeof json[key] is 'string'
         when 2
           if _verbs.indexOf(key) is -1
             console.log _logPrefix + 'Verb isn\'t match with do/does/did/verb. - mintpresso.get'
@@ -214,15 +217,16 @@ try
         when 3
           oType = encodeURIComponent(key)
           oId = encodeURIComponent(json[key]) if json[key] isnt _mark and typeof json[key] is 'number'
+          oString = encodeURIComponent(json[key]) if json[key] isnt _mark and typeof json[key] is 'string'
         else
           console.log _logPrefix + 'Too many arguments are given to be a form of subject/verb/object query - mintpresso.get'
           return false
           break
       i++
 
-    console.log "#{ _servers[_serverIteration] }#{ _versionPrefix }/account/#{_accId}/edge?subjectId=#{sId}&subjectType=#{sType}&verb=#{v}&objectId=#{oId}&objectType=#{oType}&api_token=#{_key}"
+    console.log "#{ _servers[_serverIteration] }#{ _versionPrefix }/account/#{_accId}/edge?subjectId=#{sId}&subjectType=#{sType}&subjectIdentifier=#{sString}&verb=#{v}&objectId=#{oId}&objectType=#{oType}&objectIdentifier=#{oString}&api_token=#{_key}"
     jQuery.ajax {
-      url: "#{ _servers[_serverIteration] }#{ _versionPrefix }/account/#{_accId}/edge?subjectId=#{sId}&subjectType=#{sType}&verb=#{v}&objectId=#{oId}&objectType=#{oType}&api_token=#{_key}"
+      url: "#{ _servers[_serverIteration] }#{ _versionPrefix }/account/#{_accId}/edge?subjectId=#{sId}&subjectType=#{sType}&subjectIdentifier=#{sString}&verb=#{v}&objectId=#{oId}&objectType=#{oType}&objectIdentifier=#{oString}&api_token=#{_key}"
       type: 'GET'
       async: true
       cache: false
