@@ -36,7 +36,6 @@ String.prototype.startsWith = (prefix) ->
   return (this.substr(0, prefix.length) is prefix)
 
 try
-
   _logPrefix = '[MINTPRESSO] '
   _versionPrefix = '/v1'
   _initial = 'JS 0.1 API'
@@ -58,8 +57,8 @@ try
   _point_proto = Array('type', 'identifier', 'data')
   _edge_proto = Array('subjectId', 'subjectType', 'verb', 'objectId', 'objectType')
   _dataType = 'jsonp'
-  _callbackName = 'mintpressoCallback'
   _callbackEnabled = true
+  _debugCallbackEnabled = true
 
   _log = (f) ->
     console.log _logPrefix + 'backlog executed due to network problems.'
@@ -80,7 +79,7 @@ try
       cache: false
       crossDomain: true
       dataType: _dataType
-      jsonpCallback: _callbackName
+      jsonpCallback: mintpresso._callbackName
       success: (json) ->
         _data = undefined
         if json.status.code is 200
@@ -141,7 +140,7 @@ try
       cache: false
       crossDomain: true
       dataType: _dataType
-      jsonpCallback: _callbackName
+      jsonpCallback: mintpresso._callbackName
       success: (json) ->
         _data = undefined
         if json.status.code is 200
@@ -173,6 +172,7 @@ try
             console.error _logPrefix + "Found results neither point nor points - mintpresso._getPointByTypeOrIdentifier"
         callback json
       error: (xhr, status, error) ->
+        console.error("ERRROR", xhr)
         retry()
         callback {
           status: {
@@ -228,7 +228,7 @@ try
       cache: false
       crossDomain: true
       dataType: _dataType
-      jsonpCallback: _callbackName
+      jsonpCallback: mintpresso._callbackName
       success: (json) ->
         callback json
       error: (xhr, status, error) ->
@@ -271,7 +271,7 @@ try
       cache: false
       crossDomain: true
       dataType: _dataType
-      jsonpCallback: _callbackName
+      jsonpCallback: mintpresso._callbackName
       success: (json) ->
         callback json
       error: (xhr, status, error) ->
@@ -326,7 +326,7 @@ try
       cache: false
       crossDomain: true
       dataType: _dataType
-      jsonpCallback: _callbackName
+      jsonpCallback: mintpresso._callbackName
       success: (json) ->
         callback json
       error: (xhr, status, error) ->
@@ -342,33 +342,6 @@ try
 
   window.mintpresso = {}
   window.mintpresso =
-    init: (key, option) ->
-      if typeof key isnt 'string' or key.length < 10
-        return console.warn _logPrefix + 'Not initialized. Invalid API key.'
-        
-      temp = key.split '::'
-      _key = temp[0]
-      _accId = temp[1]
-
-      if option isnt undefined
-        if option['withoutCallback'] isnt undefined and option['withoutCallback'] is true
-          _dataType = 'json'
-          _callbackName = undefined
-          _callbackEnabled = false
-        else
-          _callbackEnabled = true
-        domain = '//api.mintpresso.com'
-        if option['useLocalhost'] isnt undefined and option['useLocalhost'] is true
-          domain = '//localhost'
-
-        # init server urls
-        if 'https:' is document.location.protocol
-          _servers.push 'https:' + domain + ':9001'
-        else
-          _servers.push 'http:' + domain + ':9001'
-      _initialized = true
-      true
-
     get: () ->
       ###
       @param
@@ -446,7 +419,44 @@ try
 
     # For debug 
     callback: (response) ->
-      console.log _logPrefix + "Response(#{response.status.code}): ", response
+      if _debugCallbackEnabled is true
+        console.log _logPrefix + "Response(#{response.status.code}): ", response
+
+    init: (key, option) ->
+      if typeof key isnt 'string' or key.length < 10
+        return console.warn _logPrefix + 'Not initialized. Invalid API key.'
+        
+      temp = key.split '::'
+      _key = temp[0]
+      _accId = temp[1]
+
+      if option isnt undefined
+        if option['withoutCallback'] isnt undefined and option['withoutCallback'] is true
+          _dataType = 'json'
+          _callbackName = undefined
+          _callbackEnabled = false
+        else
+          _callbackName = 'JSAPIMINTPRESSOCALLBACK'
+          _callbackEnabled = true
+        domain = '//api.mintpresso.com'
+        if option['useLocalhost'] isnt undefined and option['useLocalhost'] is true
+          domain = '//localhost'
+
+        # init server urls
+        if 'https:' is document.location.protocol
+          _servers.push 'https:' + domain + ':9001'
+        else
+          _servers.push 'http:' + domain + ':9001'
+      _initialized = true
+
+      if option['callbackFunction'] isnt undefined and option['callbackFunction'].length > 0 and `option['callbackFunction'] in window`
+        window[option['callbackFunction']](window.mintpresso)
+        console.log _logPrefix + "window.#{option['callbackFunction']} is called."
+
+      if option['disableDebugCallback'] isnt undefined and option['disableDebugCallback'] is true
+        _debugCallbackEnabled = false
+
+      true
 
 catch e
   if window['__mintpresso__'] isnt undefined and true

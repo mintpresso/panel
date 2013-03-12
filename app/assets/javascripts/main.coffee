@@ -499,6 +499,7 @@ jQuery ->
       $code = $('div#body textarea.code');
       $code.val($code.val().replace("YOUR API KEY HERE", mint._api.token + '::' + mint.id))
 
+    # if mint.page is 'javascript/test'}}
 
   $meta = $('meta[name=login]')
   if $meta.length > 0 and $meta isnt undefined

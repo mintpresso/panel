@@ -1,6 +1,6 @@
 @(user: User)(implicit flash: Flash)
 
-@document("JavaScript API Test", Some(user)) {
+@document("javascript/test", Some(user)) {
   <h1>JavaScript API Test</h1>
   <ul class="breadcrumb">
     <li><a href="@routes.Application.docs("index")">Index</a> <span class="divider">/</span></li>
@@ -13,7 +13,61 @@
   // window.__mintpresso__ = false;
   </script>
 <script type="text/javascript">
-(function(e,t,o){var n,r,i;r=e.createElement("script");r.type="text/javascript";r.async=!0;r.onload=function(){return window["mintpresso"].init(t, o)};i="//localhost:9000/assets/javascripts/mintpresso-0.1.js";if("https:"===e.location.protocol){r.src="https:"+i}else{r.src="http:"+i}n=e.getElementsByTagName("script")[0];return n.parentNode.insertBefore(r,n)})(document,"8563847d3c46688a633fffa7c806b3bf::7",{withoutCallback: false, useLocalhost: true})
+function mintpressoInit(_){
+  var user = 0
+  var music = 0
+
+  $.when(
+    _.get({user: "jin"}, function(json){ user = json.point.id }),
+    _.get({music: "bugs-1000"}, function(json){ music = json.point.id })
+  ).then(
+    function(){
+      // all of queries are success
+      console.log("User: " + user + "\t Music: " + music)
+    },
+    function(){
+      // one of queries is failed
+      console.log("Failed to get info.")
+    }
+  )
+  
+  $.when(
+    _.get({user: "jin"}),
+    _.get({music: "bugs-1001"})
+  ).done( function(user, music){
+    /*
+      Each index of user, music object contains:
+        0: jsonResponse
+        1: statusText
+        2: jqXHR
+    */
+    var count = 0
+    count += user[0]._length
+    count += music[0]._length
+    console.log(user)
+    console.log("Number of users and music: " + count)
+  })
+}
+(function(e,t,o){var n,r,i;r=e.createElement("script");
+  r.type="text/javascript";r.async=!0;
+  r.onload=function(){if('mintpresso' in window){return window["mintpresso"].init(t, o);}else{console.log("ERROR")}};
+  i="//localhost:9000/assets/javascripts/mintpresso-0.1.js";
+  if("https:"===e.location.protocol){r.src="https:"+i}else{r.src="http:"+i}n=e.getElementsByTagName("script")[0];return n.parentNode.insertBefore(r,n)}
+  )(document,"8563847d3c46688a633fffa7c806b3bf::7",{withoutCallback: false, useLocalhost: true, callbackFunction: 'mintpressoInit', disableDebugCallback: true})
+  /*
+    withoutCallback
+      - whether or not use JSONP
+
+    useLocalhost
+      - use localhost as API server if true
+    
+    callbackFunction
+      - specified function will be called just after intialization when mintpresso API is ready to use
+    
+    disableDebugCallback
+      - force to do not use default callback; it shows debug messages on console, very handy to debug.
+
+  */
 </script>
   <hr />
   Last updated <time class="updatedAt">2013-02-15</time>.
