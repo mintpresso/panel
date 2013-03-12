@@ -172,7 +172,6 @@ try
             console.error _logPrefix + "Found results neither point nor points - mintpresso._getPointByTypeOrIdentifier"
         callback json
       error: (xhr, status, error) ->
-        console.error("ERRROR", xhr)
         retry()
         callback {
           status: {
@@ -224,7 +223,6 @@ try
           break
       i++
 
-    console.log "#{ _servers[_serverIteration] }#{ _versionPrefix }/account/#{_accId}/edge?subjectId=#{sId}&subjectType=#{sType}&subjectIdentifier=#{sString}&verb=#{v}&objectId=#{oId}&objectType=#{oType}&objectIdentifier=#{oString}&api_token=#{_key}"
     jQuery.ajax {
       url: "#{ _servers[_serverIteration] }#{ _versionPrefix }/account/#{_accId}/edge?subjectId=#{sId}&subjectType=#{sType}&subjectIdentifier=#{sString}&verb=#{v}&objectId=#{oId}&objectType=#{oType}&objectIdentifier=#{oString}&api_token=#{_key}"
       type: 'GET'
@@ -424,7 +422,6 @@ try
     # For debug 
     callback: (response) ->
       if _debugCallbackEnabled is true
-        console.log _logPrefix + "Response(#{response.status.code}): ", response
 
     init: (key, option) ->
       if typeof key isnt 'string' or key.length < 10
