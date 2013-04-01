@@ -267,7 +267,7 @@ try
         value.point.data[key] = json[key]
 
     jQuery.ajax {
-      url: "#{ _servers[_serverIteration] }#{ _versionPrefix }/post/account/#{_accId}/point?json=#{ JSON.stringify(value) }&api_token=#{_key}"
+      url: "#{ _servers[_serverIteration] }#{ _versionPrefix }/post/account/#{_accId}/point?json=#{ encodeURIComponent JSON.stringify(value) }&api_token=#{_key}"
       type: 'GET'
       async: true
       cache: false
