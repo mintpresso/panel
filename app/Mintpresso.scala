@@ -130,10 +130,36 @@ class Mintpresso(accId: Int, token: String) {
       .withQueryString(queries.toSeq:_*)
       .get()
   }
-  def linkWithEdge(query: Map[String, Seq[String]]) = {
-    WS.url(server + urls("findWithEdge").format(accId))
+  def linkWithEdge(query: Map[String, String]) = {
+    val body =
+    """
+{
+  "edge": {
+    "subjectId": "%s",
+    "subjectType": "%s",
+    "verb": "%s",
+    "objectId": "%s",
+    "objectType": "%s"
+  }
+}
+    """.format(
+      query.get("subjectId").getOrElse("\"\""),
+      query.get("subjectType").getOrElse("\"\""),
+      query.get("verb").getOrElse("\"\""),
+      query.get("objectId").getOrElse("\"\""),
+      query.get("objectType").getOrElse("\"\"")
+    )
+    WS.url(server + urls("linkWithEdge").format(accId))
       .withHeaders( ("X-Requested-With", initial) )
-      .withQueryString( (("api_token"), token) )
-      .post( query )
+      .withQueryString( ("api_token" -> token), ("json" -> body) )
+      .post( body )
+    // var map: Map[String, Seq[String]] = Map()
+    // query.foreach { kv =>
+    //   map += (kv._1 -> Seq(kv._2))
+    // }
+    // WS.url(server + urls("linkWithEdge").format(accId))
+    //   .withHeaders( ("X-Requested-With", initial) )
+    //   .withQueryString( (("api_token"), token) )
+    //   .post( map )
   }
 }
