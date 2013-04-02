@@ -23,7 +23,7 @@ GET 	/:accId/overview/usage		controllers.Panel.overview_usage(accId: Int)
 GET 	/:accId/overview/account	controllers.Panel.overview_account(accId: Int)
 GET 	/:accId/overview/transaction	controllers.Panel.overview_transaction(accId: Int)
 GET 	/:accId/overview/api	 	controllers.Panel.overview_api(accId: Int)
-PUT 	/:accId/overview/api	 	controllers.Panel.overview_api_set(accId: Int)
+PUT 	/:accId/overview/api	 	controllers.Panel.overview_api_set(accId: Int, key: String, domain: String, name: String)
 
 GET 	/:accId/data-cloud/			controllers.Panel.data(accId: Int)
 GET 	/:accId/data-cloud/index	controllers.Panel.data_index(accId: Int)

@@ -25,6 +25,7 @@ data.import.created=모델을 추가했습니다.
 
 overview.api.fill=모든 항목을 채워주세요.
 overview.api.domain.fill=최소 1개 이상의 도메인을 입력주세요. 제한을 원치않는 경우 '*' 모두 허용으로 지정하시면 됩니다.
+overview.api.password.fill=API 설정을 바꾸려면 인증을 한번 더 해야합니다. 비밀번호를 입력해주세요.
 overview.api.domain.updated=API 설정이 반영되었습니다.
 overview.api.password.invalid=비밀번호가 틀립니다. API 설정을 반영하지 못했습니다.
 overview.api.retry=일시적으로 API 설정을 반영할 수 없습니다. 다시 시도해주세요.

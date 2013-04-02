@@ -1,16 +1,31 @@
 @(user: User, json: String)(implicit flash: Flash)
 
+@import com.mintpresso.i18n.Locale
+
 <h1>API</h1>
 
-<div class="well">
-@user.name 인증을 위한 API 인증 토큰은 아래와 같습니다. 누르면 가려진 코드가 보입니다.<br />
-<span class="code seal" style="font-size:9pt; border-bottom: dotted 1px; padding: 5px;" onclick="$(this).toggleClass('seal')" title="누르면 가려진 코드가 보입니다."></span>
-</div>
-<hr />
-<p>@user.name에 대한 데이터 클라우드 및 주문 가져오기 요청(API)을 이용할 수 있는 도메인을 제한시킬 수 있습니다. <br />예제: <small>모든 하위 도메인 <span class="label label-inverse">mintpresso.com</span> &middot; 특정 하위 도메인 <span class="label label-inverse">docs.mintpresso.com</span> &middot; 모든 도메인 <span class="label label-inverse">*</span></small></p>
-<form id="domain">
-  <textarea name="domain" style="width:90%; padding:5%; height: 200px;" class="code"></textarea>
-  <button type="submit" class="btn btn-small btn-primary btn-block" data-loading-text="<i class=&quot;icon-refresh icon-spin&quot; style=&quot;color:black&quot;></i>">반영하기</button>
+@user.name 인증을 위한 API 인증 토큰은 아래와 같습니다. 데이터 클라우드 및 주문 가져오기 요청(API)을 이용할 수 있는 도메인과 API 권한을 제한시킬 수 있습니다. <p align="right"><small>모든 하위 도메인 <span class="label label-inverse">mintpresso.com</span> &middot; 특정 하위 도메인 <span class="label label-inverse">docs.mintpresso.com</span> &middot; 모든 도메인 <span class="label label-inverse">*</span></small></p>
+<form id="domain" class="form-inline">
+  <table id="tokens" class="table">
+    <thead>
+      <tr>
+        <th>API KEY</th>
+        <th width="150px">Name</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  <span class="help-block" style="text-align: center">
+    @flash.get("error").map { message =>
+      @message
+    }
+    @flash.get("msg").map { message =>
+      @message <time datetime="@flash.get("created").getOrElse("-1").toLong" title="@flash.get("created").getOrElse("-1").toLong)">@flash.get("created")</time>
+    }.getOrElse {
+      <span class="good hide" id="guide1">?</span>
+    }
+  </span>
 </form>
 <script>
 mint._api = @Html(json);
