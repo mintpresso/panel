@@ -13,44 +13,6 @@ import play.api.libs.iteratee._
 import scala.concurrent.stm._
 import scala.concurrent._
 
-object MintpressoCore {
-  val server = "http://" + Play.configuration.getString("mintpresso.core.server").getOrElse("127.0.0.1:9001")
-  val initial = "Play 2.1 Core API"
-  val versionPrefix = "/" + Play.configuration.getString("mintpresso.core.version").getOrElse("v1")
-  val urls: Map[String, String] = Map(
-    "authenticate" -> (versionPrefix + "/account/authenticate"),
-    "addAccount" -> (versionPrefix + "/account"),
-    "getAccount" -> (versionPrefix + "/account/%d"),
-    "getToken" -> (versionPrefix + "/account/%d/token"),
-    "updateToken" -> (versionPrefix + "/account/%d/token")
-  )
-  
-  def addAccount(email: String, password: String, name: String): Future[Response] = {
-    WS.url(server + urls("addAccount"))
-      .withQueryString(("email", email), ("password", password), ("name", name))
-      .withHeaders( ("X-Requested-With", initial) )
-      .post(Map("key" -> Seq("value")))
-  }
-  def authenticate(email: String, password: String): Future[Response] = {
-    WS.url(server + urls("authenticate"))
-      .withHeaders( ("X-Requested-With", initial) )
-      .withQueryString(("email", email), ("password", password))
-      .post(Map("key" -> Seq("value")))
-  }
-  def getToken(id: Int): Future[Response] = {
-    WS.url(server + urls("getToken").format(id))
-      .withHeaders( ("X-Requested-With", initial) )
-      .get()
-  }
-
-  def setToken(id: Int, password: String, url: List[String]): Future[Response] = {
-    WS.url(server + urls("setToken").format(id))
-      .withHeaders( ("X-Requested-With", initial) )
-      .withQueryString(("pw", password), ("url", url.mkString("|")))
-      .put(Map("key" -> Seq("value")))
-  }
-}
-
 object MintpressoAPI {
   var connections: Map[String, Mintpresso] = Map()
   
