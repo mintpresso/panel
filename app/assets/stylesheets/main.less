@@ -35,6 +35,31 @@ time {
   color: #fff;
 }
 
+input.editable {
+  background: none;
+  border-radius: 3px;
+  &:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+    &[disabled=disabled] {
+      cursor: initial;
+    }
+  }
+  &:focus {
+    background-color: #f0f0f0;
+  }
+}
+textarea.editable {
+  border-radius: 3px;
+  &:hover {
+    cursor: pointer;
+    &[disabled=disabled] {
+      cursor: initial;
+    }
+  }
+  &:focus {
+  }
+}
 span.selected {
   background: #C3CF98;
   color: #fff;
