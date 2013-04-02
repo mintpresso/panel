@@ -17,13 +17,21 @@ function mintpressoInit(_){
   var user = 0
   var music = 0
 
+  _.set({type: "user", identifier: "jin"});
+  _.set({type: "music", identifier: "bugs-1000", artist: "가을방학"});
+  
   $.when(
-    _.get({user: "jin"}, function(json){ user = json.point.id }),
-    _.get({music: "bugs-1000"}, function(json){ music = json.point.id })
+    _.get({user: "jin"}, function(json){ user = json.point }),
+    _.get({music: "bugs-1000"}, function(json){ music = json.point })
   ).then(
     function(){
       // all of queries are success
-      console.log("User: " + user + "\t Music: " + music)
+      console.log("User: " + user.identifier + "\t Music: " + music.artist)
+      _.get({user: "jin", did: "listen", music: "bugs-1000"}, function(json){
+        if(json.status.code == 404){
+          console.log(music.artist + "의 노래를 아직 듣지 못하셨군요!")
+        }
+      });
     },
     function(){
       // one of queries is failed
@@ -31,29 +39,29 @@ function mintpressoInit(_){
     }
   )
   
+  var friend = 0
+  var listened = 0
   $.when(
     _.get({user: "jin"}),
-    _.get({music: "bugs-1001"})
-  ).done( function(user, music){
+    _.get({user: "jin", did: "listen", music: "?"})
+  ).done( function(user, list){
     /*
       Each index of user, music object contains:
         0: jsonResponse
         1: statusText
         2: jqXHR
     */
-    var count = 0
-    count += user[0]._length
-    count += music[0]._length
-    console.log(user)
-    console.log("Number of users and music: " + count)
+    friend = user[0].point
+    listenCount = list[0].status.code == 404 ? 0 : list[0]._length
+    console.log(friend.identifier + "님은 노래 " + 0 + "곡을 들었습니다.")
   })
 }
 (function(e,t,o){var n,r,i;r=e.createElement("script");
   r.type="text/javascript";r.async=!0;
   r.onload=function(){if('mintpresso' in window){return window["mintpresso"].init(t, o);}else{console.log("ERROR")}};
-  i="//localhost:9000/assets/javascripts/mintpresso-0.1.js";
+  i="//localhost:10000/assets/javascripts/mintpresso-0.1.js";
   if("https:"===e.location.protocol){r.src="https:"+i}else{r.src="http:"+i}n=e.getElementsByTagName("script")[0];return n.parentNode.insertBefore(r,n)}
-  )(document,"8563847d3c46688a633fffa7c806b3bf::7",{withoutCallback: false, useLocalhost: true, callbackFunction: 'mintpressoInit'})
+  )(document,"33a3a9ce4-2e09-4044-a827-e179ff9c0338::3",{withoutCallback: false, useLocalhost: true, callbackFunction: 'mintpressoInit', disableDebugCallback: true})
   /*
     withoutCallback
       - whether or not use JSONP
