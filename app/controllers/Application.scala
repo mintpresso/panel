@@ -3,6 +3,8 @@ package controllers
 import play.api._
 import play.api.mvc._
 
+import models.User
+
 object Application extends Controller with Secured {
   
   def index = Action { implicit request =>
@@ -21,23 +23,8 @@ object Application extends Controller with Secured {
     page match {
       case "index" => Ok(views.html.docs.index(getOptionUser))
       case "javascript/api" => getOptionUser map { user =>
-        Async {
-          MintpressoCore.getToken(user.id).map { res =>
-            res.status match {
-              case 200 =>
-                Ok(views.html.docs.javascript.api(user, res.body))
-              case 404 =>
-                NotFound
-              //case 403 =>
-              case _ => {
-                Results.Redirect(routes.Application.login).flashing(
-                  "msg" -> "해당 링크에 들어가려면 로그인 인증이 필요합니다.",
                   "redirect_url" -> request.path
-                )
-              }
-            }
-          }
-        }
+        Ok(views.html.docs.javascript.api(user, User.findTokens(getId, getUser.email).toString))
       } getOrElse {
         Results.Redirect(routes.Application.login).flashing(
           "msg" -> "해당 링크에 들어가려면 로그인 인증이 필요합니다.",
