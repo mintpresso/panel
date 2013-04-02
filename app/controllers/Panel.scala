@@ -11,6 +11,7 @@ import play.api.cache._
 import play.api.libs.json._
 
 import com.mintpresso._
+import models.User
 import play.api.libs.concurrent.Execution.Implicits._
 
 object Panel extends Controller with Secured {
@@ -30,59 +31,36 @@ object Panel extends Controller with Secured {
   	Ok(views.html.panel._overview.transaction())
   }
   def overview_api(accountId: Int) = SignedAccount(accountId) { implicit request =>
-    Async {
-      MintpressoCore.getToken(accountId).map { res =>
-        res.status match {
-          case 200 =>
-            Ok(views.html.panel._overview.api(getUser, res.body))
-          case 404 =>
-            NotFound
-          //case 403 =>
-          case _ =>
-            Forbidden
-        }
-      }
-    }
+    Ok(views.html.panel._overview.api(getUser, User.findTokens(accountId, getUser.email).toString))
   }
-  def overview_api_set(accountId: Int) = SignedAccount(accountId) { implicit request =>
-    val f = Form(
-      tuple(
-        "data" -> text,
-        "password" -> text
-      )
-    )
-    val form = f.bindFromRequest
-    if(form.hasErrors){
-      Ok.flashing("error" -> Messages("overview.api.fill"), "msg" -> "")
-    }else{
-      form.get match {
-        case (domain: String, password: String) => {
-          val url: Array[String] = domain.trim.split('\n')
-          if(url.length == 0){
-            Ok.flashing("error" -> Messages("overview.api.domain.fill"), "msg" -> "")  
-          }else{
-            Async {
-              MintpressoCore.setToken(accountId, password, url.toList).map { response => 
-                response.status match {
-                  case 200 => {
-                    Ok.flashing(
-                        "created" -> (System.currentTimeMillis).toString,
-                        "msg" -> Messages("overview.api.domain.updated")
-                      )
-                  }
-                  case 403 => {
-                    Ok.flashing("error" -> Messages("overview.api.password.invalid"), "domain" -> domain)
-                  }
-                  case _ => {
-                    Ok.flashing("error" -> Messages("overview.api.retry"), "domain" -> domain)
-                  }
-                }
-              }
-            }
-          }
-        }
-        case _ => Ok.flashing("error" -> Messages("overview.api.domain.fill"), "msg" -> "")
+  def overview_api_set(accountId: Int, key: String, domain: String, name: String) = SignedAccount(accountId) { implicit request =>    
+    try {
+      if(key.length == 0){
+        throw new Exception(Messages("overview.api.key.fill"))
       }
+      if(domain.length == 0){
+        throw new Exception(Messages("overview.api.domain.fill"))
+      }
+      if(name.length == 0){
+        throw new Exception(Messages("overview.api.name.fill"))
+      }
+      val url: Array[String] = domain.trim.split('|')
+      if(url.length == 0){
+        throw new Exception(Messages("overview.api.domain.fill"))
+      }
+      Ok.flashing("error" -> Messages("overview.api.retry"), "domain" -> domain)
+      // Async {
+      //   User.updateToken(key, url.toList) == true){
+      //     Ok.flashing(
+      //         "created" -> (System.currentTimeMillis).toString,
+      //         "msg" -> Messages("overview.api.domain.updated")
+      //       )
+      //   }else{
+      //   }
+      // }
+    } catch { 
+      case e: Exception =>
+        Ok.flashing("error" -> e.getMessage, "msg" -> "")  
     }
   }
 
