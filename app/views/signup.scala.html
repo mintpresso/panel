@@ -17,7 +17,7 @@
       <fieldset>
         <div style="text-align: center">
           <input type="text" name="email" id="inputEmail" placeholder="Email" value="@flash.get("email")" />
-          <input type="password" name="password" id="inputPassword" placeholder="Password" />
+          <input type="password" name="password" id="inputPassword" placeholder="Password" value="@flash.get("password")" />
           <span class="help-block">
             @flash.get("msg-basic").map { message =>
               <span class="good">✔</span>
