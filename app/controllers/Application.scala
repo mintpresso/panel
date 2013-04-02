@@ -23,7 +23,6 @@ object Application extends Controller with Secured {
     page match {
       case "index" => Ok(views.html.docs.index(getOptionUser))
       case "javascript/api" => getOptionUser map { user =>
-                  "redirect_url" -> request.path
         Ok(views.html.docs.javascript.api(user, User.findTokens(getId, getUser.email).toString))
       } getOrElse {
         Results.Redirect(routes.Application.login).flashing(
@@ -52,7 +51,7 @@ object Application extends Controller with Secured {
       Ok(views.html.changeAccount())
     }else{
       if(authenticated){
-        Redirect(routes.Panel.overview(getAccountId))
+        Redirect(routes.Panel.overview(getId))
       }else{
         Ok(views.html.login())
       }
