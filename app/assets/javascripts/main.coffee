@@ -262,23 +262,64 @@ jQuery ->
             .error( blockError($block) )
             .success (e) ->
               $block.html e
-              $block.find('div.well span').html mint._api.token
-              $block.find('textarea').html mint._api.urls.join '\n'
-              $form = $block.find('form#domain')
-              $form.submit () ->
-                offContent $content
-                args =
-                  data: {
-                    domain: $form.find('textarea[name=domain]').val()
-                  }
-                  success: (e) ->
-                    refreshContent $content, $submenu, 'api', ($block) ->
-                      true
-                  error: blockError($block)
+              $tbody = $block.find('table#tokens tbody')
+              # for token in mint._api
+              token = mint._api
+              $tbody.prepend """
+                <tr>
+                  <td>
+                    <input name="key" type="text" value="#{token.identifier}" disabled="disabled" class="editable code" style="width:450px; font-size:8pt" />
+                    <br />
+                    <textarea name="domain" title="Accessible Domains" class="editable" style="width:437px">#{token.data.url.split('|').join('\n')}</textarea>
+                  </td>
+                  <td>
+                    <input name="name" type="text" value="#{token.data.name}" class="editable" />
+                    <button type="button" class="btn btn-small btn-block">SAVE</button>
+                  </td>
+                </tr>
+                """
 
-                routes.controllers.Panel.overview_api_set(mint.id).ajax args
-                return false
-              
+              $tbody.append """
+                <tr>
+                  <td>
+                    <input name="key" type="text" value="새로운 API 인증 토큰 추가" disabled="disabled" class="editable code" style="width:450px; font-size:8pt" />
+                    <br />
+                    <textarea name="domain" title="Accessible Domains" class="editable" style="width:437px"></textarea>
+                  </td>
+                  <td>
+                    <input name="name" type="text" placeholder="토큰을 알아보기 쉬운 이름" class="editable" />
+                    <button type="button" data-type="new" class="btn btn-small btn-block">SAVE</button>
+                  </td>
+                </tr>
+                """
+
+              $tbody.find('span.seal').click () ->
+                $(this).toggleClass 'seal'
+
+              $block.find('form#domain').find('tr button').each (k,v) ->
+                $elem = $(v)
+                $elem.click (e) ->
+                  if $(this).attr('data-type') is 'new'
+                    alert '현재 인증키는 하나만 발급가능합니다.'
+                    return false
+                  else
+                    $form = $(this).closest('tr')
+
+                    offContent $content
+                    args =
+                      data:
+                        key: $form.find('input[name=key]').val()
+                        name: $form.find('input[name=name]').val()
+                        domain: $form.find('textarea[name=domain]').val()
+                      success: (e) ->
+                        refreshContent $content, $submenu, 'api', ($block) ->
+                          true
+                      error: blockError($block)
+
+                    routes.controllers.Panel.overview_api_set(mint.id).ajax args
+                    e.preventDefault()
+                    e.stopPropagation()
+                    return false
               onBlock $block
 
       triggerHash $content, $submenu
