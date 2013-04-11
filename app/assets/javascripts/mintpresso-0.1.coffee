@@ -8,7 +8,7 @@ __init__ = (d, key) ->
   script.async = !0
   script.onload = () ->
     window['mintpresso'].init key
-  server = '//localhost:10000/assets/javascripts/mintpresso-0.1.min.js'
+  server = '//api.mintpresso.com:9000/assets/javascripts/mintpresso-0.1.min.js'
   if 'https:' is d.location.protocol
     script.src = 'https:' + server
   else
@@ -449,9 +449,9 @@ try
 
         # init server urls
         if 'https:' is document.location.protocol
-          _servers.push 'https:' + domain + ':10001'
+          _servers.push 'https:' + domain + ':9001'
         else
-          _servers.push 'http:' + domain + ':10001'
+          _servers.push 'http:' + domain + ':9001'
       _initialized = true
 
       if option['callbackFunction'] isnt undefined and option['callbackFunction'].length > 0 and `option['callbackFunction'] in window`
