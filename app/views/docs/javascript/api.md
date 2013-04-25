@@ -19,7 +19,7 @@
 
 <textarea class="code" style="width:95%; height:250px">
 <script type="text/javascript">
-(function(e,t){var n,r,i;r=e.createElement("script");r.type="text/javascript";r.async=!0;r.onload=function(){return window["mintpresso"].init(t, {withoutCallback: true})};i="//api.mintpresso.com:9000/assets/javascripts/mintpresso-0.1.min.js";if("https:"===e.location.protocol){r.src="https:"+i}else{r.src="http:"+i}n=e.getElementsByTagName("script")[0];return n.parentNode.insertBefore(r,n)})(document,"YOUR API KEY HERE")
+(function(e,t){var n,r,i;r=e.createElement("script");r.type="text/javascript";r.async=!0;r.onload=function(){return window["mintpresso"].init(t, {withoutCallback: false})};i="//api.mintpresso.com:9000/assets/javascripts/mintpresso-0.1.min.js";if("https:"===e.location.protocol){r.src="https:"+i}else{r.src="http:"+i}n=e.getElementsByTagName("script")[0];return n.parentNode.insertBefore(r,n)})(document,"YOUR API KEY HERE")
 </script>
 </textarea>
 
@@ -31,7 +31,7 @@
   기본적으로 <code>window.mintpresso</code>에 API가 초기화되므로 <code>mintpresso.set</code> 이와 같이 이용할 수 있습니다.
 </div>
 
-민트프레소의 callback을 비활성화 시키기위해서, `window["mintpresso"].init(t, {withoutCCallback: true})`에 옵션을 `{withoutCallback: false}`로 바꿔야합니다.
+민트프레소의 callback을 비활성화 시키기위해서, `window["mintpresso"].init(t, {withoutCCallback: false})`에 옵션을 `{withoutCallback: true}`로 바꿔야합니다.
 
 #### 데이터가 잘 들어오는지 확인하기
 
