@@ -435,32 +435,38 @@ try
       _key = temp[0]
       _accId = temp[1]
 
-      if option isnt undefined
-        if option['withoutCallback'] isnt undefined and option['withoutCallback'] is true
-          _dataType = 'json'
-          _callbackName = undefined
-          _callbackEnabled = false
-        else
-          _callbackName = 'JSAPIMINTPRESSOCALLBACK'
-          _callbackEnabled = true
-        domain = '//api.mintpresso.com'
-        if option['useLocalhost'] isnt undefined and option['useLocalhost'] is true
-          domain = '//localhost'
+      # use ajax callback (required CORS) or not
+      if option['withoutCallback'] isnt undefined and option['withoutCallback'] is true
+        _dataType = 'json'
+        _callbackName = undefined
+        _callbackEnabled = false
+      else
+        _callbackName = 'JSAPIMINTPRESSOCALLBACK'
+        _callbackEnabled = true
 
-        # init server urls
-        if 'https:' is document.location.protocol
-          _servers.push 'https:' + domain + ':9001'
-        else
-          _servers.push 'http:' + domain + ':9001'
-      _initialized = true
+      # use custom domain for any purpose
+      domain = '//api.mintpresso.com'
+      if option['useLocalhost'] isnt undefined and option['useLocalhost'] is true
+        domain = '//localhost'
 
+      # init server urls
+      if 'https:' is document.location.protocol
+        _servers.push 'https:' + domain + ':9001'
+      else
+        _servers.push 'http:' + domain + ':9001'
+
+      # call given function just after mintpressso API init.
       if option['callbackFunction'] isnt undefined and option['callbackFunction'].length > 0 and `option['callbackFunction'] in window`
         window[option['callbackFunction']](window.mintpresso)
         console.log _logPrefix + "window.#{option['callbackFunction']} is called."
 
+      # show description of all queries and APIs
       if option['disableDebugCallback'] isnt undefined and option['disableDebugCallback'] is true
         _debugCallbackEnabled = false
+      else
+        _debugCallbackEnabled = true
 
+      _initialized = true
       true
 
 catch e
