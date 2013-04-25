@@ -322,7 +322,7 @@ try
       i++
 
     jQuery.ajax {
-      url: "#{ _servers[_serverIteration] }#{ _versionPrefix }/post/account/#{_accId}/edge?json=#{ JSON.stringify(value) }&api_token=#{_key}"
+      url: "#{ _servers[_serverIteration] }#{ _versionPrefix }/post/account/#{_accId}/edge?json=#{ encodeURIComponent(JSON.stringify(value)) }&api_token=#{_key}"
       type: 'GET'
       async: true
       cache: false
