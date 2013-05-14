@@ -1,0 +1,3 @@
+[submodule "public/javascript-api"]
+	path = public/javascript-api
+	url = git://github.com/mintpresso/javascript-api.git
