@@ -23,6 +23,9 @@ object ApplicationBuild extends Build {
   val main = play.Project(appName, appVersion, appDependencies).settings(
     lessEntryPoints <<= baseDirectory(customLessEntryPoints),
     coffeescriptOptions := Seq("native", "/usr/local/bin/coffee -p")
+  ) dependsOn (
+    RootProject(uri("git://github.com/mintpresso/affogato.git"))
+    // RootProject(uri("file:////Users/eces/affogato"))
   )
 
 }
