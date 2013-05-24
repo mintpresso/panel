@@ -1,3 +1,6 @@
 [submodule "public/javascript-api"]
 	path = public/javascript-api
 	url = git://github.com/mintpresso/javascript-api.git
+[submodule "affogato"]
+	path = affogato
+	url = git://github.com/mintpresso/affogato.git
