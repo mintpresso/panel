@@ -29,3 +29,10 @@ You can enable continuous compilation with slash.
 ```bash
 [panel] $ ~run 9000
 ```
+
+The only dependency, Affogato(Scala API for MINTPRESSO) is managed on git submodule and placed in `/affogato`. To update this:
+```bash
+$ cd affogato
+$ git pull origin master
+```
+and then, commit with this message 'Update submodule of affogato.'
