@@ -5,7 +5,6 @@ import com.typesafe.config._
 
 object ApplicationBuild extends Build {
 
-  // val conf = play.api.Configuration.load(new File("."))
   val conf = ConfigFactory.parseFile(new File("conf/application.conf")).resolve()
   val appName         = "panel"
   val appVersion      = "1.0-SNAPSHOT"
