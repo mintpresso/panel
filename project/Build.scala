@@ -1,9 +1,12 @@
 import sbt._
 import Keys._
 import play.Project._
+import com.typesafe.config._
 
 object ApplicationBuild extends Build {
 
+  // val conf = play.api.Configuration.load(new File("."))
+  val conf = ConfigFactory.parseFile(new File("conf/application.conf")).resolve()
   val appName         = "panel"
   val appVersion      = "1.0-SNAPSHOT"
 
@@ -24,8 +27,7 @@ object ApplicationBuild extends Build {
     lessEntryPoints <<= baseDirectory(customLessEntryPoints),
     coffeescriptOptions := Seq("native", "/usr/local/bin/coffee -p")
   ) dependsOn (
-    RootProject(uri("git://github.com/mintpresso/affogato.git"))
-    // RootProject(uri("file:////Users/eces/affogato"))
+    RootProject(uri(conf.getString("affogato.repository")))
   )
 
 }
