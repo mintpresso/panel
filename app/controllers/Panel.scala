@@ -15,6 +15,8 @@ import models.User
 import play.api.libs.concurrent.Execution.Implicits._
 
 object Panel extends Controller with Secured {
+  val mintpresso: Affogato = Affogato( Play.configuration.getString("mintpresso.internal.api").getOrElse(""), Play.configuration.getString("mintpresso.internal.id").getOrElse("0").toLong)
+
   def overview(accountId: Int) = SignedAccount(accountId) { implicit request =>
     Ok(views.html.panel.overview())
   }
