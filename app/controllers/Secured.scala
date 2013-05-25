@@ -23,6 +23,9 @@ trait Secured {
   def getId(implicit request: RequestHeader): Int = {
     request.session.get("id").getOrElse(-1).toString.toInt
   }
+  def getIdentifier(implicit request: RequestHeader): String = {
+    request.session.get("email").getOrElse("anonymous@mintpresso.com")
+  }
   def getUser(implicit request: RequestHeader): User = {
     User(
       request.session.get("id").getOrElse(-1).toString.toInt,
