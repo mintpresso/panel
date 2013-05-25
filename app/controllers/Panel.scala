@@ -36,6 +36,7 @@ object Panel extends Controller with Secured {
     Ok(views.html.panel._overview.api(getUser, User.findTokens(accountId, getUser.email).toString))
   }
   def overview_api_set(accountId: Int, key: String, domain: String, name: String) = SignedAccount(accountId) { implicit request =>    
+    import java.net.{InetAddress, URL, MalformedURLException, UnknownHostException}
     try {
       if(key.length == 0){
         throw new Exception(Messages("overview.api.key.fill"))
@@ -50,17 +51,33 @@ object Panel extends Controller with Secured {
       if(url.length == 0){
         throw new Exception(Messages("overview.api.domain.fill"))
       }
-      Ok.flashing("error" -> Messages("overview.api.retry"), "domain" -> domain)
-      // Async {
-      //   User.updateToken(key, url.toList) == true){
-      //     Ok.flashing(
-      //         "created" -> (System.currentTimeMillis).toString,
-      //         "msg" -> Messages("overview.api.domain.updated")
-      //       )
-      //   }else{
-      //   }
-      // }
-    } catch { 
+      var address: Array[String] = Array()
+      
+      // query ip address
+      url.foreach { name =>
+        var query: InetAddress = InetAddress.getByName(new URL("http://"+name).getHost())
+        var ip = query.getHostAddress()
+        // add to address list
+        address :+= (ip.toString)
+      }
+
+      mintpresso.set(Map[Symbol, String](
+        'token -> key,
+        'name -> name,
+        'expired -> "true",
+        'url -> url.mkString("|"),
+        'address -> address.mkString("|"))
+      ).as[Option[Point]] match {
+        case Some(point) =>
+          Ok.flashing("error" -> "", "msg" -> Messages("overview.api.done"))
+        case None =>
+          Ok.flashing("error" -> Messages("overview.api.retry"), "domain" -> domain)
+      }
+    } catch {
+      case e: MalformedURLException =>
+        Ok.flashing("error" -> Messages("overview.api.domain.url"), "msg" -> "")
+      case e: UnknownHostException =>
+        Ok.flashing("error" -> Messages("overview.api.domain.host"), "msg" -> "")
       case e: Exception =>
         Ok.flashing("error" -> e.getMessage, "msg" -> "")  
     }
