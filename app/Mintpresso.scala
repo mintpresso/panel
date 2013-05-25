@@ -38,7 +38,7 @@ object MintpressoAPI {
     MintpressoAPI("user", accountId, "token is here")
       token won't be verified when Panel and API servers are paired with access domain so just leave it an empty for internal use.
   */
-  def apply(label: String, accountId: Int, token: String): Mintpresso = {
+  def apply(label: String, accountId: Int, token: String = ""): Mintpresso = {
     // API Token consists of {api token}::{account id}
     val tokens = token.split("::")
     // Set key as LABEL + AccountID combi
