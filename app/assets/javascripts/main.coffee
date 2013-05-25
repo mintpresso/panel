@@ -279,19 +279,19 @@ jQuery ->
                 </tr>
                 """
 
-              $tbody.append """
-                <tr>
-                  <td>
-                    <input name="key" type="text" value="새로운 API 인증 토큰 추가" disabled="disabled" class="editable code" style="width:450px; font-size:8pt" />
-                    <br />
-                    <textarea name="domain" title="Accessible Domains" class="editable" style="width:437px"></textarea>
-                  </td>
-                  <td>
-                    <input name="name" type="text" placeholder="토큰을 알아보기 쉬운 이름" class="editable" />
-                    <button type="button" data-type="new" class="btn btn-small btn-block">SAVE</button>
-                  </td>
-                </tr>
-                """
+              # $tbody.append """
+              #   <tr>
+              #     <td>
+              #       <input name="key" type="text" value="새로운 API 인증 토큰 추가" disabled="disabled" class="editable code" style="width:450px; font-size:8pt" />
+              #       <br />
+              #       <textarea name="domain" title="Accessible Domains" class="editable" style="width:437px"></textarea>
+              #     </td>
+              #     <td>
+              #       <input name="name" type="text" placeholder="토큰을 알아보기 쉬운 이름" class="editable" />
+              #       <button type="button" data-type="new" class="btn btn-small btn-block">SAVE</button>
+              #     </td>
+              #   </tr>
+              #   """
 
               $tbody.find('span.seal').click () ->
                 $(this).toggleClass 'seal'
