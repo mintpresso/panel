@@ -328,6 +328,55 @@ jQuery ->
       $submenu = $("#submenu")
       $content = $("#content")
 
+      $submenu.find('[data-menu=log]').click (e) ->
+        triggerContent $content, $submenu, $(this), ($block) ->
+          routes.controllers.Panel.data_log(mint.id)
+            .ajax()
+            .error( blockError($block) )
+            .success (e) ->
+              $block.html e
+
+              if mint._warnings isnt undefined and mint._warnings._length > 0
+                $tbody = $block.find('table#warnings')
+                for e in mint._warnings.edges
+                  d1 = moment(e.createdAt).format('YYYY-MM-DD HH:mm:ss')
+                  d2 = moment(e.createdAt).fromNow()
+                  data = e.object.data
+                  # delete data['message']
+                  data = JSON.stringify(data)
+                  $tbody.append """
+                    <tr>
+                      <td>#{e.object.data.message}</td>
+                      <td>#{e.object.data}</td>
+                      <td>#{data}</td>
+                      <td>
+                        <time datetime="#{d1}" title="#{d1}">#{d2}</time>
+                      </td>
+                    </tr>
+                    """
+                $tbody.fadeIn()
+              if mint._requests isnt undefined and mint._requests._length > 0
+                $tbody = $block.find('table#requests')
+                for e in mint._requests.edges
+                  d1 = moment(e.createdAt).format('YYYY-MM-DD HH:mm:ss')
+                  d2 = moment(e.createdAt).fromNow()
+                  data = e.object.data
+                  msg = data['message']
+                  delete data['message']
+                  data = JSON.stringify(data)
+                  console.log e.object.data.message
+                  $tbody.append """
+                    <tr>
+                      <td>#{msg}</td>
+                      <td>#{data}</td>
+                      <td>
+                        <time datetime="#{d1}" title="#{d1}">#{d2}</time>
+                      </td>
+                    </tr>
+                    """
+                $tbody.fadeIn()
+              onBlock $block
+
       $submenu.find('[data-menu=view]').click (e) ->
         triggerContent $content, $submenu, $(this), ($block) ->
           routes.controllers.Panel.data_view(mint.id, $.getParameter('_filter'))

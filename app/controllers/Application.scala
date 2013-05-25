@@ -82,6 +82,7 @@ object Application extends Controller with Secured {
         Panel.data,
         Panel.data_index,
         Panel.data_view,
+        Panel.data_log,
         Panel.data_filter,
         Panel.data_import,
         Panel.data_import_add,

@@ -87,8 +87,9 @@ object Panel extends Controller with Secured {
     Ok(views.html.panel.data())
   }
   def data_index(accountId: Int) = SignedAccount(accountId) { implicit request =>
-    Ok(views.html.panel._data.index(""))
+    Ok(views.html.panel._data.index())
   }
+
   def data_view(accountId: Int, json: String) = SignedAccount(accountId) { implicit request =>
     var types: String = "[]"
     var points: String = "{\"points\": []}"
@@ -205,6 +206,42 @@ object Panel extends Controller with Secured {
         }
       }
     }
+  }
+
+  def data_log(accountId: Int) = SignedAccount(accountId) { implicit request =>
+    var warnings = "{}"
+    var requests = "{}"
+    var getWarnings = MintpressoAPI("user", accountId).findRelations(Map(
+      "subjectId" -> accountId.toString,
+      "verb" -> "log",
+      "objectType" -> "warning",
+      "useModels" -> "true"
+    ))
+    var getRequests = MintpressoAPI("user", accountId).findRelations(Map(
+      "subjectId" -> accountId.toString,
+      "verb" -> "log",
+      "objectType" -> "request",
+      "useModels" -> "true"
+    ))
+
+    import scala.concurrent._
+    import scala.concurrent.duration._
+    var res1 = Await.result(getWarnings, Duration(2000, MILLISECONDS))
+    var res2 = Await.result(getRequests, Duration(2000, MILLISECONDS))
+    
+    res1.status match {
+      case 200 =>
+        warnings = res1.body
+      case _ =>
+        Logger.warn(res1.status + " at findRelations")
+    }
+    res2.status match {
+      case 200 =>
+        requests = res2.body
+      case _ =>
+        Logger.warn(res2.status + " at findRelations")
+    }
+    Ok(views.html.panel._data.log(warnings, requests) )
   }
   def data_filter(accountId: Int) = SignedAccount(accountId) { implicit request =>
     Ok(views.html.panel._data.filter())

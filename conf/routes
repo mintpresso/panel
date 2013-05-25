@@ -27,7 +27,8 @@ PUT 	/:accId/overview/api	 	controllers.Panel.overview_api_set(accId: Int, key: 
 
 GET 	/:accId/data-cloud/			controllers.Panel.data(accId: Int)
 GET 	/:accId/data-cloud/index	controllers.Panel.data_index(accId: Int)
-GET 	/:accId/data-cloud/view		controllers.Panel.data_view(accId: Int, json: String)
+GET   /:accId/data-cloud/view   controllers.Panel.data_view(accId: Int, json: String)
+GET 	/:accId/data-cloud/log		controllers.Panel.data_log(accId: Int)
 GET 	/:accId/data-cloud/filter	controllers.Panel.data_filter(accId: Int)
 GET 	/:accId/data-cloud/import	controllers.Panel.data_import(accId: Int)
 POST 	/:accId/data-cloud/import	controllers.Panel.data_import_add(accId: Int)
