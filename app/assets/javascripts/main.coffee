@@ -432,12 +432,10 @@ jQuery ->
                 $text.height $text[0].scrollHeight if not $text.is('.scaled')  
 
               switcher = (className) ->
-                console.log $tbody.find('tbody tr')
                 $tbody.find('tbody tr').hide()
                 $tbody.find('tbody tr.' + className + ':not(.editor)').show()    
               $block.find('div[data-toggle=buttons-radio] button').click (e) ->
                 $this = $(this)
-                console.log $this.html().toLowerCase()
                 switch $this.html().toLowerCase()
                   when 'recently' then switcher 'recents'
                   when 'error' then switcher 'errors'
