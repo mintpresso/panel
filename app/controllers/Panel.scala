@@ -222,6 +222,7 @@ object Panel extends Controller with Secured {
   def data_log(accountId: Int) = SignedAccount(accountId) { implicit request =>
     var warnings = "{}"
     var requests = "{}"
+    var errors = "{}"
     var getWarnings = MintpressoAPI("user", accountId).findRelations(Map(
       "subjectId" -> accountId.toString,
       "verb" -> "log",
@@ -232,11 +233,17 @@ object Panel extends Controller with Secured {
       "verb" -> "log",
       "objectType" -> "request"
     ), true)
+    var getErrors = MintpressoAPI("user", accountId).findRelations(Map(
+      "subjectId" -> accountId.toString,
+      "verb" -> "log",
+      "objectType" -> "error"
+    ), true)
 
     import scala.concurrent._
     import scala.concurrent.duration._
     var res1 = Await.result(getWarnings, Duration(2000, MILLISECONDS))
     var res2 = Await.result(getRequests, Duration(2000, MILLISECONDS))
+    var res3 = Await.result(getErrors, Duration(2000, MILLISECONDS))
     
     res1.status match {
       case 200 =>
@@ -250,7 +257,13 @@ object Panel extends Controller with Secured {
       case _ =>
         Logger.warn(res2.status + " at findRelations")
     }
-    Ok(views.html.panel._data.log(warnings, requests) )
+    res3.status match {
+      case 200 =>
+        errors = res3.body
+      case _ =>
+        Logger.warn(res3.status + " at findRelations")
+    }
+    Ok(views.html.panel._data.log(errors, warnings, requests) )
   }
   def data_filter(accountId: Int) = SignedAccount(accountId) { implicit request =>
     Ok(views.html.panel._data.filter())

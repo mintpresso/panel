@@ -342,44 +342,111 @@ jQuery ->
             .success (e) ->
               $block.html e
 
+              if mint._errors isnt undefined and mint._errors._length > 0
+                $tbody = $block.find('table#logs')
+                for e in mint._errors.edges
+                  d1 = moment(e.createdAt).format('YYYY-MM-DD HH:mm:ss')
+                  d2 = moment(e.createdAt).fromNow()
+                  data = e.object.data
+                  msg = data['message']
+                  delete data['message']
+                  data = e.object.data
+                  delete data['message']
+                  d = js_beautify JSON.stringify(data), { indent_size: 2 }
+                  recentClass = ''
+                  recentClass = 'recents error' if Date.now() < (e.createdAt + 3600000)
+                  $tbody.append """
+                    <tr class="errors #{recentClass}">
+                      <td><i class="icon-frown"></i> #{msg}</td>
+                      <td><button class="btn btn-mini" data-trigger="json">Show details</button></td>
+                      <td>
+                        <time datetime="#{d1}" title="#{d1}">#{d2}</time>
+                      </td>
+                    </tr>
+                    <tr class="hide editor">
+                      <td colspan="5">
+                        <textarea class="code">#{d}</textarea>
+                      </td>
+                    </tr>
+                    """
+
               if mint._warnings isnt undefined and mint._warnings._length > 0
-                $tbody = $block.find('table#warnings')
+                $tbody = $block.find('table#logs')
                 for e in mint._warnings.edges
                   d1 = moment(e.createdAt).format('YYYY-MM-DD HH:mm:ss')
                   d2 = moment(e.createdAt).fromNow()
                   data = e.object.data
-                  # delete data['message']
-                  data = JSON.stringify(data)
+                  msg = data['message']
+                  delete data['message']
+                  d = js_beautify JSON.stringify(data), { indent_size: 2 }
+                  recentClass = ''
+                  recentClass = 'recents warning' if Date.now() < (e.createdAt + 3600000)
                   $tbody.append """
-                    <tr>
-                      <td>#{e.object.data.message}</td>
-                      <td>#{data}</td>
+                    <tr class="warnings #{recentClass}">
+                      <td><i class="icon-meh"></i> #{msg}</td>
+                      <td><button class="btn btn-mini" data-trigger="json">Show details</button></td>
                       <td>
                         <time datetime="#{d1}" title="#{d1}">#{d2}</time>
                       </td>
                     </tr>
+                    <tr class="hide editor">
+                      <td colspan="5">
+                        <textarea class="code">#{d}</textarea>
+                      </td>
+                    </tr>
                     """
-                $tbody.fadeIn()
+
               if mint._requests isnt undefined and mint._requests._length > 0
-                $tbody = $block.find('table#requests')
+                $tbody = $block.find('table#logs')
                 for e in mint._requests.edges
                   d1 = moment(e.createdAt).format('YYYY-MM-DD HH:mm:ss')
                   d2 = moment(e.createdAt).fromNow()
-                  data = e.object?.data
+                  data = e.object.data
                   msg = data['message']
                   delete data['message']
-                  data = JSON.stringify(data)
-                  console.log e.object.data.message
+                  data = e.object.data
+                  delete data['message']
+                  d = js_beautify JSON.stringify(data), { indent_size: 2 }
+                  recentClass = ''
+                  recentClass = 'recents success' if Date.now() < (e.createdAt + 3600000)
                   $tbody.append """
-                    <tr>
-                      <td>#{msg}</td>
-                      <td>#{data}</td>
+                    <tr class="requests #{recentClass}">
+                      <td><i class="icon-smile"></i> #{msg}</td>
+                      <td><button class="btn btn-mini" data-trigger="json">Show details</button></td>
                       <td>
                         <time datetime="#{d1}" title="#{d1}">#{d2}</time>
                       </td>
                     </tr>
+                    <tr class="hide editor">
+                      <td colspan="5">
+                        <textarea class="code">#{d}</textarea>
+                      </td>
+                    </tr>
                     """
-                $tbody.fadeIn()
+
+              $block.find('button[data-trigger=json]').click (e) ->
+                $this = $(this)
+                $tr = $this.closest('tr').next()
+                $text = $tr.find('textarea')
+                $tr.toggle()
+                $text.height $text[0].scrollHeight if not $text.is('.scaled')  
+
+              switcher = (className) ->
+                console.log $tbody.find('tbody tr')
+                $tbody.find('tbody tr').hide()
+                $tbody.find('tbody tr.' + className + ':not(.editor)').show()    
+              $block.find('div[data-toggle=buttons-radio] button').click (e) ->
+                $this = $(this)
+                console.log $this.html().toLowerCase()
+                switch $this.html().toLowerCase()
+                  when 'recently' then switcher 'recents'
+                  when 'error' then switcher 'errors'
+                  when 'warning' then switcher 'warnings'
+                  when 'request' then switcher 'requests'
+              
+              switcher 'recents'
+
+              $tbody.fadeIn()
               onBlock $block
 
       $submenu.find('[data-menu=view]').click (e) ->
