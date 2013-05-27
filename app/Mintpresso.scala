@@ -100,7 +100,7 @@ class Mintpresso(accId: Int, token: String) {
       .withQueryString(("api_token", token), ("type", typeString), ("identifier", identifier), ("limit", limit.toString), ("offset", offset.toString))
       .get()
   }
-  def addPoint(typeString: String, identifier: String, json: String) = {
+  def addPoint(typeString: String, identifier: String, json: String, updateIfExists: Boolean = false) = {
     var p1: String = ""
     var p2: String = ""
     if(identifier.length > 0){
@@ -120,11 +120,11 @@ class Mintpresso(accId: Int, token: String) {
     """.format(p1, p2, typeString)
     WS.url(server + urls("addPoint").format(accId))
       .withHeaders( ("Content-Type", "application/json"), ("X-Requested-With", initial) )
-      .withQueryString( ("api_token", token) )
+      .withQueryString( ("api_token", token), ("updateIfExists", updateIfExists.toString) )
       .post[String](body)
   }
-  def findRelations(query: Map[String, String]) = {
-    val queries = query + (("api_token" -> token))
+  def findRelations(query: Map[String, String], getInnerPoints: Boolean = false) = {
+    val queries = query + (("api_token" -> token), ("getInnerPoints") -> getInnerPoints.toString)
     WS.url(server + urls("findEdges").format(accId))
       .withHeaders( ("X-Requested-With", initial) )
       .withQueryString(queries.toSeq:_*)
