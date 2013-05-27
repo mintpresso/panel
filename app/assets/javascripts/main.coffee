@@ -307,16 +307,17 @@ jQuery ->
 
                     offContent $content
                     args =
-                      data:
-                        key: $form.find('input[name=key]').val()
-                        name: $form.find('input[name=name]').val()
-                        domain: $form.find('textarea[name=domain]').val()
                       success: (e) ->
                         refreshContent $content, $submenu, 'api', ($block) ->
                           true
                       error: blockError($block)
 
-                    routes.controllers.Panel.overview_api_set(mint.id).ajax args
+                    routes.controllers.Panel.overview_api_set(
+                      mint.id,
+                      $form.find('input[name=key]').val(),
+                      $form.find('textarea[name=domain]').val(),
+                      $form.find('input[name=name]').val()
+                    ).ajax args
                     e.preventDefault()
                     e.stopPropagation()
                     return false
@@ -347,7 +348,6 @@ jQuery ->
                   $tbody.append """
                     <tr>
                       <td>#{e.object.data.message}</td>
-                      <td>#{e.object.data}</td>
                       <td>#{data}</td>
                       <td>
                         <time datetime="#{d1}" title="#{d1}">#{d2}</time>

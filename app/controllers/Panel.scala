@@ -47,39 +47,48 @@ object Panel extends Controller with Secured {
       if(name.length == 0){
         throw new Exception(Messages("overview.api.name.fill"))
       }
-      val url: Array[String] = domain.trim.split('|')
+      val url: Array[String] = domain.trim.split('\n')
       if(url.length == 0){
         throw new Exception(Messages("overview.api.domain.fill"))
       }
       var address: Array[String] = Array()
       
+      // fill the form
+
       // query ip address
-      url.foreach { name =>
-        var query: InetAddress = InetAddress.getByName(new URL("http://"+name).getHost())
-        var ip = query.getHostAddress()
-        // add to address list
-        address :+= (ip.toString)
+      url.foreach { item =>
+        if(item != "*"){
+          var query: InetAddress = InetAddress.getByName(new URL("http://"+item).getHost())
+          var ip = query.getHostAddress()
+          // add to address list
+          address :+= (ip.toString)
+        }
       }
 
-      mintpresso.set(Map[Symbol, String](
-        'token -> key,
-        'name -> name,
-        'expired -> "true",
-        'url -> url.mkString("|"),
-        'address -> address.mkString("|"))
-      ).as[Option[Point]] match {
-        case Some(point) =>
+      var updateToken = MintpressoAPI("user", accountId).addPoint("token", key, Json.obj(
+        "name" -> name,
+        "expired" -> "false",
+        "url" -> url.mkString("|"),
+        "address" -> address.mkString("|")
+      ).toString, true)
+
+      import scala.concurrent._
+      import scala.concurrent.duration._
+      var res1 = Await.result(updateToken, Duration(2000, MILLISECONDS))
+      
+      res1.status match {
+        case 200 =>
           Ok.flashing("error" -> "", "msg" -> Messages("overview.api.done"))
-        case None =>
+        case _ =>
           Ok.flashing("error" -> Messages("overview.api.retry"), "domain" -> domain)
       }
     } catch {
       case e: MalformedURLException =>
-        Ok.flashing("error" -> Messages("overview.api.domain.url"), "msg" -> "")
+        Ok.flashing("error" -> Messages("overview.api.domain.url", e.getMessage), "msg" -> "", "domain" -> domain)
       case e: UnknownHostException =>
-        Ok.flashing("error" -> Messages("overview.api.domain.host"), "msg" -> "")
+        Ok.flashing("error" -> Messages("overview.api.domain.host", e.getMessage), "msg" -> "", "domain" -> domain)
       case e: Exception =>
-        Ok.flashing("error" -> e.getMessage, "msg" -> "")  
+        Ok.flashing("error" -> e.getMessage, "msg" -> "", "domain" -> domain)  
     }
   }
 

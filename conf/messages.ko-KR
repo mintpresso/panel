@@ -30,8 +30,8 @@ overview.api.domain.updated=API 설정이 반영되었습니다.
 overview.api.password.invalid=비밀번호가 틀립니다. API 설정을 반영하지 못했습니다.
 overview.api.retry=일시적으로 API 설정을 반영할 수 없습니다. 다시 시도해주세요.
 overview.api.done=해당 API KEY에 도메인 정보가 반영되었습니다.
-overview.api.domain.url=URL 오류 (http:// 같은 프로토콜 부분을 빼주세요)
-overview.api.domain.host=Hostname 오류 (domain.com 도메인 형태를 확인해주세요)
+overview.api.domain.url=URL 오류 ({0} - http:// 같은 프로토콜 부분을 빼주세요)
+overview.api.domain.host=Hostname 오류 ({0} - 도메인 형태를 확인해주세요)
 
 date.fullstring=yyyy-dd-MM HH:mm:ss
 
