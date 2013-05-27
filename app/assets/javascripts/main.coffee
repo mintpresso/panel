@@ -121,6 +121,11 @@ jQuery ->
     else
       offContent $content
 
+    if $block.is('.wide')
+      $content.addClass 'wide'
+    else
+      $content.removeClass 'wide'
+
     onMenu $submenu, $menu
 
     state = $block.data('state')
@@ -360,7 +365,7 @@ jQuery ->
                 for e in mint._requests.edges
                   d1 = moment(e.createdAt).format('YYYY-MM-DD HH:mm:ss')
                   d2 = moment(e.createdAt).fromNow()
-                  data = e.object.data
+                  data = e.object?.data
                   msg = data['message']
                   delete data['message']
                   data = JSON.stringify(data)
@@ -407,7 +412,12 @@ jQuery ->
                 for p in mint._points.points
                   d1 = moment(p.createdAt).format('YYYY-MM-DD HH:mm:ss')
                   d2 = moment(p.createdAt).fromNow()
-                  d = JSON.stringify(p.data)
+                  d = js_beautify JSON.stringify(p.data), { indent_size: 2 }
+                  dCount = Object.keys(p.data).length
+                  if dCount > 0
+                    dLabel = dCount + " keys"
+                  else
+                    dLabel = 'Empty'
                   if d is "{}"
                     d = "<small> - </small>"
                   $tbody.prepend """
@@ -415,9 +425,14 @@ jQuery ->
                       <td><a href="#{p._url}">#{p.id}</a></td>
                       <td>#{p.type}</td>
                       <td>#{p.identifier}</td>
-                      <td class="code">#{d}</td>
+                      <td><button class="btn" data-trigger="json">#{dLabel}</button></td>
                       <td>
                         <time datetime="#{d1}" title="#{d1}">#{d2}</time>
+                      </td>
+                    </tr>
+                    <tr class="hide editor">
+                      <td colspan="5">
+                        <textarea class="code">#{d}</textarea>
                       </td>
                     </tr>
                     """
@@ -427,31 +442,59 @@ jQuery ->
                 for e in mint._edges.edges
                   d1 = moment(e.createdAt).format('YYYY-MM-DD HH:mm:ss')
                   d2 = moment(e.createdAt).fromNow()
-                  ### currently not support data store in an edge.
-                  d = JSON.stringify(e.data)
-                  if d is "{}"
-                    d = "<small> - </small>"
-                  ###
+
+                  subjectD = js_beautify JSON.stringify(e.subject), { indent_size: 2 }
+                  objectD = js_beautify JSON.stringify(e.object), { indent_size: 2 }
+
                   d = "<small> - </small>"
                   $tbody.prepend """
                     <tr>
                       <td>
-                        <span class="label label-inverse">#{e.subjectType}</span>
-                        <span class="label label-info">#{e.subjectId}</span>
+                        <button class="btn btn-small" data-trigger="json" data-type="subject">#{e.subjectType}</button>
+                        <button class="btn btn-small btn-primary" data-trigger="fill" data-type="subjectId">#{e.subjectId}</button>
                       </td>
                       <td>#{e.verb}</td>
                       <td>
-                        <span class="label label-inverse">#{e.objectType}</span>
-                        <span class="label label-info">#{e.objectId}</span>
+                        <button class="btn btn-small" data-trigger="json" data-type="object">#{e.objectType}</button>
+                        <button class="btn btn-small btn-primary" data-trigger="fill" data-type="objectId">#{e.objectId}</button>
                       </td>
                       <td class="code">#{d}</td>
                       <td>
                         <time datetime="#{d1}" title="#{d1}">#{d2}</time>
                       </td>
                     </tr>
+                    <tr class="hide editor">
+                      <td colspan="2">
+                        <textarea class="code subject">#{subjectD}</textarea>
+                      </td>
+                      <td colspan="3">
+                        <textarea class="code object">#{objectD}</textarea>
+                      </td>
+                    </tr>
                     """
                 $tbody.fadeIn()
               
+              $block.find('button[data-trigger=json]').click (e) ->
+                $this = $(this)
+                $tr = $this.closest('tr').next()
+                if $this.data('type') is ('subject' or 'object')
+                  $text = $tr.find('textarea')
+                  $tr.toggle()
+                  $text.height Math.max($text[0].scrollHeight, $text[1].scrollHeight) if not $text.is('.scaled')
+                else
+                  $text = $tr.find('textarea')
+                  $tr.toggle()
+                  $text.height $text[0].scrollHeight if not $text.is('.scaled')
+
+              $block.find('button[data-trigger=fill]').click (e) ->
+                $this = $(this)
+                $form = $('form#model')
+
+                if $this.data('type') is 'subjectId'
+                  $form.find('input[name=s]').val $this.html()
+                else if $this.data('type') is 'objectId'
+                  $form.find('input[name=o]').val $this.html()
+
               $modelForm = $block.find('form#model')
               $modelForm.submit () ->
                 offContent $content

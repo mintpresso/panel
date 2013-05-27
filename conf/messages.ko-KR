@@ -36,3 +36,5 @@ overview.api.domain.host=Hostname 오류 ({0} - 도메인 형태를 확인해주
 date.fullstring=yyyy-dd-MM HH:mm:ss
 
 json.invalid=(JSON 데이터가 유효하지 않아 빈 데이터로 처리함)
+
+none.changes=변경된 설정이 없습니다.

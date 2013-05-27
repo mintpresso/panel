@@ -67,7 +67,7 @@ object Panel extends Controller with Secured {
 
       var updateToken = MintpressoAPI("user", accountId).addPoint("token", key, Json.obj(
         "name" -> name,
-        "expired" -> "false",
+        "expired" -> false,
         "url" -> url.mkString("|"),
         "address" -> address.mkString("|")
       ).toString, true)
@@ -78,6 +78,8 @@ object Panel extends Controller with Secured {
       
       res1.status match {
         case 200 =>
+          Ok.flashing("error" -> "", "msg" -> Messages("none.changes"))
+        case 201 =>
           Ok.flashing("error" -> "", "msg" -> Messages("overview.api.done"))
         case _ =>
           Ok.flashing("error" -> Messages("overview.api.retry"), "domain" -> domain)
@@ -196,7 +198,7 @@ object Panel extends Controller with Secured {
                   }
                 }
               }
-              MintpressoAPI("user", accountId, "").findRelations(query).map { res =>
+              MintpressoAPI("user", accountId, "").findRelations(query, true).map { res =>
                 val _after = System.currentTimeMillis
                 res.status match {
                   case 200 => {

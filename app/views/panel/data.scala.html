@@ -2,6 +2,13 @@
 
 @single("Data Cloud - MINTPRESSO Panel")("white") {
   <meta name="panel" content="data">
+  <script src="@routes.Assets.at("javascripts/beautify.js")"></script>
+  @*
+  <script src="@routes.Assets.at("javascripts/highlight.pack.js")"></script>
+  *@
+  <script src="http://softwaremaniacs.org/media/soft/highlight/highlight.pack.js"></script>
+  <link href="@routes.Assets.at("stylesheets/monokai.css")" rel="stylesheet">
+
   <div id="panel">
     @menu("data")
     <div id="submenu">
@@ -30,8 +37,8 @@
     </div>
     <div id="content">
       <div data-content="index" data-state="0"></div>
-      <div data-content="view" data-state="0"></div>
-      <div data-content="log" data-state="0"></div>
+      <div data-content="view" data-state="0" class="wide"></div>
+      <div data-content="log" data-state="0" class="wide"></div>
       <div data-content="filter" data-state="0"></div>
       <div data-content="import" data-state="0"></div>
       <div data-content="export" data-state="0"></div>
