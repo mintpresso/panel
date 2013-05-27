@@ -214,15 +214,13 @@ object Panel extends Controller with Secured {
     var getWarnings = MintpressoAPI("user", accountId).findRelations(Map(
       "subjectId" -> accountId.toString,
       "verb" -> "log",
-      "objectType" -> "warning",
-      "useModels" -> "true"
-    ))
+      "objectType" -> "warning"
+    ), true)
     var getRequests = MintpressoAPI("user", accountId).findRelations(Map(
       "subjectId" -> accountId.toString,
       "verb" -> "log",
-      "objectType" -> "request",
-      "useModels" -> "true"
-    ))
+      "objectType" -> "request"
+    ), true)
 
     import scala.concurrent._
     import scala.concurrent.duration._
