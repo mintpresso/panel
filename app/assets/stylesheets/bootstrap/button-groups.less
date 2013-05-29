@@ -34,7 +34,7 @@
 // Float them, remove border radius, then re-add to first and last elements
 .btn-group > .btn {
   position: relative;
-  .border-radius(0);
+  .border-radius(0px);
 }
 .btn-group > .btn + .btn {
   margin-left: -1px;
@@ -160,7 +160,7 @@
 
 // Reposition the caret
 .btn .caret {
-  margin-top: 8px;
+  margin-top: @paddingCaret;
   margin-left: 0;
 }
 // Carets in other button sizes
