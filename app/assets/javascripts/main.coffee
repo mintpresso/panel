@@ -534,7 +534,7 @@ val mintpresso: Affogato = Affogato(
                   else
                     dLabel = 'Empty'
                   if d is "{}"
-                    d = "<small> - </small>"
+                    d = "/* no data json */"
                   $tbody.prepend """
                     <tr>
                       <td><a href="#{p._url}">#{p.id}</a></td>
@@ -561,7 +561,7 @@ val mintpresso: Affogato = Affogato(
                   subjectD = js_beautify JSON.stringify(e.subject), { indent_size: 2 }
                   objectD = js_beautify JSON.stringify(e.object), { indent_size: 2 }
 
-                  d = "<small> - </small>"
+                  d = "/* no data json */"
                   $tbody.prepend """
                     <tr>
                       <td>
