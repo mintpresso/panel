@@ -279,7 +279,16 @@ jQuery ->
                   </td>
                   <td>
                     <input name="name" type="text" value="#{token.data.name}" class="editable" />
-                    <button type="button" class="btn btn-small btn-block">SAVE</button>
+                    <div class="btn-group">
+                      <button type="submit" class="btn" style="width: 190px">SAVE</button>
+                      <button class="btn dropdown-toggle" data-toggle="dropdown" style="width: 45px">
+                        <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu" style="width: 230px">
+                        <li><a href="#" class="api-js">JavaScript API</a></li>
+                        <li><a href="#" class="api-scala">Scala API</a></li>
+                      </ul>
+                    </div>
                   </td>
                 </tr>
                 """
@@ -301,7 +310,46 @@ jQuery ->
               $tbody.find('span.seal').click () ->
                 $(this).toggleClass 'seal'
 
-              $block.find('form#domain').find('tr button').each (k,v) ->
+              $tbody.find('tr').first().find('td div.btn-group button.dropdown-toggle').tooltip {
+                title: "API KEY가 들어간 소스코드를 받을 수 있습니다."
+              }
+
+              $tbody.find('ul.dropdown-menu a').click (e) ->
+                $elem = $(this)
+                key = $elem.closest('tr').find('input[name=key]').val()
+                id = mint.id
+
+                if $elem.is('.api-js')
+                  alert """
+Add it into <head> ... </head>
+
+(function(e,t,o){var n,r,i;r=e.createElement("script");
+r.type="text/javascript";r.async=!0;
+r.onload=function(){if('mintpresso' in window){return window["mintpresso"].init(t, o);}else{console.log("ERROR")}};
+i="//mintpresso.com/assets/javascript-api/mintpresso-0.2.js";
+if("https:"===e.location.protocol){r.src="https:"+i}else{r.src="http:"+i}n=e.getElementsByTagName("script")[0];return n.parentNode.insertBefore(r,n)}
+)(document,"#{key}",#{id}, {withoutCallback: false, useLocalhost: false, callbackFunction: 'mintpressoInit', disableDebugCallback: true})
+"""
+                else if $elem.is('.api-scala')
+                  alert """
+Copy and paste block you need from these 3 examples.
+
+// for application.conf
+mintpresso.api="#{key}"
+mintpresso.id=#{id}
+
+// inline Affogato
+val mintpresso: Affogato = Affogato("#{key}", #{id})
+
+// Affogato with Play Framework
+val mintpresso: Affogato = Affogato( 
+  Play.configuration.getString("mintpresso.api").getOrElse("#{key}"),
+  Play.configuration.getLong("mintpresso.id").getOrElse(#{id}L)
+)
+
+"""
+
+              $block.find('form#domain').find('tr button[type=submit]').each (k,v) ->
                 $elem = $(v)
                 $elem.click (e) ->
                   if $(this).attr('data-type') is 'new'
