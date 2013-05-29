@@ -323,12 +323,14 @@ jQuery ->
                   alert """
 Add it into <head> ... </head>
 
+<script type="text/javascript">
 (function(e,t,o){var n,r,i;r=e.createElement("script");
 r.type="text/javascript";r.async=!0;
 r.onload=function(){if('mintpresso' in window){return window["mintpresso"].init(t, o);}else{console.log("ERROR")}};
 i="//mintpresso.com/assets/javascript-api/mintpresso-0.2.js";
 if("https:"===e.location.protocol){r.src="https:"+i}else{r.src="http:"+i}n=e.getElementsByTagName("script")[0];return n.parentNode.insertBefore(r,n)}
 )(document,"#{key}",#{id}, {withoutCallback: false, useLocalhost: false, callbackFunction: 'mintpressoInit', disableDebugCallback: true})
+</script>
 """
                 else if $elem.is('.api-scala')
                   alert """
