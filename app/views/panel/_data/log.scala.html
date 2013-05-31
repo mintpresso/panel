@@ -6,10 +6,10 @@
 <form class="form-inline">
   <div class="btn-toolbar">
     <div class="btn-group" data-toggle="buttons-radio">
-      <button type="button" class="btn btn-primary active">Recently</button>
-      <button type="button" class="btn btn-primary">Error</button>
-      <button type="button" class="btn btn-primary">Warning</button>
-      <button type="button" class="btn btn-primary">Request</button>
+      <button type="button" class="btn btn-primary active" data-field="recent">Recently</button>
+      <button type="button" class="btn btn-primary" data-field="error">Error</button>
+      <button type="button" class="btn btn-primary" data-field="warning">Warning</button>
+      <button type="button" class="btn btn-primary" data-field="request">Request</button>
     </div>
   </div>
 </form>
@@ -25,6 +25,16 @@
   </thead>
   <tbody></tbody>
 </table>
+
+<div id="no-recents" class="status-popup hide">
+<br />
+<br />
+<br />
+<i class="icon-rotate-right icon-spin" style="font-size:100pt; color: #1ABC9C"></i>
+<br />
+<h1 style="font-weight: 900">WE'RE RECEIVING DATA !</h1>
+<h5>NOTHING LOGGED IN A HOUR BEFORE</h5>
+</div>
 
 <script>
   mint._errors = @Html(errors);

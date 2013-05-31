@@ -613,7 +613,51 @@ table#logs {
   }
 }
 
+button {
+  span.label-number {
+    font-size: 12pt;
+    background-color: lighten(rgba(86, 86, 86, 1), 5%);
+    padding: 15px 15px;
+    line-height: 50px - 30px;
+    color: #fff;
+    text-shadow: none;
+    margin-right: -18px;
+    margin-left: 10px;
+    .transition(all .1s linear);
+  }
+  &:hover {
+    span.label-number {
+      background-color: rgba(86,86,86,1.0);
+      .transition(all .1s linear);
+    }
+  }
+  &.active {
+    span.label-number {
+      background: none;
+      // background-color: darken(rgba(86, 86, 86, 1.0), 10%);
+    }
+  }
+}
+
+// button {
+//   span.label-number {
+//     font-size: 12pt;
+//     background-color: rgba(86, 86, 86, 0.85);
+//     padding: 15px 15px;
+//     color: #fff;
+//     text-shadow: none;
+//     margin-right: -18px;
+//     margin-left: 10px;
+//   }
+//   &.active {
+//     span.label-number {
+//       background-color: darken(rgba(86, 86, 86, 1.0), 10%);
+//     }
+//   }
+// }
+
 .status-popup {
+  font-size: 26px;
   text-align: center;
   width: 500px;
   position: absolute;
@@ -622,9 +666,6 @@ table#logs {
   margin-left: (500px / -2) + 151px;
   margin-top: 500px / -2;
   .typo-capital();
-  h1 {
-
-  }
   hr {
     border-color: #16A085;
     border-bottom-width: 7px;

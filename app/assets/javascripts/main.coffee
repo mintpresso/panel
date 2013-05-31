@@ -404,6 +404,7 @@ val mintpresso: Affogato = Affogato(
             .success (e) ->
               $block.html e
 
+              mint._recents = 0
               if mint._errors isnt undefined and mint._errors._length > 0
                 $tbody = $block.find('table#logs')
                 for e in mint._errors.edges
@@ -416,7 +417,9 @@ val mintpresso: Affogato = Affogato(
                   delete data['message']
                   d = js_beautify JSON.stringify(data), { indent_size: 2 }
                   recentClass = ''
-                  recentClass = 'recents error' if Date.now() < (e.createdAt + 3600000)
+                  if Date.now() < (e.createdAt + 3600000)
+                    recentClass = 'recents error'
+                    mint._recents++
                   $tbody.append """
                     <tr class="errors #{recentClass}">
                       <td><i class="icon-frown"></i> #{msg}</td>
@@ -442,7 +445,9 @@ val mintpresso: Affogato = Affogato(
                   delete data['message']
                   d = js_beautify JSON.stringify(data), { indent_size: 2 }
                   recentClass = ''
-                  recentClass = 'recents warning' if Date.now() < (e.createdAt + 3600000)
+                  if Date.now() < (e.createdAt + 3600000)
+                    recentClass = 'recents warning'
+                    mint._recents++
                   $tbody.append """
                     <tr class="warnings #{recentClass}">
                       <td><i class="icon-meh"></i> #{msg}</td>
@@ -470,7 +475,9 @@ val mintpresso: Affogato = Affogato(
                   delete data['message']
                   d = js_beautify JSON.stringify(data), { indent_size: 2 }
                   recentClass = ''
-                  recentClass = 'recents success' if Date.now() < (e.createdAt + 3600000)
+                  if Date.now() < (e.createdAt + 3600000)
+                    recentClass = 'recents success'
+                    mint._recents++
                   $tbody.append """
                     <tr class="requests #{recentClass}">
                       <td><i class="icon-smile"></i> #{msg}</td>
@@ -497,6 +504,7 @@ val mintpresso: Affogato = Affogato(
 </div>
                 """).insertAfter $block.find('#selector')
               else
+
                 $block.find('button[data-trigger=json]').click (e) ->
                   $this = $(this)
                   $tr = $this.closest('tr').next()
@@ -504,19 +512,34 @@ val mintpresso: Affogato = Affogato(
                   $tr.toggle()
                   $text.height $text[0].scrollHeight if not $text.is('.scaled')  
 
+                $block.find('#selector div.btn-group button').each (k, v) ->
+                  $this = $(v)
+                  switch $this.data 'field'
+                    when 'recent'  then $this.html """{0} <span class="typo-number label-number">{1}</span>""".format( $this.html(), mint._recents ) if mint._recents > 0
+                    when 'error'   then $this.html """{0} <span class="typo-number label-number">{1}</span>""".format( $this.html(), mint._errors._length ) if mint._errors._length > 0
+                    when 'warning' then $this.html """{0} <span class="typo-number label-number">{1}</span>""".format( $this.html(), mint._warnings._length ) if mint._warnings._length > 0 
+                    when 'request' then $this.html """{0} <span class="typo-number label-number">{1}</span>""".format( $this.html(), mint._requests._length ) if mint._requests._length > 0 
+
                 switcher = (className) ->
                   $tbody.find('tbody tr').hide()
                   $tbody.find('tbody tr.' + className + ':not(.editor)').show()
 
-                $block.find('div[data-toggle=buttons-radio] button').click (e) ->
+                $popup = $block.find('#no-recents')
+                switcherForRecent = () ->
+                  switcher 'recents'
+                  if mint._recents is 0
+                    $popup.show()
+
+                $block.find('#selector div.btn-group button').click (e) ->
                   $this = $(this)
-                  switch $this.html().toLowerCase()
-                    when 'recently' then switcher 'recents'
+                  $popup.hide()
+                  switch $this.data 'field'
+                    when 'recent' then switcherForRecent()
                     when 'error' then switcher 'errors'
                     when 'warning' then switcher 'warnings'
                     when 'request' then switcher 'requests'
                 
-                switcher 'recents'
+                switcherForRecent()
                 $tbody.fadeIn()
               onBlock $block
 
