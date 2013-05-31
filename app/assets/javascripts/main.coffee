@@ -419,7 +419,7 @@ val mintpresso: Affogato = Affogato(
                       </td>
                     </tr>
                     """
-
+              
               if mint._warnings isnt undefined and mint._warnings._length > 0
                 $tbody = $block.find('table#logs')
                 for e in mint._warnings.edges
@@ -473,28 +473,39 @@ val mintpresso: Affogato = Affogato(
                       </td>
                     </tr>
                     """
+              if mint._errors isnt undefined and mint._warnings isnt undefined and mint._requests isnt undefined and (mint._errors._length + mint._warnings._length + mint._requests._length) is 0
+                $("""
+<div class="status-popup">
+<br />
+<br />
+<br />
+<i class="icon-rotate-right icon-spin" style="font-size:100pt; color: #1ABC9C"></i>
+<br />
+<h1 style="font-weight: 900">WE'RE RECEIVING DATA !</h1>
+</div>
+                """).insertAfter $block.find('#selector')
+              else
+                $block.find('button[data-trigger=json]').click (e) ->
+                  $this = $(this)
+                  $tr = $this.closest('tr').next()
+                  $text = $tr.find('textarea')
+                  $tr.toggle()
+                  $text.height $text[0].scrollHeight if not $text.is('.scaled')  
 
-              $block.find('button[data-trigger=json]').click (e) ->
-                $this = $(this)
-                $tr = $this.closest('tr').next()
-                $text = $tr.find('textarea')
-                $tr.toggle()
-                $text.height $text[0].scrollHeight if not $text.is('.scaled')  
+                switcher = (className) ->
+                  $tbody.find('tbody tr').hide()
+                  $tbody.find('tbody tr.' + className + ':not(.editor)').show()
 
-              switcher = (className) ->
-                $tbody.find('tbody tr').hide()
-                $tbody.find('tbody tr.' + className + ':not(.editor)').show()    
-              $block.find('div[data-toggle=buttons-radio] button').click (e) ->
-                $this = $(this)
-                switch $this.html().toLowerCase()
-                  when 'recently' then switcher 'recents'
-                  when 'error' then switcher 'errors'
-                  when 'warning' then switcher 'warnings'
-                  when 'request' then switcher 'requests'
-              
-              switcher 'recents'
-
-              $tbody.fadeIn()
+                $block.find('div[data-toggle=buttons-radio] button').click (e) ->
+                  $this = $(this)
+                  switch $this.html().toLowerCase()
+                    when 'recently' then switcher 'recents'
+                    when 'error' then switcher 'errors'
+                    when 'warning' then switcher 'warnings'
+                    when 'request' then switcher 'requests'
+                
+                switcher 'recents'
+                $tbody.fadeIn()
               onBlock $block
 
       $submenu.find('[data-menu=view]').click (e) ->
