@@ -65,7 +65,7 @@ object Panel extends Controller with Secured {
         }
       }
 
-      var updateToken = MintpressoAPI("user", accountId).addPoint("token", key, Json.obj(
+      var updateToken = MintpressoAPI("internal").addPoint("token", key, Json.obj(
         "name" -> name,
         "expired" -> false,
         "url" -> url.mkString("|"),
@@ -220,9 +220,9 @@ object Panel extends Controller with Secured {
   }
 
   def data_log(accountId: Int) = SignedAccount(accountId) { implicit request =>
-    var warnings = "{}"
-    var requests = "{}"
-    var errors = "{}"
+    var warnings = "{_length: 0}"
+    var requests = "{_length: 0}"
+    var errors = "{_length: 0}"
     var getWarnings = MintpressoAPI("user", accountId).findRelations(Map(
       "subjectId" -> accountId.toString,
       "verb" -> "log",
