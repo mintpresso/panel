@@ -1,5 +1,6 @@
 package models
 
+import play.api.{Play, Logger}
 import play.api.mvc._
 import play.api.Play.current
 import play.api.libs._
@@ -15,60 +16,60 @@ import play.api.libs.concurrent.Execution.Implicits._
 case class Token(key: String, data: String)
 case class User(id: Int, email: String, name: String)
 object User {
-  def createToken(id: Int, email: String, urls: List[String], name: String): Boolean = {
+  val mintpresso: Affogato = Affogato( Play.configuration.getString("mintpresso.internal.api").getOrElse(""), Play.configuration.getString("mintpresso.internal.id").getOrElse("0").toLong)
+
+  def createToken(id: Int, email: String, urls: List[String], name: String)(implicit request: RequestHeader): Boolean = {
     val urlString = urls.mkString("|")
     val key: String = id.toString + java.util.UUID.randomUUID()
     val data = Json.obj(
       "name" -> name,
       "expired" -> false,
-      "url" -> urlString
+      "url" -> urlString,
+      "domain" -> ""
     )
     
-    val f1 = MintpressoAPI("internal").addPoint("token", key, Json.stringify(data))
-    val res1 = Await.result(f1, 3 seconds)
-    res1.status match {
-      case 201 => {
-        val query = Map(  ("subjectId" -> email),
-                      ("subjectType" -> "user"),
-                      ("verb" -> "issue"),
-                      ("objectId" -> key),
-                      ("objectType" -> "token"))
-
-        val f2 = MintpressoAPI("internal").linkWithEdge(query)
-        val res2 = Await.result(f2, 3 seconds)
-        res2.status match {
-          case 201 => true
-          case _ => {
-            println("User token not linked")
-            false
-          }
-        }
-
+    val p = Point(0L, "token", key, Json.stringify(data), "", 0, 0, 0)
+    mintpresso.set(p) match {
+      case Some(p) => {
+        // true or false
+        mintpresso.set("user", email, "issue", "token", p.identifier)
       }
-      case _ => {
-        println("User token not created")
+      case None => {
+        val uuid = java.util.UUID.randomUUID().toString
+        val p = Point(0L, "warning", uuid, Json.obj(
+            "message" -> "token not created",
+            "domain" -> request.domain,
+            "remoteAddress" -> request.remoteAddress,
+            "url" -> request.uri,
+            "user_email" -> email,
+            "token_not_created" -> key
+          ).toString, "", 0, 0, 0)
+
+        mintpresso.set(p) match {
+          case Some(point) => mintpresso.set("user", "support@mintpresso.com", "log", "warning", uuid)
+          case None => Logger.info("Not logged. User("+email+") token not created.")
+        }
         false
       }
     }
   }
   def findTokens(id: Int, email: String) = {
-    val query = Map(  "subjectIdentifier" -> email,
-                      "subjectType" -> "user",
-                      "verb" -> "issue",
-                      "objectType" -> "token")
-    val f1 = MintpressoAPI("internal").findRelations(query)
-    val r1 = Await.result(f1, 3 seconds)
-    r1.status match {
-      case 200 => {
-        // opt for single token
-        val id = ((r1.json \ "edges").as[JsArray].value(0) \ "objectId").as[Int]
-        val f2 = MintpressoAPI("internal").getPoint(id.toInt)
-        val r2 = Await.result(f2, 3 seconds)
-        (r2.json \ "point").as[JsValue]
+    mintpresso.get(Some(id.toLong), "user", "", "issue", None, "token", "") match {
+      case Some(edges: List[Edge]) => {
+        val e = edges(0)
+        val token = mintpresso.get(e._object.id).get
+        Json.obj(
+          "id" -> token.id,
+          "identifier" -> token.identifier,
+          "type" -> token._type,
+          "data" -> Json.parse(token.data),
+          "createdAt" -> token.createdAt.toLong
+        )
       }
-      case _ => Json.parse("{}")
+      case None => {
+        Json.parse("{}")
+      }
     }
-    
   }
   def updateToken(key: String, urls: List[String]) = {
     false
