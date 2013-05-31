@@ -223,17 +223,17 @@ object Panel extends Controller with Secured {
     var warnings = "{_length: 0}"
     var requests = "{_length: 0}"
     var errors = "{_length: 0}"
-    var getWarnings = MintpressoAPI("user", accountId).findRelations(Map(
+    var getWarnings = MintpressoAPI("internal").findRelations(Map(
       "subjectId" -> accountId.toString,
       "verb" -> "log",
       "objectType" -> "warning"
     ), true)
-    var getRequests = MintpressoAPI("user", accountId).findRelations(Map(
+    var getRequests = MintpressoAPI("internal").findRelations(Map(
       "subjectId" -> accountId.toString,
       "verb" -> "log",
       "objectType" -> "request"
     ), true)
-    var getErrors = MintpressoAPI("user", accountId).findRelations(Map(
+    var getErrors = MintpressoAPI("internal").findRelations(Map(
       "subjectId" -> accountId.toString,
       "verb" -> "log",
       "objectType" -> "error"
