@@ -2,6 +2,18 @@
   Author: Jinhyuk Lee
 ###
 
+if String.prototype.format is undefined
+  String.prototype.format = () ->
+    _arguments = arguments
+    this.replace /{(\d+)}/g, (match, number) ->
+      if typeof _arguments[number] isnt 'undefined' then _arguments[number] else match
+
+String.prototype.endsWith = (suffix) ->
+  return (this.substr(this.length - suffix.length) is suffix)
+
+String.prototype.startsWith = (prefix) ->
+  return (this.substr(0, prefix.length) is prefix)
+
 jQuery ->
   $.extend {
     getParameters: () ->
