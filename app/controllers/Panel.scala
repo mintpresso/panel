@@ -248,20 +248,23 @@ object Panel extends Controller with Secured {
     res1.status match {
       case 200 =>
         warnings = res1.body
+      case 404 =>
       case _ =>
-        Logger.warn(res1.status + " at findRelations")
+        Logger.warn("Response(%s) %s at findRelations".format(res1.status, res1.body))
     }
     res2.status match {
       case 200 =>
         requests = res2.body
+      case 404 =>
       case _ =>
-        Logger.warn(res2.status + " at findRelations")
+        Logger.warn("Response(%s) %s at findRelations".format(res2.status, res2.body))
     }
     res3.status match {
       case 200 =>
         errors = res3.body
+      case 404 =>
       case _ =>
-        Logger.warn(res3.status + " at findRelations")
+        Logger.warn("Response(%s) %s at findRelations".format(res3.status, res3.body))
     }
     Ok(views.html.panel._data.log(errors, warnings, requests) )
   }
