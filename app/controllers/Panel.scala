@@ -241,9 +241,9 @@ object Panel extends Controller with Secured {
 
     import scala.concurrent._
     import scala.concurrent.duration._
-    var res1 = Await.result(getWarnings, Duration(2000, MILLISECONDS))
-    var res2 = Await.result(getRequests, Duration(2000, MILLISECONDS))
-    var res3 = Await.result(getErrors, Duration(2000, MILLISECONDS))
+    var res1 = Await.result(getWarnings, Duration(10000, MILLISECONDS))
+    var res2 = Await.result(getRequests, Duration(10000, MILLISECONDS))
+    var res3 = Await.result(getErrors, Duration(10000, MILLISECONDS))
     
     res1.status match {
       case 200 =>
