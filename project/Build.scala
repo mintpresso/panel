@@ -26,7 +26,8 @@ object ApplicationBuild extends Build {
     lessEntryPoints <<= baseDirectory(customLessEntryPoints),
     coffeescriptOptions := Seq("native", "/usr/local/bin/coffee -p")
   ) dependsOn (
-    RootProject(uri(conf.getString("affogato.repository")))
+    RootProject(uri(conf.getString("affogato.repository"))),
+    RootProject(uri("https://github.com/mintpresso/play-framework-api.git"))
   )
 
 }
