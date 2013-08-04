@@ -4,7 +4,7 @@
 
 # Home page
 GET     /                           controllers.Application.index
-GET     /features                   controllers.Application.features
+GET     /product                    controllers.Application.features
 GET     /company                    controllers.Application.company
 GET     /docs                 		controllers.Application.docsIndex
 GET     /docs/*page                 controllers.Application.docs(page: String)

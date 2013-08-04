@@ -18,6 +18,10 @@ body {
   padding-top: 20px;
 }
 
+* {
+
+}
+
 a {
   text-decoration: none;
 }
@@ -37,13 +41,6 @@ time {
 
 img.typekit-badge {
   display: none !important;
-}
-
-.typo-capital {
-  font-family: "museo-sans", 'Lato', 'Helvetica Neue', Helvetica, 'Apple SD Gothic Neo', 'Nanum Gothic', 'Malgun Gothic', Arial, sans-serif;
-}
-.typo-number {
-  font-family: "bebas-neue", "museo-sans", 'Lato', 'Helvetica Neue', Helvetica, 'Apple SD Gothic Neo', 'Nanum Gothic', 'Malgun Gothic', Arial, sans-serif;
 }
 
 input.editable {
@@ -125,9 +122,13 @@ footer {
     font-weight: 100;
     letter-spacing: 1px;
     font-size: 9pt;
+    margin-bottom: 0;
   }
   a {
     color: #fff;
+    &:hover {
+      color: #fff;
+    }
   }
 }
 
@@ -656,6 +657,16 @@ button {
 //   }
 // }
 
+.icons {
+  i.img-circle {
+    font-size: 130px;
+    padding: 50px;
+    color: #d4d4d4;
+    background-color: #f0f0f0;
+    margin-left: 120px;
+  }
+}
+
 .status-popup {
   font-size: 26px;
   text-align: center;
@@ -671,6 +682,23 @@ button {
     border-bottom-width: 7px;
     margin: 90px 80px 15px 80px;
   }
+}
+
+#submenu {
+  width:100%;
+  margin-top: -60px;
+  margin-bottom: 0;
+  &.affix {
+    margin-top: 0px;
+    top: 0px;
+    & + div.marketing {
+      // padding-top: 30px;
+    }
+  }
+  ul {
+    margin-bottom: 0;
+  }
+  // .box-shadow(0 1px 4px rgba(0,0,0,.265));
 }
 
 /* CUSTOMIZE THE NAVBAR
@@ -754,7 +782,7 @@ button {
 .carousel-caption {
   background-color: transparent;
   position: static;
-  max-width: 550px;
+  max-width: 550px + 50px;
   padding: 0 20px;
   margin-top: 200px;
 }
@@ -902,4 +930,17 @@ button {
     line-height: 1.5;
   }
 
+}
+
+.typo-capital {
+  font-family: "museo-sans", 'Helvetica Neue', Helvetica, 'Apple SD Gothic Neo', 'Nanum Gothic', 'Malgun Gothic', Arial, sans-serif;
+  &.bold {
+    font-weight: 900;
+  }
+  &.light {
+    font-weight: 100;
+  }
+}
+.typo-number {
+  font-family: "bebas-neue", "museo-sans", 'Helvetica Neue', Helvetica, 'Apple SD Gothic Neo', 'Nanum Gothic', 'Malgun Gothic', Arial, sans-serif;
 }
